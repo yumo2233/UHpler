@@ -1,6 +1,6 @@
 ### 教师信息
-> 1.teacherName: String 教师姓名
-> 2.teacherId: String 教师唯一Id标识符，用于后期增删改查权限判断
+> 1.userName: String 教师姓名
+> 2.userId: String 教师唯一Id标识符，用于后期增删改查权限判断
 > 3.Tcourses: Array 该教师可见的所有的课程
 ### 课程信息
 > 1.createBy: String as teacherId 仅teacherId与createBy 内容相同时，才能进行增删改查工作
