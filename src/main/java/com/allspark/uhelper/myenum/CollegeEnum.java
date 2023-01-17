@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
-
 @Getter
 public enum CollegeEnum {
     /**
@@ -16,19 +15,19 @@ public enum CollegeEnum {
     * @return
     **/
 
-    TONGGONG(1,"通信工程学院"),
-    DIANGONG(2,"电子工程学院"),
-    ZIDONGHUA(3,"自动化学院"),
-    JISUANJI(4,"计算机学院"),
-    JINGGUAN(5,"经济与管理学院");
-
-    @JsonCreator
+    TONGGONG(1,"communAndInfo"),
+    DIANGONG(2,"electronAndEng"),
+    ZIDONGHUA(3,"autoMation"),
+    JISUANJI(4,"computing"),
+    JINGGUAN(5,"economyAndMag");
     CollegeEnum(int i, String s) {
         code=i;
         name=s;
     }
+
     @EnumValue
     private final Integer code;
     @JsonValue
     private final String name;
+
 }

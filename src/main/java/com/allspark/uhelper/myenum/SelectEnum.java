@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
-
 @Getter
 public enum SelectEnum {
     /**
@@ -19,8 +18,6 @@ public enum SelectEnum {
     BIXIU(1,"专业必修"),
     XUANXIU(2,"专业选修");
 
-    @JsonCreator
-
     SelectEnum(int i, String s) {
         code=i;
         name=s;
@@ -29,4 +26,5 @@ public enum SelectEnum {
     private final Integer code;
     @JsonValue
     private final String name;
+
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.FkPreMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.FkPre">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="preId" column="pre_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,pre_id
+    </sql>
+    <select id="selectPreidById" resultMap="BaseResultMap">
+        select
+        pre_id
+        from u_courseinfo.fk_pre
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
+
+    <update id="updateSelective">
+        update u_courseinfo.fk_pre
+        <set>
+            <if test="preId != null">pre_id=#{preId,jdbcType=NUMERIC},</if>
+        </set>
+        where id = #{id,jdbcType=NUMERIC}
+    </update>
+    <delete id="delById">
+        delete
+        from u_courseinfo.fk_pre
+        where id = #{id,jdbcType=NUMERIC}
+    </delete>
+    <insert id="insertAll">
+        insert into u_courseinfo.fk_pre
+            (id, pre_id)
+        values (#{id,jdbcType=NUMERIC}, #{preId,jdbcType=NUMERIC})
+
+    </insert>
+
+</mapper>

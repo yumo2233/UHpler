@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.CourseInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.CourseInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="college" column="college" jdbcType="INTEGER"/>
+            <result property="unit" column="unit" jdbcType="VARCHAR"/>
+            <result property="teacher" column="teacher" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="nature" column="nature" jdbcType="INTEGER"/>
+            <result property="number" column="number" jdbcType="VARCHAR"/>
+            <result property="allPeriod" column="all_period" jdbcType="INTEGER"/>
+            <result property="theoryPeriod" column="theory_period" jdbcType="INTEGER"/>
+            <result property="runPeriod" column="run_period" jdbcType="INTEGER"/>
+            <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="preElse" column="pre_else" jdbcType="VARCHAR"/>
+            <result property="studentNum" column="student_num" jdbcType="INTEGER"/>
+            <result property="semester" column="semester" jdbcType="INTEGER"/>
+            <result property="usualRatio" column="usual_ratio" jdbcType="DECIMAL"/>
+            <result property="finalRatio" column="final_ratio" jdbcType="DECIMAL"/>
+            <result property="finalId" column="final_id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="userName" column="user_name" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,college,unit,
+        teacher,name,nature,
+        number,all_period,theory_period,
+        run_period,score,pre_else,
+        student_num,semester,
+        usual_ratio,final_ratio,final_id,
+        user_id,user_name
+    </sql>
+</mapper>

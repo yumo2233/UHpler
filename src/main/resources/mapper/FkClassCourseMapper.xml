@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.FkClassCourseMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.FkClassCourse">
+            <id property="classId" column="class_id" jdbcType="BIGINT"/>
+            <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        class_id,course_id
+    </sql>
+    <select id="selectClassIdByCourseId" resultMap="BaseResultMap">
+        select class_id
+        from u_classinfo.fk_class_course
+        where course_id = #{courseId,jdbcType=NUMERIC}
+    </select>
+    <update id="updateSelective">
+        update u_classinfo.fk_class_course
+        <set>
+            <if test="classId != null">class_id=#{classId,jdbcType=NUMERIC},</if>
+        </set>
+        where course_id = #{courseId,jdbcType=NUMERIC}
+    </update>
+    <delete id="delByCourseId">
+        delete
+        from u_classinfo.fk_class_course
+        where course_id = #{courseId,jdbcType=NUMERIC}
+    </delete>
+    <insert id="insertAll">
+        insert into u_classinfo.fk_class_course
+            (class_id, course_id)
+        values (#{classId,jdbcType=NUMERIC}, #{courseId,jdbcType=NUMERIC})
+
+    </insert>
+</mapper>
