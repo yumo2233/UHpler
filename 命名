@@ -3,7 +3,7 @@
 > 2.userId: String 教师唯一Id标识符，用于后期增删改查权限判断
 > 3.Tcourses: Array 该教师可见的所有的课程
 ### 课程信息
-> 1.createBy: String as teacherId 仅teacherId与createBy 内容相同时，才能进行增删改查工作
+> 1.createBy: String as userId 仅userId与createBy 内容相同时，才能进行增删改查工作
 > 2.academy: String 创建学院的学院名
 > > 1. autoMation: 自动化学院
 > > 2. communAndInfo: 通信与信息工程学院
