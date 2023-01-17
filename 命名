@@ -1,6 +1,6 @@
 ### 教师信息
 > 1.userName: String 教师姓名
-> 2.userId: String 教师唯一Id标识符，用于后期增删改查权限判断
+> 2.userId: String 教师工号，用于后期增删改查权限判断
 > 3.Tcourses: Array 该教师可见的所有的课程
 ### 课程信息
 > 1.createBy: String as userId 仅userId与createBy 内容相同时，才能进行增删改查工作
@@ -9,4 +9,8 @@
 > > 2. communAndInfo: 通信与信息工程学院
 > > 3. electronAndEng: 电子工程学院
 > > 4. computing: 计算机学院
-> 3.
+### 账号信息
+> 1.isFirst: 是否为第一次登录
+> 2.userId: 教师工号
+> 3.userPassword: 教师密码，仅后端人员使用
+> 4.userAvator: String 教师头像
