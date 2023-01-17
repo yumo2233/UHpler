@@ -1,0 +1,44 @@
+/* app总样式 */
+#app{
+  height: 100%;
+}
+a {
+  text-decoration: none;
+}
+/* 系统色号设置 */
+.red {
+  color: #ED6355;
+}
+.bred, .communAndInfo {
+  background-color: #ED6355;
+}
+.blue {
+  color: #337FE7;
+}
+.bblue {
+  background-color: #337FE7;
+}
+.yellow {
+  color: #F9BD5F;
+}
+.bwellow, .electronAndEng {
+  background-color: #F9BD5F;
+}
+.grey {
+  color: #f5f6f7;
+}
+.bgrey {
+  background-color: #f5f6f7;
+}
+.green {
+  color: 2AD4AE;
+}
+.bgreenm, .autoMation {
+  background-color: #2AD4AE;
+}
+.purple {
+  color: #A07BE6;
+}
+.bpurple, .computeAc {
+  background-color: #A07BE6;
+}

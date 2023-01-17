@@ -10,7 +10,9 @@
     <i>* </i><span>期末成绩占比：</span>
     <input-ref :maxValue="1" type="number" placeholder="请输入0-1以内数字">
     </input-ref>&nbsp;%
-  <add-examway></add-examway>
+  <template><!-- 此处添加v-for -->
+    <add-examway></add-examway>
+  </template>
   <div>
     <el-button type="primary" @click="addEaxmWay">增加考核方式</el-button>
     <el-button @click="back">返回</el-button>
@@ -39,6 +41,7 @@ export default defineComponent({
     const save = () => {
       console.log(333)
     }
+    // const methods = reactive({store.state.nameHere})
     return {
       addEaxmWay,
       back,

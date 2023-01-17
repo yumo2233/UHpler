@@ -16,18 +16,15 @@
     <div>
       <i>* </i><span>关联毕业要求：</span>
       <el-select v-model="value" class="m-2 right" placeholder="请选择" style="width: 363px;">
-      <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    /></el-select>
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+      </el-select>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+// import mitt from 'mitt'
 import InputRef from '../InputRef.vue'
 export default defineComponent({
   name: 'AddTargetInfo',
@@ -87,6 +84,7 @@ export default defineComponent({
 }
 i {
   color: #ed6355;
+  font-style: normal;
 }
 .right {
   margin-top: 18px;

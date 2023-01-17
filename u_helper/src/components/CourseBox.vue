@@ -5,8 +5,8 @@
       <span class="addCourse">新增课程</span>
     </div>
     <div v-else style="width: 100%;height: 100%;" @click="goCourseDetail">
-      <div class="left_color_box" :style="{backgroundColor: color}"></div>
-      <span class="academy" :style="{backgroundColor: color}">电子工程学院</span>
+      <div class="left_color_box"></div>
+      <span class="academy">电子工程学院</span>
       <span v-if="isAuthor" @click.stop="goEdit"><el-icon><Edit /></el-icon></span>
       <span v-else @click.stop="goView"><el-icon><View /></el-icon></span>
       <span class="course">通信原理(TX001)</span>
@@ -20,10 +20,6 @@ import { defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'CourseBox',
   props: {
-    color: {
-      type: String,
-      default: '#337fe7'
-    },
     isFirst: {
       type: Boolean,
       default: false
@@ -67,6 +63,7 @@ export default defineComponent({
   float: left;
   overflow: hidden;
   border-radius: 15px 0 0 15px;
+  /* todo传入颜色 */
   background-color: #a07be6;
 }
 .academy {

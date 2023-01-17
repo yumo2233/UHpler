@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+import '@/common/style.css'
 import { defineComponent } from 'vue'
 // 组件
 import GlobalHeader from './components/GlobalHeader.vue'
@@ -31,12 +32,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style>
-#app{
-  height: 100%;
-}
-a {
-  text-decoration: none;
-}
-</style>
