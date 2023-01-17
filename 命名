@@ -10,6 +10,7 @@
 > > 3. electronAndEng: 电子工程学院
 > > 4. computing: 计算机学院
 > 3.courseId: String 课程的id标识
+> 4.stuNum: Number 选修本课程的学生人数
 ### 账号信息
 > 1.isFirst: 是否为第一次登录
 > 2.userId: 教师工号
