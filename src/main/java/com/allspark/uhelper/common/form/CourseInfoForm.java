@@ -23,7 +23,7 @@ public class CourseInfoForm {
     /**
      * 课程id
      */
-    private String id;
+    private Long id;
 
     /**
      * 所属院系（枚举存储）

@@ -24,7 +24,7 @@ public class CourseInfoResp {
     /**
      * 课程id
      */
-    private String id;
+    private Long id;
 
     /**
      * 所属院系（枚举存储）
@@ -129,5 +129,5 @@ public class CourseInfoResp {
     /**
      * 考核方式的列表
      */
-    private List<CheckInfoResp> checkList;
+    private List<CheckInfo> checkList;
 }

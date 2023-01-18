@@ -54,7 +54,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         List<CourseInfoResp> courseInfoResps = new ArrayList<>();
         for (CourseInfo courseInfo : course) {
             CourseInfoResp courseInfoResp = CopyUtil.copy(courseInfo, CourseInfoResp.class);
-            courseInfoResp.setId(courseInfo.getId().toString());
+            courseInfoResp.setId(courseInfo.getId());
             List<Long> fkClassCourses = fkClassCourseMapper.selectClassIdByCourseId(courseInfo.getId());
             List<Long> fkPres = fkPreMapper.selectPreidById(courseInfo.getId());
             List<CheckInfo> checkInfoList = checkInfoMapper.selectAllByCourseId(courseInfo.getId());
@@ -70,7 +70,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     public boolean modifyOneCourseInfo(CourseInfoForm courseInfoForm){
         boolean flag;
         CourseInfo courseInfo = CopyUtil.copy(courseInfoForm, CourseInfo.class);
-        courseInfo.setId(Long.parseLong(courseInfoForm.getId()));
+        courseInfo.setId(courseInfoForm.getId());
         List<Long> classList = courseInfoForm.getClassList();
         List<Long> preList = courseInfoForm.getPreList();
         List<FkPre> preList1 = new ArrayList<>();
