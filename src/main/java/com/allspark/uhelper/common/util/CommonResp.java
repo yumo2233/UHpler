@@ -1,7 +1,6 @@
 package com.allspark.uhelper.common.util;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @ClassName CommonResp
@@ -10,25 +9,25 @@ import io.swagger.annotations.ApiModelProperty;
  * @Date 2022/10/12 19:16
  * @Version 1.0
  **/
-@ApiModel("统一返回类")
+@Schema(description = "统一返回类")
 public class CommonResp<T> {
 
     /**
      * 业务上的成功或失败
      */
-    @ApiModelProperty("业务上的成功或失败")
+    @Schema(description = "业务上的成功或失败")
     private boolean success = true;
 
     /**
      * 返回信息
      */
-    @ApiModelProperty("返回信息")
+    @Schema(description = "返回信息")
     private String message;
 
     /**
      * 返回泛型数据，自定义类型
      */
-    @ApiModelProperty("返回泛型数据，自定义类型,真实数据")
+    @Schema(description = "返回泛型数据，自定义类型,真实数据")
     private T content;
 
     public boolean getSuccess() {

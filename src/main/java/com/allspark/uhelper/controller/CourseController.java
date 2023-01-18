@@ -5,7 +5,8 @@ import com.allspark.uhelper.common.resp.CourseInfoResp;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
 import com.allspark.uhelper.service.impl.CourseInfoServiceImpl;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
  * @Date 2023/1/17 2:17
  * @Version 1.0
  **/
-
+@Tag(name = "CourseController")
 @RestController
 @RequestMapping("/course")
 public class CourseController {
@@ -27,7 +28,7 @@ public class CourseController {
     @Autowired
     private CourseInfoServiceImpl courseInfoService;
 
-    @ApiOperation("返回所有课程信息")
+    @Operation(summary = "返回所有课程信息")
     @GetMapping("/listAll")
     public CommonResp listAll(){
         List<CourseInfo> courseInfos = courseInfoService.list();
@@ -38,7 +39,7 @@ public class CourseController {
         return resp;
     }
 
-    @ApiOperation("返回单个课程信息")
+    @Operation(summary = "返回单个课程信息")
     @GetMapping("/listOne/{courseId}")
     public CommonResp listOne(@PathVariable Long courseId){
         ArrayList<Long> ids = new ArrayList<>();
@@ -52,7 +53,7 @@ public class CourseController {
         return resp;
     }
 
-    @ApiOperation("修改单个课程信息")
+    @Operation(summary = "修改单个课程信息")
     @PostMapping("/modifyOne")
     public CommonResp listOne(@RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
@@ -65,7 +66,7 @@ public class CourseController {
         return resp;
     }
 
-    @ApiOperation("增加单个课程信息")
+    @Operation(summary = "增加单个课程信息")
     @PostMapping("/addOne")
     public CommonResp addOne(@RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
