@@ -129,5 +129,5 @@ public class CourseInfoResp {
     /**
      * 考核方式的列表
      */
-    private List<CheckInfo> checkList;
+    private List<CheckInfoResp> checkList;
 }

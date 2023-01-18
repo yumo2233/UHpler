@@ -1,4 +1,5 @@
 package com.allspark.uhelper.db.mapper;
+import java.util.Collection;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -22,6 +23,8 @@ public interface FkClassCourseMapper extends BaseMapper<FkClassCourse> {
     int delByCourseId(@Param("courseId") Long courseId);
 
     int insertAll(FkClassCourse fkClassCourse);
+
+    int insertBatch(@Param("fkClassCourseCollection") Collection<FkClassCourse> fkClassCourseCollection);
 }
 
 

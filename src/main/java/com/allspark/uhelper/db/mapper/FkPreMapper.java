@@ -1,4 +1,5 @@
 package com.allspark.uhelper.db.mapper;
+import java.util.Collection;
 import java.util.List;
 
 import com.allspark.uhelper.db.pojo.FkPre;
@@ -23,6 +24,8 @@ public interface FkPreMapper extends BaseMapper<FkPre> {
     int delById(@Param("id") Long id);
 
     int insertAll(FkPre fkPre);
+
+    int insertBatch(@Param("fkPreCollection") Collection<FkPre> fkPreCollection);
 }
 
 
