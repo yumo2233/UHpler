@@ -1,8 +1,10 @@
 package com.allspark.uhelper.common.form;
 
+import com.allspark.uhelper.db.pojo.CheckInfo;
 import com.allspark.uhelper.myenum.CollegeEnum;
 import com.allspark.uhelper.myenum.SelectEnum;
 import com.allspark.uhelper.myenum.SemesterEnum;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,12 +17,13 @@ import java.util.List;
  * @Date 2023/1/17 17:41
  * @Version 1.0
  **/
+@Schema(description = "前端返回的的课程类")
 @Data
 public class CourseInfoForm {
     /**
      * 课程id
      */
-    private Long id;
+    private String id;
 
     /**
      * 所属院系（枚举存储）
@@ -121,4 +124,9 @@ public class CourseInfoForm {
      * 对应的用户名称
      */
     private String userName;
+
+    /**
+     * 考核方式的列表
+     */
+    private List<CheckInfo> checkList;
 }

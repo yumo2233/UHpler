@@ -12,7 +12,7 @@
     <sql id="Base_Column_List">
         class_id,course_id
     </sql>
-    <select id="selectClassIdByCourseId" resultMap="BaseResultMap">
+    <select id="selectClassIdByCourseId" resultType="long">
         select class_id
         from u_classinfo.fk_class_course
         where course_id = #{courseId,jdbcType=NUMERIC}

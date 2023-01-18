@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Param;
 @DS("u_courseinfo")
 public interface FkPreMapper extends BaseMapper<FkPre> {
 
-    List<FkPre> selectPreidById(@Param("id") Long id);
+    List<Long> selectPreidById(@Param("id") Long id);
 
 
     int updateSelective(FkPre fkPre);

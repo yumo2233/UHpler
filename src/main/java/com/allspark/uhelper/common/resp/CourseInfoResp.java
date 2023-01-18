@@ -1,9 +1,11 @@
 package com.allspark.uhelper.common.resp;
 
+import com.allspark.uhelper.db.pojo.CheckInfo;
 import com.allspark.uhelper.myenum.CollegeEnum;
 import com.allspark.uhelper.myenum.SelectEnum;
 import com.allspark.uhelper.myenum.SemesterEnum;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,12 +18,13 @@ import java.util.List;
  * @Date 2023/1/17 16:31
  * @Version 1.0
  **/
+@Schema(description = "返回给前端的课程类")
 @Data
 public class CourseInfoResp {
     /**
      * 课程id
      */
-    private Long id;
+    private String id;
 
     /**
      * 所属院系（枚举存储）
@@ -122,4 +125,9 @@ public class CourseInfoResp {
      * 对应的用户名称
      */
     private String userName;
+
+    /**
+     * 考核方式的列表
+     */
+    private List<CheckInfo> checkList;
 }

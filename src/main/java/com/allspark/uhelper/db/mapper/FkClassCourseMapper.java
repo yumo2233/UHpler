@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 @DS("u_classinfo")
 public interface FkClassCourseMapper extends BaseMapper<FkClassCourse> {
-    List<FkClassCourse> selectClassIdByCourseId(@Param("courseId") Long courseId);
+    List<Long> selectClassIdByCourseId(@Param("courseId") Long courseId);
 
     int updateSelective(FkClassCourse fkClassCourse);
 

@@ -12,7 +12,7 @@
     <sql id="Base_Column_List">
         id,pre_id
     </sql>
-    <select id="selectPreidById" resultMap="BaseResultMap">
+    <select id="selectPreidById" resultType="long">
         select
         pre_id
         from u_courseinfo.fk_pre

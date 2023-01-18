@@ -2,8 +2,10 @@ package com.allspark.uhelper.service.impl;
 
 import com.allspark.uhelper.common.form.CourseInfoForm;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
+import com.allspark.uhelper.db.mapper.CheckInfoMapper;
 import com.allspark.uhelper.db.mapper.FkClassCourseMapper;
 import com.allspark.uhelper.db.mapper.FkPreMapper;
+import com.allspark.uhelper.db.pojo.CheckInfo;
 import com.allspark.uhelper.db.pojo.FkClassCourse;
 import com.allspark.uhelper.db.pojo.FkPre;
 import com.allspark.uhelper.utils.CopyUtil;
@@ -39,6 +41,9 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     @Resource
     private FkPreMapper fkPreMapper;
 
+    @Resource
+    private CheckInfoMapper checkInfoMapper;
+
     @Autowired
     private TransactionTemplate transactionTemplate;
 
@@ -47,18 +52,13 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         List<CourseInfoResp> courseInfoResps = new ArrayList<>();
         for (CourseInfo courseInfo : course) {
             CourseInfoResp courseInfoResp = CopyUtil.copy(courseInfo, CourseInfoResp.class);
-            List<FkClassCourse> fkClassCourses = fkClassCourseMapper.selectClassIdByCourseId(courseInfo.getId());
-            List<Long> classIdList = new ArrayList<>();
-            for (FkClassCourse fkClassCourse : fkClassCourses) {
-                classIdList.add(fkClassCourse.getClassId());
-            }
-            List<FkPre> fkPres = fkPreMapper.selectPreidById(courseInfo.getId());
-            List<Long> preIdList = new ArrayList<>();
-            for (FkPre fkPre : fkPres) {
-                preIdList.add(fkPre.getPreId());
-            }
-            courseInfoResp.setClassList(classIdList);
-            courseInfoResp.setPreList(preIdList);
+            courseInfoResp.setId(courseInfo.getId().toString());
+            List<Long> fkClassCourses = fkClassCourseMapper.selectClassIdByCourseId(courseInfo.getId());
+            List<Long> fkPres = fkPreMapper.selectPreidById(courseInfo.getId());
+            List<CheckInfo> checkInfoList = checkInfoMapper.selectAllByCourseId(courseInfo.getId());
+            courseInfoResp.setClassList(fkClassCourses);
+            courseInfoResp.setPreList(fkPres);
+            courseInfoResp.setCheckList(checkInfoList);
             courseInfoResps.add(courseInfoResp);
         }
 
@@ -68,12 +68,12 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     public boolean modifyOneCourseInfo(CourseInfoForm courseInfoForm){
         boolean flag;
         CourseInfo courseInfo = CopyUtil.copy(courseInfoForm, CourseInfo.class);
+        courseInfo.setId(Long.parseLong(courseInfoForm.getId()));
         List<Long> classList = courseInfoForm.getClassList();
         List<Long> preList = courseInfoForm.getPreList();
         List<FkPre> preList1 = new ArrayList<>();
         List<FkClassCourse> classList1 = new ArrayList<>();
-
-        Long courseId = courseInfoForm.getId();
+        Long courseId = courseInfo.getId();
         for (Long aLong : preList) {
             FkPre fkPre = new FkPre();
             fkPre.setId(courseId);
@@ -86,6 +86,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             fkClassCourse.setCourseId(courseId);
             classList1.add(fkClassCourse);
         }
+
 
         flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
             updateById(courseInfo);

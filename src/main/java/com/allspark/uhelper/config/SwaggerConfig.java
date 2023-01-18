@@ -26,8 +26,8 @@ public class SwaggerConfig {
         boolean flag = environment.acceptsProfiles(profiles);
 
         return new OpenAPI()
-                .info(new Info().title("Mall-Tiny API")
-                        .description("SpringDoc API 演示")
+                .info(new Info().title("UHelper")
+                        .description("UHelper API ")
                         .version("v1.0.0")
                         .license(new License().name("Apache 2.0").url("https://github.com/macrozheng/mall-learning")))
                 .externalDocs(new ExternalDocumentation()
