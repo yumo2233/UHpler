@@ -128,5 +128,5 @@ public class CourseInfoForm {
     /**
      * 考核方式的列表
      */
-    private List<CheckInfoForm> checkList;
+    private List<CheckInfo> checkList;
 }

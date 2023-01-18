@@ -2,6 +2,7 @@ package com.allspark.uhelper.service.impl;
 
 import com.allspark.uhelper.common.form.CourseInfoForm;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
+import com.allspark.uhelper.common.resp.classTree.CollegeTree;
 import com.allspark.uhelper.db.mapper.CheckInfoMapper;
 import com.allspark.uhelper.db.mapper.FkClassCourseMapper;
 import com.allspark.uhelper.db.mapper.FkPreMapper;
@@ -83,6 +84,11 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 fkPre.setPreId(aLong);
                 preList1.add(fkPre);
             }
+        } else {
+            FkPre fkPre = new FkPre();
+            fkPre.setId(courseId);
+            fkPre.setPreId(-1L);
+            preList1.add(fkPre);
         }
         if (!CollectionUtils.isEmpty(classList)) {
             for (Long aLong : classList) {
@@ -92,9 +98,15 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 classList1.add(fkClassCourse);
             }
         }
+        else {
+            FkClassCourse fkClassCourse = new FkClassCourse();
+            fkClassCourse.setCourseId(courseId);
+            fkClassCourse.setClassId(-1L);
+            classList1.add(fkClassCourse);
+        }
 
         flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
-            save(courseInfo);
+            updateById(courseInfo);
             fkPreMapper.delById(courseId);
             fkClassCourseMapper.delByCourseId(courseId);
             fkPreMapper.insertBatch(preList1);
@@ -124,6 +136,11 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 fkPre.setPreId(aLong);
                 preList1.add(fkPre);
             }
+        } else {
+            FkPre fkPre = new FkPre();
+            fkPre.setId(courseId);
+            fkPre.setPreId(-1L);
+            preList1.add(fkPre);
         }
         if (!CollectionUtils.isEmpty(classList)) {
             for (Long aLong : classList) {
@@ -132,6 +149,11 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 fkClassCourse.setCourseId(courseId);
                 classList1.add(fkClassCourse);
             }
+        } else {
+            FkClassCourse fkClassCourse = new FkClassCourse();
+            fkClassCourse.setCourseId(courseId);
+            fkClassCourse.setClassId(-1L);
+            classList1.add(fkClassCourse);
         }
 
 
@@ -145,7 +167,6 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         return flag;
 
     }
-
 
 
 }

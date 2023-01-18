@@ -2,8 +2,11 @@ package com.allspark.uhelper.controller;
 
 import com.allspark.uhelper.common.form.CourseInfoForm;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
+import com.allspark.uhelper.common.resp.classTree.ClassTree;
+import com.allspark.uhelper.common.resp.classTree.CollegeTree;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
+import com.allspark.uhelper.service.impl.ClassInfoServiceImpl;
 import com.allspark.uhelper.service.impl.CourseInfoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @ClassName CourseController
@@ -27,6 +31,9 @@ public class CourseController {
 
     @Autowired
     private CourseInfoServiceImpl courseInfoService;
+
+    @Autowired
+    private ClassInfoServiceImpl classInfoService;
 
     @Operation(summary = "返回所有课程信息")
     @GetMapping("/listAll")
@@ -76,6 +83,16 @@ public class CourseController {
             resp.setSuccess(false);
             resp.setMessage("增加失败！");
         }
+        return resp;
+    }
+
+    @Operation(summary = "显示班级列表(三级显示)")
+    @GetMapping("/listAllClass")
+    public CommonResp listAllClass(){
+        CommonResp resp = new CommonResp<>();
+        Set<CollegeTree> collegeTrees = classInfoService.listAllClass();
+        resp.setContent(collegeTrees);
+        resp.setMessage("返回所有的班级");
         return resp;
     }
 
