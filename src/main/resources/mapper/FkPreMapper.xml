@@ -37,5 +37,12 @@
         values (#{id,jdbcType=NUMERIC}, #{preId,jdbcType=NUMERIC})
 
     </insert>
+    <insert id="insertBatch">
+        insert into u_courseinfo.fk_pre(id,pre_id)
+        values
+        <foreach collection="fkPreCollection" item="item" separator=",">
+            (#{item.id,jdbcType=NUMERIC},#{item.preId,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
 
 </mapper>

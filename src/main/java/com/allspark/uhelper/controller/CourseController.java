@@ -70,7 +70,7 @@ public class CourseController {
     @PostMapping("/addOne")
     public CommonResp addOne(@RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
-        if (courseInfoService.modifyOneCourseInfo(course)) {
+        if (courseInfoService.addOneCourseInfo(course)) {
             resp.setMessage("增加成功！");
         } else {
             resp.setSuccess(false);

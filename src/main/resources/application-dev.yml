@@ -5,17 +5,17 @@ spring:
   # 配置数据源信息
   datasource:
     dynamic:
-      primary: uhelper
+      primary: u_classinfo
       strict: false
       datasource:
         # 配置数据源类型
         #    type: com.zaxxer.hikari.HikariDataSource
-        # 配置连接数据库的各个信息
-        uhelper:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://localhost:3306/uhelper?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-          username: root
-          password: 211314zzz
+#        # 配置连接数据库的各个信息
+#        uhelper:
+#          driver-class-name: com.mysql.cj.jdbc.Driver
+#          url: jdbc:mysql://localhost:3306/uhelper?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+#          username: root
+#          password: 211314zzz
 
         u_classinfo:
           driver-class-name: com.mysql.cj.jdbc.Driver

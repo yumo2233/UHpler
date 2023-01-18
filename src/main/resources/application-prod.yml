@@ -24,5 +24,5 @@ mybatis-plus:
       # 设置统一的主键生成策略
       id-type:
   # 配置类型别名所对应的包
-  type-aliases-package: com.allspark.uhelper.domain
+  type-aliases-package: com.allspark.uhelper.db.pojo
 

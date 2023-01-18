@@ -9,6 +9,7 @@ import com.allspark.uhelper.db.pojo.CheckInfo;
 import com.allspark.uhelper.db.pojo.FkClassCourse;
 import com.allspark.uhelper.db.pojo.FkPre;
 import com.allspark.uhelper.utils.CopyUtil;
+import com.allspark.uhelper.utils.SnowFlake;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.CourseInfo;
@@ -18,6 +19,7 @@ import org.apache.ibatis.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -74,32 +76,69 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         List<FkPre> preList1 = new ArrayList<>();
         List<FkClassCourse> classList1 = new ArrayList<>();
         Long courseId = courseInfo.getId();
-        for (Long aLong : preList) {
-            FkPre fkPre = new FkPre();
-            fkPre.setId(courseId);
-            fkPre.setPreId(aLong);
-            preList1.add(fkPre);
+        if (!CollectionUtils.isEmpty(preList)) {
+            for (Long aLong : preList) {
+                FkPre fkPre = new FkPre();
+                fkPre.setId(courseId);
+                fkPre.setPreId(aLong);
+                preList1.add(fkPre);
+            }
         }
-        for (Long aLong : classList) {
-            FkClassCourse fkClassCourse = new FkClassCourse();
-            fkClassCourse.setClassId(aLong);
-            fkClassCourse.setCourseId(courseId);
-            classList1.add(fkClassCourse);
+        if (!CollectionUtils.isEmpty(classList)) {
+            for (Long aLong : classList) {
+                FkClassCourse fkClassCourse = new FkClassCourse();
+                fkClassCourse.setClassId(aLong);
+                fkClassCourse.setCourseId(courseId);
+                classList1.add(fkClassCourse);
+            }
+        }
+
+        flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+            save(courseInfo);
+            fkPreMapper.delById(courseId);
+            fkClassCourseMapper.delByCourseId(courseId);
+            fkPreMapper.insertBatch(preList1);
+            fkClassCourseMapper.insertBatch(classList1);
+
+            return true;
+        }));
+
+        return flag;
+
+    }
+
+    public boolean addOneCourseInfo(CourseInfoForm courseInfoForm){
+        boolean flag;
+        SnowFlake snowFlake = new SnowFlake();
+        CourseInfo courseInfo = CopyUtil.copy(courseInfoForm, CourseInfo.class);
+        courseInfo.setId(snowFlake.nextId());
+        List<Long> classList = courseInfoForm.getClassList();
+        List<Long> preList = courseInfoForm.getPreList();
+        List<FkPre> preList1 = new ArrayList<>();
+        List<FkClassCourse> classList1 = new ArrayList<>();
+        Long courseId = courseInfo.getId();
+        if (!CollectionUtils.isEmpty(preList)) {
+            for (Long aLong : preList) {
+                FkPre fkPre = new FkPre();
+                fkPre.setId(courseId);
+                fkPre.setPreId(aLong);
+                preList1.add(fkPre);
+            }
+        }
+        if (!CollectionUtils.isEmpty(classList)) {
+            for (Long aLong : classList) {
+                FkClassCourse fkClassCourse = new FkClassCourse();
+                fkClassCourse.setClassId(aLong);
+                fkClassCourse.setCourseId(courseId);
+                classList1.add(fkClassCourse);
+            }
         }
 
 
         flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
-            updateById(courseInfo);
-            fkPreMapper.delById(courseId);
-            fkClassCourseMapper.delByCourseId(courseId);
-
-            for (FkPre fkPre : preList1) {
-                fkPreMapper.insertAll(fkPre);
-            }
-            for (FkClassCourse fkClassCourse : classList1) {
-                fkClassCourseMapper.insertAll(fkClassCourse);
-            }
-
+            save(courseInfo);
+            fkPreMapper.insertBatch(preList1);
+            fkClassCourseMapper.insertBatch(classList1);
             return true;
         }));
 

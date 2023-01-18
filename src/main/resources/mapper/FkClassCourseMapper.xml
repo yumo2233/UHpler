@@ -35,4 +35,11 @@
         values (#{classId,jdbcType=NUMERIC}, #{courseId,jdbcType=NUMERIC})
 
     </insert>
+    <insert id="insertBatch">
+        insert into u_classinfo.fk_class_course(class_id,course_id)
+        values
+        <foreach collection="fkClassCourseCollection" item="item" separator=",">
+            (#{item.classId,jdbcType=NUMERIC},#{item.courseId,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
 </mapper>
