@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.mapper.TClassMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.domain.TClass">
+            <id property="clId" column="cl_id" jdbcType="INTEGER"/>
+            <result property="clHeadcount" column="cl_headcount" jdbcType="INTEGER"/>
+            <result property="clFkCourse" column="cl_fk_course" jdbcType="OTHER"/>
+            <result property="clFkGraduate" column="cl_fk_graduate" jdbcType="OTHER"/>
+            <result property="clName" column="cl_name" jdbcType="INTEGER"/>
+            <result property="clGrade" column="cl_grade" jdbcType="INTEGER"/>
+            <result property="clProfessional" column="cl_professional" jdbcType="VARCHAR"/>
+            <result property="clCollege" column="cl_college" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        cl_id,cl_headcount,cl_fk_course,
+        cl_fk_graduate,cl_name,cl_grade,
+        cl_professional,cl_college
+    </sql>
+    <insert id="insertAll">
+        insert into t_class
+        (cl_id, cl_headcount, cl_fk_course,
+         cl_fk_graduate, cl_name, cl_grade,
+         cl_professional, cl_college)
+        values (#{clId,jdbcType=NUMERIC}, #{clHeadcount,jdbcType=NUMERIC}, #{clFkCourse},
+                #{clFkGraduate}, #{clName,jdbcType=NUMERIC}, #{clGrade,jdbcType=NUMERIC},
+                #{clProfessional,jdbcType=VARCHAR}, #{clCollege,jdbcType=VARCHAR})
+
+    </insert>
+</mapper>
