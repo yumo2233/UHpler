@@ -3,6 +3,7 @@ package com.allspark.uhelper.common.resp.classTree;
 import com.allspark.uhelper.myenum.CollegeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.Set;
  **/
 @Schema(description = "返回给前端的班级三级树")
 @Data
+@EqualsAndHashCode
 public class CollegeTree {
     CollegeEnum collegeEnum;
 

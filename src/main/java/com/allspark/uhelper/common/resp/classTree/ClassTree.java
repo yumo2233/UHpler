@@ -1,6 +1,7 @@
 package com.allspark.uhelper.common.resp.classTree;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @ClassName ClassTree
@@ -10,6 +11,7 @@ import lombok.Data;
  * @Version 1.0
  **/
 @Data
+@EqualsAndHashCode
 public class ClassTree {
     Long classId;
 

@@ -2,6 +2,7 @@ package com.allspark.uhelper.common.resp.classTree;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import java.util.Set;
  * @Version 1.0
  **/
 @Data
+@EqualsAndHashCode
 public class ProfessionalTree {
 
     String professionalName;
