@@ -4,44 +4,37 @@
       <span class="plus">+</span> <br>
       <span class="addCourse">新增课程</span>
     </div>
-    <div v-else style="width: 100%;height: 100%;" @click="goCourseDetail">
-      <div class="left_color_box"></div>
-      <span class="academy">电子工程学院</span>
-      <span v-if="isAuthor" @click.stop="goEdit"><el-icon><Edit /></el-icon></span>
-      <span v-else @click.stop="goView"><el-icon><View /></el-icon></span>
-      <span class="course">通信原理(TX001)</span>
-      <span class="teacher">张老师</span>
-    </div>
+    <template v-else>
+      <div style="width: 100%;height: 100%;">
+        <div class="left_color_box"></div>
+        <span class="academy">{{ courses && courses.unit }}</span>
+        <span v-if="isAuthor"><el-icon><Edit /></el-icon></span>
+        <span v-else><el-icon><View /></el-icon></span>
+        <span class="course">{{ courses && `${courses.name} (${courses.id})` }}</span>
+        <span class="teacher">{{ courses && courses.teacher }}</span>
+      </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, PropType } from 'vue'
+import { ICourses } from '@/store/index'
 export default defineComponent({
   name: 'CourseBox',
   props: {
     isFirst: {
       type: Boolean,
       default: false
+    },
+    courses: {
+      type: Object as PropType<ICourses>
     }
   },
   setup () {
-    const goCourseDetail = () => {
-      // 跳转路由
-      console.log(222)
-    }
     const isAuthor = ref(true)
-    const goEdit = () => {
-      console.log(777)
-    }
-    const goView = () => {
-      console.log(888)
-    }
     return {
-      goCourseDetail,
-      isAuthor,
-      goEdit,
-      goView
+      isAuthor
     }
   }
 })
@@ -63,11 +56,8 @@ export default defineComponent({
   float: left;
   overflow: hidden;
   border-radius: 15px 0 0 15px;
-  /* todo传入颜色 */
-  background-color: #a07be6;
 }
 .academy {
-  padding: 13px 16px;
   text-align: center;
   position: absolute;
   left: 30px;
@@ -80,7 +70,7 @@ export default defineComponent({
 .course {
   position: absolute;
   left: 30px;
-  top: 75px;
+  top: 60px;
   font-size: 20px;
   font-weight: bold;
 }
@@ -112,7 +102,7 @@ i {
   background-color: #f5f6f7;
   border-radius: 50%;
   position: absolute;
-  top: 24px;
+  top: 20px;
   right: 25px;
 }
 </style>

@@ -1,4 +1,6 @@
 export const apis = {
-  course: '/test/tclass',
-  class: ''
+  course: '/course/listAll',
+  modfiy: '/course/modifyOne',
+  addone: '/course/addOne',
+  classlist: '/course/listAllClass'
 }

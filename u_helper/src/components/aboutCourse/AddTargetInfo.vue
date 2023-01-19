@@ -2,20 +2,20 @@
   <div class="outer">
     <div class="top">
       <div class="dev"></div>
-      <span>课程目标1<i @click="removeThisWay">（点击删除考核方式）</i></span>
+      <span>课程目标1<i @click="removeThisWay">（点击删除课程目标）</i></span>
     </div><br>
     <div>
-      <i>* </i><span>课程目标名称：</span><input-ref class="right" placeholder="课程目标" :maxLength="20"></input-ref>
+      <i>* </i><span>课程目标名称：</span><el-input v-model="examName" :disabled="isAuthor" maxlength="20" class="w-50 m-2 right" placeholder="请输入20字以内文字" style="height: 38px;width: 343px;"/>
     </div>
     <div>
-      <i>* </i><span>课程目标编码：</span><input-ref class="right" placeholder="CT1" type="number"></input-ref>
+      <i>* </i><span>课程目标编码：</span><el-input v-model="id" :disabled="isAuthor" maxlength="20" class="w-50 m-2 right" placeholder="请输入20字以内文字" style="height: 38px;width: 343px;"/>
     </div>
     <div>
-      <i>* </i><span>课程目标内容：</span><input-ref class="right" :maxLength="200" placeholder="请输入200字以内课程目标内容" type="number"></input-ref>
+      <i>* </i><span>课程目标内容：</span><el-input  v-model="target" :disabled="isAuthor" maxlength="20" class="w-50 m-2 right" placeholder="请输入20字以内文字" style="height: 38px;width: 343px;"/>
     </div>
     <div>
       <i>* </i><span>关联毕业要求：</span>
-      <el-select v-model="value" class="m-2 right" placeholder="请选择" style="width: 363px;">
+      <el-select v-model="value" :disabled="isAuthor" class="m-2 right" placeholder="请选择" size="large" style="width: 343px;">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
       </el-select>
     </div>
@@ -23,16 +23,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-// import mitt from 'mitt'
-import InputRef from '../InputRef.vue'
+import { defineComponent, ref, PropType } from 'vue'
+import { ICourses } from '@/store'
 export default defineComponent({
-  name: 'AddTargetInfo',
-  components: {
-    InputRef
+  props: {
+    isAuthor: {
+      type: Boolean
+    },
+    info: {
+      type: Object as PropType<ICourses>
+    }
   },
+  name: 'AddTargetInfo',
   setup () {
     const examName = ref('')
+    const id = ref('')
+    const target = ref('')
     const removeThisWay = () => {
       console.log(1)
     }
@@ -50,7 +56,9 @@ export default defineComponent({
       examName,
       removeThisWay,
       options,
-      value
+      value,
+      id,
+      target
     }
   }
 })

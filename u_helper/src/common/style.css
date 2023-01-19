@@ -2,14 +2,15 @@
 #app{
   height: 100%;
 }
-a {
+a , a:-webkit-any-link:active{
   text-decoration: none;
+  color: black;
 }
 /* 系统色号设置 */
 .red {
   color: #ED6355;
 }
-.bred, .communAndInfo {
+.bred, .communAndInfo .left_color_box {
   background-color: #ED6355;
 }
 .blue {
@@ -21,24 +22,24 @@ a {
 .yellow {
   color: #F9BD5F;
 }
-.bwellow, .electronAndEng {
+.bwellow, .electronAndEng .left_color_box {
   background-color: #F9BD5F;
 }
 .grey {
   color: #f5f6f7;
 }
-.bgrey {
+.bgrey, .EconAndManage .left_color_box {
   background-color: #f5f6f7;
 }
 .green {
   color: 2AD4AE;
 }
-.bgreenm, .autoMation {
+.bgreenm, .autoMation .left_color_box {
   background-color: #2AD4AE;
 }
 .purple {
   color: #A07BE6;
 }
-.bpurple, .computeAc {
+.bpurple, .computing .left_color_box {
   background-color: #A07BE6;
 }

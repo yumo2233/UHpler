@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import CourseManage from '@/pages/CourseManage.vue'
 import CourseList from '@/pages/CourseList.vue'
 import ClassManage from '@/pages/ClassManage.vue'
+import LoginVue from '@/pages/aboutLogin/LoginVue.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -20,6 +21,10 @@ const router = createRouter({
     path: '/class',
     name: 'class',
     component: ClassManage
+  }, {
+    path: '/login',
+    name: 'login',
+    component: LoginVue
   }]
 })
 
