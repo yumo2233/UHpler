@@ -2,7 +2,6 @@ package com.allspark.uhelper.service.impl;
 
 import com.allspark.uhelper.common.form.CourseInfoForm;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
-import com.allspark.uhelper.common.resp.classTree.CollegeTree;
 import com.allspark.uhelper.db.mapper.CheckInfoMapper;
 import com.allspark.uhelper.db.mapper.FkClassCourseMapper;
 import com.allspark.uhelper.db.mapper.FkPreMapper;
@@ -16,7 +15,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.CourseInfo;
 import com.allspark.uhelper.service.CourseInfoService;
 import com.allspark.uhelper.db.mapper.CourseInfoMapper;
-import org.apache.ibatis.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;

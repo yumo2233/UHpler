@@ -2,8 +2,7 @@ package com.allspark.uhelper.controller;
 
 import com.allspark.uhelper.common.form.CourseInfoForm;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
-import com.allspark.uhelper.common.resp.classTree.ClassTree;
-import com.allspark.uhelper.common.resp.classTree.CollegeTree;
+import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
 import com.allspark.uhelper.service.impl.ClassInfoServiceImpl;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @ClassName CourseController
@@ -90,7 +88,7 @@ public class CourseController {
     @GetMapping("/listAllClass")
     public CommonResp listAllClass(){
         CommonResp resp = new CommonResp<>();
-        Set<CollegeTree> collegeTrees = classInfoService.listAllClass();
+        List<NAryTree> collegeTrees = classInfoService.listAllClass();
         resp.setContent(collegeTrees);
         resp.setMessage("返回所有的班级");
         return resp;
