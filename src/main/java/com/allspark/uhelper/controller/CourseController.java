@@ -88,7 +88,7 @@ public class CourseController {
     @GetMapping("/listAllClass")
     public CommonResp listAllClass(){
         CommonResp resp = new CommonResp<>();
-        List<NAryTree> collegeTrees = classInfoService.listAllClass();
+        List<NAryTree> collegeTrees = classInfoService.listAll3();
         resp.setContent(collegeTrees);
         resp.setMessage("返回所有的班级");
         return resp;
