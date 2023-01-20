@@ -7,37 +7,46 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * 考核方式表
- * @TableName check_info
+ * 课程目标表
+ * @TableName target_info
  */
-@Schema(description = "返回给前端的考核方式类")
+@Schema(description = "前端返回的课程目标类")
 @Data
 @EqualsAndHashCode
-public class CheckInfoForm implements Serializable {
+public class TargetInfoForm implements Serializable {
     /**
-     * 考核方式id
+     * 课程指标点id
      */
-    @NotBlank()
+    @TableId
     private Long id;
 
     /**
-     * 课程id
+     * 对应的课程
      */
     private Long courseId;
 
     /**
-     * 考核比重
+     * 内容
      */
-    private BigDecimal ratio;
+    private String content;
 
     /**
-     * 考核名称
+     * 编码
+     */
+    private String number;
+
+    /**
+     * 名称
      */
     private String name;
+
+    /**
+     * 关联的毕业要求对应的指标点的id
+     */
+    private Long graduateId;
 
 }

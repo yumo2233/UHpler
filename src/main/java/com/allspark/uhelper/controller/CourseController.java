@@ -7,11 +7,13 @@ import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
 import com.allspark.uhelper.service.impl.ClassInfoServiceImpl;
 import com.allspark.uhelper.service.impl.CourseInfoServiceImpl;
+import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,9 @@ public class CourseController {
 
     @Autowired
     private ClassInfoServiceImpl classInfoService;
+
+    @Autowired
+    private GraduateTargetInfoServiceImpl graduateTargetInfoService;
 
     @Operation(summary = "返回所有课程信息")
     @GetMapping("/listAll")
@@ -60,7 +65,7 @@ public class CourseController {
 
     @Operation(summary = "修改单个课程信息")
     @PostMapping("/modifyOne")
-    public CommonResp listOne(@RequestBody CourseInfoForm course){
+    public CommonResp listOne(@Valid @RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
         if (courseInfoService.modifyOneCourseInfo(course)) {
             resp.setMessage("修改成功！");
@@ -73,7 +78,7 @@ public class CourseController {
 
     @Operation(summary = "增加单个课程信息")
     @PostMapping("/addOne")
-    public CommonResp addOne(@RequestBody CourseInfoForm course){
+    public CommonResp addOne(@Valid @RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
         if (courseInfoService.addOneCourseInfo(course)) {
             resp.setMessage("增加成功！");
@@ -91,6 +96,16 @@ public class CourseController {
         List<NAryTree> collegeTrees = classInfoService.listAll3();
         resp.setContent(collegeTrees);
         resp.setMessage("返回所有的班级");
+        return resp;
+    }
+
+    @Operation(summary = "显示毕业指标点列表(二级显示)")
+    @GetMapping("/listAllGraduate")
+    public CommonResp listAllGraduate(){
+        CommonResp resp = new CommonResp<>();
+        List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
+        resp.setContent(collegeTrees);
+        resp.setMessage("返回所有的毕业指标点");
         return resp;
     }
 

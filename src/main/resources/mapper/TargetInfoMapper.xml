@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.TargetInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.TargetInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="number" column="number" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+            <result property="graduateId" column="graduate_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,number,
+        content,course_id,graduate_id
+    </sql>
+    <insert id="insertBatch">
+        insert into u_courseinfo.target_info(id,name,number,
+        content,course_id,graduate_id)
+        values
+        <foreach collection="targetInfoCollection" item="item" separator=",">
+            (#{item.id,jdbcType=NUMERIC},#{item.name,jdbcType=VARCHAR},#{item.number,jdbcType=VARCHAR},
+            #{item.content,jdbcType=VARCHAR},#{item.courseId,jdbcType=NUMERIC},#{item.graduateId,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+    <delete id="delByCourseId">
+        delete
+        from u_courseinfo.target_info
+        where course_id = #{courseId,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectAllByCourseId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_courseinfo.target_info
+        where
+        course_id = #{courseId,jdbcType=NUMERIC}
+    </select>
+</mapper>

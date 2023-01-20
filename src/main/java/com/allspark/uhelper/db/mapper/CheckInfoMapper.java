@@ -1,4 +1,5 @@
 package com.allspark.uhelper.db.mapper;
+import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,6 +19,10 @@ public interface CheckInfoMapper extends BaseMapper<CheckInfo> {
     List<CheckInfo> selectIdByCourseId(@Param("courseId") Long courseId);
 
     List<CheckInfo> selectAllByCourseId(@Param("courseId") Long courseId);
+
+    int delByCourseId(@Param("courseId") Long courseId);
+
+    int insertBatch(@Param("checkInfoCollection") Collection<CheckInfo> checkInfoCollection);
 
 }
 
