@@ -13,6 +13,7 @@ import com.allspark.uhelper.utils.SnowFlake;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.service.CourseInfoService;
+import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -80,8 +81,21 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     }
 
     public HashMap<String,Object> extractPost(CourseInfoForm courseInfoForm) {
+        HashMap <String,Object> map = new HashMap();
+        BigDecimal count0 = courseInfoForm.getFinalRatio().add(courseInfoForm.getUsualRatio());
+        int flag1,flag0;
+        BigDecimal bigDecimal0 = new BigDecimal("0");
+        BigDecimal bigDecimal1 = new BigDecimal("1");
+        flag1 = count0.compareTo(bigDecimal1);
+        flag0 = count0.compareTo(bigDecimal0);
+        if (flag1==0||flag0==0) {
+
+        } else {
+            String s = new String("期末平时占比不归一");
+            map.put("message", s);
+            return map;
+        }
         SnowFlake snowFlake = new SnowFlake();
-        HashMap map = new HashMap();
         CourseInfo courseInfo = CopyUtil.copy(courseInfoForm, CourseInfo.class);
         List<Long> classList = courseInfoForm.getClassList();
         List<Long> preList = courseInfoForm.getPreList();
@@ -119,17 +133,31 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             fkClassCourse.setClassId(-1L);
             classList1.add(fkClassCourse);
         }
+        BigDecimal count1 = new BigDecimal("0");
         if (CollectionUtils.isEmpty(checkInfoList)) {
             CheckInfo checkInfo = new CheckInfo();
             checkInfo.setCourseId(courseId);
             checkInfo.setId(snowFlake.nextId());
+            checkInfo.setRatio(new BigDecimal(0));
             checkInfoList.add(checkInfo);
         } else {
             for (CheckInfo checkInfo : checkInfoList) {
                 checkInfo.setId(snowFlake.nextId());
                 checkInfo.setCourseId(courseId);
+                count1 = count1.add(checkInfo.getRatio());
             }
         }
+        flag1 = count1.compareTo(bigDecimal1);
+        flag0 = count1.compareTo(bigDecimal0);
+        if (flag1==0||flag0==0) {
+
+        } else {
+            String s = new String("考核方式占比不归一");
+            map.put("message", s);
+            return map;
+        }
+
+        System.out.println(count1);
         if (CollectionUtils.isEmpty(targetInfoList)) {
             TargetInfo targetInfo = new TargetInfo();
             targetInfo.setId(snowFlake.nextId());
@@ -153,9 +181,16 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         return map;
     }
 
-    public boolean modifyOneCourseInfo(CourseInfoForm courseInfoForm){
+    public HashMap<String,Object> modifyOneCourseInfo(CourseInfoForm courseInfoForm){
         boolean flag;
         HashMap<String,Object> map = extractPost(courseInfoForm);
+        HashMap<String,Object> result = new HashMap<>();
+        if (map.containsKey("message")) {
+            result.put("message", map.get("message"));
+            result.put("flag", false);
+            return result;
+        }
+
         List<FkPre> preList1 = (ArrayList<FkPre>)map.get("preList1");
         List<FkClassCourse> classList1 =(ArrayList<FkClassCourse>)map.get("classList1");
         List<CheckInfo> checkInfoList = (ArrayList<CheckInfo>)map.get("checkInfoList");
@@ -176,16 +211,22 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 
             return true;
         }));
-
-        return flag;
+        result.put("flag", flag);
+        return result;
 
     }
 
-    public boolean addOneCourseInfo(CourseInfoForm courseInfoForm){
+    public HashMap<String,Object> addOneCourseInfo(CourseInfoForm courseInfoForm){
         boolean flag;
         SnowFlake snowFlake = new SnowFlake();
         courseInfoForm.setId(snowFlake.nextId());
         HashMap<String,Object> map = extractPost(courseInfoForm);
+        HashMap<String,Object> result = new HashMap<>();
+        if (map.containsKey("message")) {
+            result.put("message", map.get("message"));
+            result.put("flag", false);
+            return result;
+        }
         List<FkPre> preList1 = (ArrayList<FkPre>)map.get("preList1");
         List<FkClassCourse> classList1 =(ArrayList<FkClassCourse>)map.get("classList1");
         List<CheckInfo> checkInfoList = (ArrayList<CheckInfo>)map.get("checkInfoList");
@@ -200,8 +241,8 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             targetInfoMapper.insertBatch(targetInfoList);
             return true;
         }));
-
-        return flag;
+        result.put("flag", flag);
+        return result;
 
     }
 

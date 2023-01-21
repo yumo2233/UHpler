@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -67,11 +68,15 @@ public class CourseController {
     @PostMapping("/modifyOne")
     public CommonResp listOne(@Valid @RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
-        if (courseInfoService.modifyOneCourseInfo(course)) {
+        HashMap<String,Object> result =courseInfoService.modifyOneCourseInfo(course);
+        if ((Boolean) result.get("flag")) {
             resp.setMessage("修改成功！");
+        } else if (result.containsKey("message")){
+            resp.setSuccess(false);
+            resp.setMessage((String) result.get("message"));
         } else {
             resp.setSuccess(false);
-            resp.setMessage("修改失败！");
+            resp.setContent("增加失败！");
         }
         return resp;
     }
@@ -80,8 +85,12 @@ public class CourseController {
     @PostMapping("/addOne")
     public CommonResp addOne(@Valid @RequestBody CourseInfoForm course){
         CommonResp resp = new CommonResp<>();
-        if (courseInfoService.addOneCourseInfo(course)) {
+        HashMap<String,Object> result = courseInfoService.addOneCourseInfo(course);
+        if ((Boolean) result.get("flag")) {
             resp.setMessage("增加成功！");
+        } else if (result.containsKey("message")){
+            resp.setSuccess(false);
+            resp.setMessage((String) result.get("message"));
         } else {
             resp.setSuccess(false);
             resp.setMessage("增加失败！");
