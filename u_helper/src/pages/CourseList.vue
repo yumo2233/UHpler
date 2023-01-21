@@ -2,7 +2,7 @@
   <el-row :gutter="20" justify="start">
     <router-link to="/course">
       <el-col :span="6">
-        <course-box :is-first="true"></course-box>
+        <course-box @click="addOne" :is-first="true"></course-box>
       </el-col>
     </router-link>
     <el-col :span="6" v-for="o in courseList" :key="o.id" class="autoMation">
@@ -34,8 +34,11 @@ export default defineComponent({
       store.dispatch('getCourse')
     })
     const courseList = computed(() => store.state.courses)
+    const addOne = () => {
+      store.commit('addOne')
+    }
     return {
-      courseList
+      courseList, addOne
     }
   }
 })

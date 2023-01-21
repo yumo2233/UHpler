@@ -18,20 +18,54 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
+import mitt from 'mitt'
+type Delete = {
+  'on-item-delete': number
+}
+export const Aemitter = mitt<Delete>()
 export default defineComponent({
   props: {
     index: Number,
     info: Object
   },
   name: 'AddExamway',
-  setup () {
-    const examName = ref('')
-    const Ratio = ref(0)
+  setup (props) {
+    const store = useStore<GlobalDataProps>()
+    const examName = ref(props.info?.name || '')
+    const Ratio = ref(props.info?.ratio || 0)
     const removeThisWay = () => {
-      console.log(1)
+      Aemitter.emit('on-item-delete', props.info?.id)
     }
+    watch([examName, Ratio], () => {
+      const index = props.index || -1
+      if (index > 0) {
+        store.state.currentCourse.checkList[index - 1].name = examName.value
+      } else {
+        console.log('保存新增考核方式名称失败')
+      }
+    })
+    // const updateName = () => {
+    //   const index = props.index || -1
+    //   if (index > 0) {
+    //     store.state.currentCourse.checkList[index - 1].name = examName.value
+    //   } else {
+    //     console.log('保存新增考核方式名称失败')
+    //   }
+    // }
+    // const updateRatio = () => {
+    //   const index = props.index || -1
+    //   if (index > 0) {
+    //     store.state.currentCourse.checkList[index - 1].ratio = +Ratio.value
+    //   } else {
+    //     console.log('保存新增考核方式比重失败')
+    //   }
+    // }
     return {
+      // updateRatio,
+      // updateName,
       examName,
       removeThisWay,
       Ratio

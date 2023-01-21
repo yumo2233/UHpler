@@ -1,6 +1,18 @@
 <template>
   <div class="outer">
-    <toast-box :message="message"></toast-box>
+    <el-dialog v-model="centerDialogVisible" title="Warning" width="30%" center>
+    <span>
+      {{ message }}
+    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleSave3">
+          确认
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
     <div class="header">
       <div class="dev"></div>
       <span>成绩占比</span>
@@ -13,30 +25,28 @@
     <span class="right">
       <el-input @input="uchange" :disabled="isAuthor" type="number" v-model="final" class="w-50 m-2" placeholder="请输入0-100以内数字" style="height: 38px;width: 343px;"/>&nbsp;%
     </span><br>
-    <template v-for="(i, index) in o" :key="i.id">
-      <add-examway :index="+index+1"></add-examway>
+    <template v-for="(i, index) in info.checkList" :key="i.id">
+      <add-examway :index="+index+1" :info="i"></add-examway>
     </template>
     <div>
       <el-button type="primary" :disabled="isAuthor" @click="addEaxmWay">增加考核方式</el-button>
       <el-button @click="back">返回</el-button>
-      <el-button :disabled="isAuthor" type="primary" @click="handleSave">保存</el-button>
+      <el-button :disabled="isAuthor" type="primary" @click="handleSave4">保存</el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, PropType } from 'vue'
-// import { useStore } from 'vuex'
+import { defineComponent, ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { ICourses } from '@/store'
-import AddExamway from '@/components/aboutCourse/AddExamway.vue'
-import ToastBox, { emitter } from '@/components/ToastBox.vue'
+import { GlobalDataProps } from '@/store'
+import AddExamway, { Aemitter } from '@/components/aboutCourse/AddExamway.vue'
+import axios from 'axios'
+import { apis } from '@/common/apis'
 
 export default defineComponent({
   props: {
-    info: {
-      type: Object as PropType<ICourses>
-    },
     isAuthor: {
       type: Boolean,
       default: true
@@ -44,25 +54,78 @@ export default defineComponent({
   },
   name: 'ExamWay',
   components: {
-    AddExamway,
-    ToastBox
+    AddExamway
   },
-  setup (props) {
-    // const store = useStore<GlobalDataProps>()
+  setup () {
+    const store = useStore<GlobalDataProps>()
     const router = useRouter()
-    const o = computed(() => props.info?.checkList)
-    const usual = ref(props.info?.usualRatio || 0)
-    const final = ref(props.info?.finalRatio || 0)
-    const message = ref('')
+    const info = computed(() => store.state.currentCourse)
     const addEaxmWay = () => {
-      console.log(111)
+      info.value.checkList.push({
+        id: Date.now(),
+        courseId: Date.now() + 1,
+        ratio: 0,
+        name: ''
+      })
     }
+    const backOrSave = ref(0)
+    const usual = ref(info.value.usualRatio || 0)
+    const final = ref(info.value.finalRatio || 0)
+    const message = ref('')
+    const centerDialogVisible = ref(false)
     const back = () => {
-      emitter.emit('on-dialog-unsave', () => null)
+      centerDialogVisible.value = true
       message.value = '是否返回课程列表页，返回将不会保存已修改信息'
     }
-    const handleSave = () => {
-      emitter.emit('on-dialog-open', () => null)
+    watch([usual, final], () => {
+      info.value.finalRatio = final.value
+      info.value.usualRatio = usual.value
+    })
+    const submitChange = () => {
+      if (!store.state.isAdd) {
+        axios.post(apis.modfiy, JSON.stringify(info.value)).then(res => {
+          if (res.status !== 200) {
+            alert('保存失败')
+          }
+        })
+      } else {
+        axios.post(apis.addone, JSON.stringify(info.value)).then(res => {
+          if (res.status !== 200) {
+            alert('添加失败')
+          }
+        })
+      }
+      router.push('/')
+      store.commit('noAddOne')
+    }
+    const handleSave3 = () => {
+      if (backOrSave.value) {
+        backOrSave.value = 0
+        let sum = 0
+        for (let i = 0, len = info.value.checkList.length; i < len; i++) {
+          console.log(len)
+          sum += info.value.checkList[i].ratio
+        }
+        console.log(sum)
+        if (sum !== 100) {
+          console.log('sum!==100')
+          if (!confirm('当前所有考核方式比重，相加不等于1，是否继续保存')) {
+            console.log('quit')
+            return false
+          } else {
+            console.log('save')
+            submitChange()
+          }
+        } else {
+          console.log('sum = 100')
+          submitChange()
+        }
+      }
+      router.push('/')
+    }
+    const handleSave4 = () => {
+      backOrSave.value = 1
+      centerDialogVisible.value = true
       message.value = '保存后将覆盖已有信息，请确认输入信息正确无误'
     }
     const uchange = () => {
@@ -71,16 +134,26 @@ export default defineComponent({
     const fchange = () => {
       final.value = 100 - usual.value
     }
-    emitter.on('on-dialog-confirm', () => {
-      // 打包数据
-      router.push('/')
+    Aemitter.on('on-item-delete', (id: number) => {
+      const len = info.value.checkList.length
+      if (len < 2) {
+        alert('至少保留一个考核方式！')
+      } else {
+        for (let i = 0; i < len; i++) {
+          if (info.value.checkList[i].id === id) {
+            info.value.checkList.splice(i, 1)
+            break
+          }
+        }
+      }
     })
-    // const methods = reactive({store.state.nameHere})
     return {
-      o,
+      centerDialogVisible,
+      info,
       addEaxmWay,
       back,
-      handleSave,
+      handleSave4,
+      handleSave3,
       usual,
       final,
       uchange,
@@ -115,5 +188,8 @@ i {
 .right {
   position: absolute;
   left: 175px;
+}
+.dialog-footer button:first-child {
+  margin-right: 10px;
 }
 </style>

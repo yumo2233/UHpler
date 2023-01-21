@@ -22,11 +22,10 @@ import mitt from 'mitt'
 import { ref, onUnmounted, defineComponent } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import router from '@/router'
-type noReturn = () => void
 type Events = {
-  'on-dialog-open': noReturn,
-  'on-dialog-confirm': noReturn,
-  'on-dialog-unsave': noReturn
+  'on-dialog-open': () => void,
+  'on-dialog-confirm': () => void,
+  'on-dialog-unsave': () => void
 }
 export const emitter = mitt<Events>()
 export default defineComponent({
