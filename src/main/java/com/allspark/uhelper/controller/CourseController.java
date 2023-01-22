@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName CourseController
@@ -110,7 +111,7 @@ public class CourseController {
 
     @Operation(summary = "显示毕业指标点列表(二级显示)")
     @GetMapping("/listAllGraduate")
-    public CommonResp listAllGraduate(){
+    public CommonResp listAllGraduate() {
         CommonResp resp = new CommonResp<>();
         List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
         resp.setContent(collegeTrees);
@@ -118,4 +119,11 @@ public class CourseController {
         return resp;
     }
 
+    @PostMapping("/searchTarget")
+    public CommonResp<Map> searchTargetById(@RequestBody int id) {
+        HashMap map = graduateTargetInfoService.searchTargetById(id);
+        CommonResp resp = new CommonResp<>();
+        resp.setContent(map);
+        return resp;
+    }
 }

@@ -21,19 +21,19 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://localhost:3306/u_classinfo?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
           username: root
-          password: 211314zzz
+          password: abc123456
 
         u_courseinfo:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://localhost:3306/u_courseinfo?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
           username: root
-          password: 211314zzz
+          password: abc123456
 
         u_graduateinfo:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://localhost:3306/u_graduateinfo?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
           username: root
-          password: 211314zzz
+          password: abc123456
 
 #        u_course_report:
 #          driver-class-name: com.mysql.cj.jdbc.Driver
