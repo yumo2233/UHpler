@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import FilterBar from './aboutClass/FilterBar.vue'
+import FilterBar from '../components/aboutClass/FilterBar.vue'
 import ClassDetail from './aboutClass/ClassDetail.vue'
 export default defineComponent({
   name: 'ClassManage',

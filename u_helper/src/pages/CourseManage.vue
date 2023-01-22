@@ -52,7 +52,9 @@ if (courseId) {
   // })
   // isAuthor.value = courseInfo?.userId === store.state.user.userId
 } else {
-  store.commit('clearCurrentCourse')
+  if (!store.state.isAdd) {
+    store.commit('clearCurrentCourse')
+  }
 }
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)

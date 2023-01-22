@@ -7,7 +7,7 @@
     <el-table-column prop="num1" label="人数" width="80" />
     <el-table-column prop="num2" label="进行中课程" />
     <el-table-column prop="address" label="操作">
-      <function-button></function-button>
+    <function-button></function-button>
     </el-table-column>
   </el-table>
 </template>
