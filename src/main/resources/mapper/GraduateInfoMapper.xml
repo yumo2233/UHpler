@@ -16,7 +16,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,college,grade,
+        id
+        ,college,grade,
         professional,graduate_count,graduate_target_count,
         name,user_id
     </sql>
@@ -26,4 +27,14 @@
         from u_graduateinfo.graduate_info
         where id = #{id,jdbcType=NUMERIC}
     </select>
+
+
+    <insert id="insertStudent">
+        insert into u_classinfo.student_info(id,index,name,number,class_id)
+        values
+        <foreach collection="studentInfoCollection" item="item" separator=",">
+            (#{id,jdbcType=NUMERIC},#{index,jdbcType=INTGER},#{name,jdbcType=VARCHAR},
+            #{number,jdbcType=INTEGER},#{class_id,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
 </mapper>

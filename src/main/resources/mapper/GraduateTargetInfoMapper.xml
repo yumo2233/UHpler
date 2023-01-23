@@ -24,6 +24,7 @@
         WHERE id = ${id}
     </select>
 
+    <!--要以excel表格的形式插入，暂时搁置!-->
     <insert id="insertTarget">
         insert into u_graduateinfo.graduate_target_info()
     </insert>
