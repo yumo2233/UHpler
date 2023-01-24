@@ -19,4 +19,9 @@
         grade,name,headcount,
         user_id
     </sql>
+    <select id="selectNameById" resultType="string">
+        select name
+        from u_classinfo.class_info
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
 </mapper>

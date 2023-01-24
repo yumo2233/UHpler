@@ -1,7 +1,11 @@
 package com.allspark.uhelper.controller;
 
 import com.allspark.uhelper.common.form.CourseInfoForm;
+import com.allspark.uhelper.common.form.ListStudentForCourseIdForm;
+import com.allspark.uhelper.common.form.StudentAndScoreForm;
+import com.allspark.uhelper.common.form.StudentAndScoreListForm;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
+import com.allspark.uhelper.common.resp.StudentAndScoreResp;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
@@ -115,6 +119,26 @@ public class CourseController {
         List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
         resp.setContent(collegeTrees);
         resp.setMessage("返回所有的毕业指标点");
+        return resp;
+    }
+
+    @Operation(summary = "显示该课程的学生和成绩")
+    @PostMapping("/listAllStudent")
+    public CommonResp listAllStudent(@RequestBody ListStudentForCourseIdForm form){
+        CommonResp resp = new CommonResp<>();
+        List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.listAllStudent(form);
+        resp.setContent(studentAndScoreRespList);
+        resp.setMessage("显示该课程下的所有学生的平时和期末成绩");
+        return resp;
+    }
+
+    @Operation(summary = "显示该课程的学生和成绩")
+    @PostMapping("/modifyAllStudent")
+    public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form){
+        CommonResp resp = new CommonResp<>();
+        List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.modifyAllStudent(form);
+        resp.setContent(studentAndScoreRespList);
+        resp.setMessage("修改该课程下的所有学生的平时和期末成绩");
         return resp;
     }
 

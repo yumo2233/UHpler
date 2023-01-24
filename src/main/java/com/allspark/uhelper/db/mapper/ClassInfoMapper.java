@@ -1,4 +1,6 @@
 package com.allspark.uhelper.db.mapper;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 import com.allspark.uhelper.db.pojo.ClassInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -12,6 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 @DS("u_classinfo")
 public interface ClassInfoMapper extends BaseMapper<ClassInfo> {
+
+    String selectNameById(@Param("id") Long id);
 
 }
 

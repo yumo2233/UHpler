@@ -20,7 +20,6 @@ public class NAryTree {
 
     public String label;
 
-//    public NAryTree parentTree;
 
     public List<NAryTree> children;
 

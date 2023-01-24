@@ -1,10 +1,11 @@
 package com.allspark.uhelper.service.impl;
 
-import com.allspark.uhelper.common.form.CheckInfoForm;
-import com.allspark.uhelper.common.form.CourseInfoForm;
-import com.allspark.uhelper.common.form.TargetInfoForm;
+import cn.hutool.json.JSONBeanParser;
+import cn.hutool.json.JSONUtil;
+import com.allspark.uhelper.common.form.*;
 import com.allspark.uhelper.common.resp.CheckInfoResp;
 import com.allspark.uhelper.common.resp.CourseInfoResp;
+import com.allspark.uhelper.common.resp.StudentAndScoreResp;
 import com.allspark.uhelper.common.resp.TargetInfoResp;
 import com.allspark.uhelper.db.mapper.*;
 import com.allspark.uhelper.db.pojo.*;
@@ -13,12 +14,10 @@ import com.allspark.uhelper.utils.SnowFlake;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.service.CourseInfoService;
-import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -49,6 +48,15 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 
     @Resource
     private TargetInfoMapper targetInfoMapper;
+
+    @Resource
+    private StudentInfoMapper studentInfoMapper;
+
+    @Resource
+    private  StudentScoreInfoMapper studentScoreInfoMapper;
+
+    @Resource
+    private ClassInfoMapper classInfoMapper;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -246,7 +254,38 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 
     }
 
+    public List<StudentAndScoreResp> listAllStudent(ListStudentForCourseIdForm form){
+        List<StudentAndScoreResp>  studentAndScoreRespList;
+        List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(form.getIds());
+        List<StudentScoreInfo> studentScoreInfoList = studentScoreInfoMapper.selectAllByCourseId(form.getCourseId());
+        studentAndScoreRespList = CopyUtil.copyList(studentInfoList, StudentAndScoreResp.class);
+        HashMap<Long,StudentScoreInfo> map = new HashMap<>();
+        for (StudentScoreInfo studentScoreInfo : studentScoreInfoList) {
+            map.put(studentScoreInfo.getId(), studentScoreInfo);
+        }
+        for (StudentAndScoreResp studentAndScoreResp : studentAndScoreRespList) {
+            StudentScoreInfo studentScoreInfo = new StudentScoreInfo();
+            if (!map.containsKey(studentAndScoreResp.getId())) {
+             studentScoreInfo.setUsualScore(new String("[0]"));
+             studentScoreInfo.setFinalScore(new String("[0]"));
+             studentScoreInfo.setId(studentAndScoreResp.getId());
+             studentScoreInfo.setCourseId(form.getCourseId());
+            } else {
+                studentScoreInfo=map.get(studentAndScoreResp.getId());
+            }
+            studentAndScoreResp.setUsualScore(JSONUtil.parse(studentScoreInfo.getUsualScore()).toBean(Integer[].class));
+            studentAndScoreResp.setFinalScore(JSONUtil.parse(studentScoreInfo.getFinalScore()).toBean(Integer[].class));
+            studentAndScoreResp.setClassName(classInfoMapper.selectNameById(studentAndScoreResp.getClassId()));
+        }
+        return studentAndScoreRespList;
+    }
 
+
+    public List<StudentAndScoreResp> modifyAllStudent(StudentAndScoreListForm form) {
+
+        List<StudentAndScoreResp> studentAndScoreRespList = new ArrayList<>();
+        return studentAndScoreRespList;
+    }
 }
 
 

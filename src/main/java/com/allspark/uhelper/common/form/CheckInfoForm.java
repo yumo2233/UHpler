@@ -15,14 +15,13 @@ import java.math.BigDecimal;
  * 考核方式表
  * @TableName check_info
  */
-@Schema(description = "返回给前端的考核方式类")
+@Schema(description = "前端提交的考核方式表单")
 @Data
 @EqualsAndHashCode
 public class CheckInfoForm implements Serializable {
     /**
      * 考核方式id
      */
-    @NotBlank()
     private Long id;
 
     /**

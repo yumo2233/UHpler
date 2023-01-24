@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.StudentScoreInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.StudentScoreInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+            <result property="usualScore" column="usual_score" jdbcType="OTHER"/>
+            <result property="finalScore" column="final_score" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,course_id,usual_score,
+        final_score
+    </sql>
+    <select id="selectAllByCourseId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_classinfo.student_score_info
+        where
+        course_id = #{courseId,jdbcType=NUMERIC}
+    </select>
+</mapper>
