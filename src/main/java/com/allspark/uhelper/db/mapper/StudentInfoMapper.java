@@ -18,7 +18,7 @@ public interface StudentInfoMapper extends BaseMapper<StudentInfo> {
 
     List<StudentInfo> selectAllByClassId(@Param("classId") Long... classId);
 
-    List<StudentInfo> listAllByClassIdIn(@Param("classIdList") Long[] classIdList);
+    List<StudentInfo> listAllByClassIdIn(@Param("classIdList") List<Long> classIdList);
 
 }
 

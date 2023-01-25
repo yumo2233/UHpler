@@ -1,5 +1,8 @@
 package com.allspark.uhelper.db.mapper;
+import java.util.Collection;
 import java.util.List;
+
+import net.sf.jsqlparser.statement.replace.Replace;
 import org.apache.ibatis.annotations.Param;
 
 import com.allspark.uhelper.db.pojo.StudentScoreInfo;
@@ -16,6 +19,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface StudentScoreInfoMapper extends BaseMapper<StudentScoreInfo> {
 
     List<StudentScoreInfo> selectAllByCourseId(@Param("courseId") Long courseId);
+
+    int updateBatchByCourseId(List<StudentScoreInfo> list);
+
+    int insertBatch(@Param("studentScoreInfoCollection") List<StudentScoreInfo> studentScoreInfoCollection);
 
 }
 

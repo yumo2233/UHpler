@@ -23,8 +23,8 @@ public class TargetAndCheckInfoForm {
     private String checkName;
 
     @Schema(description = "占同种考核方式的权重")
-    private BigDecimal ratio;
+    private BigDecimal targetRatio;
 
     @Schema(description = "测试次数")
-    private Integer count;
+    private Integer targetCount;
 }

@@ -24,9 +24,9 @@ public class JsonConfig {
     @ConditionalOnMissingBean(ObjectMapper.class)
     public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
-//        SimpleModule simpleModule = new SimpleModule();
+        SimpleModule simpleModule = new SimpleModule();
 //        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
-//        simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);
+////        simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);
 //        objectMapper.registerModule(simpleModule);
         objectMapper.setSerializerFactory(objectMapper.getSerializerFactory()
                 .withSerializerModifier(new MyBeanSerializerModifier()));
