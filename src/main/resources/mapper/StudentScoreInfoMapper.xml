@@ -22,4 +22,21 @@
         where
         course_id = #{courseId,jdbcType=NUMERIC}
     </select>
+    <update id="updateBatchByCourseId" parameterType="list">
+        <foreach collection="list" item="item" separator=";">
+            update `u_classinfo`.student_score_info
+            set `final_score` = #{item.finalScore},
+                `usual_score` = #{item.usualScore}
+            where course_id = #{item.courseId} and `id` = #{item.id}
+        </foreach>
+    </update>
+    <insert id="insertBatch">
+        replace into u_classinfo.student_score_info(id,course_id,usual_score,
+        final_score)
+        values
+        <foreach collection="studentScoreInfoCollection" item="item" separator=",">
+            (#{item.id,jdbcType=NUMERIC},#{item.courseId,jdbcType=NUMERIC},#{item.usualScore},
+            #{item.finalScore})
+        </foreach>
+    </insert>
 </mapper>

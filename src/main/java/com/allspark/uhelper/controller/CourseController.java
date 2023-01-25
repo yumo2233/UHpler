@@ -1,11 +1,7 @@
 package com.allspark.uhelper.controller;
 
-import com.allspark.uhelper.common.form.CourseInfoForm;
-import com.allspark.uhelper.common.form.ListStudentForCourseIdForm;
-import com.allspark.uhelper.common.form.StudentAndScoreForm;
-import com.allspark.uhelper.common.form.StudentAndScoreListForm;
-import com.allspark.uhelper.common.resp.CourseInfoResp;
-import com.allspark.uhelper.common.resp.StudentAndScoreResp;
+import com.allspark.uhelper.common.form.*;
+import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
@@ -18,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,13 +41,32 @@ public class CourseController {
     private GraduateTargetInfoServiceImpl graduateTargetInfoService;
 
     @Operation(summary = "返回所有课程信息")
-    @GetMapping("/listAll")
-    public CommonResp listAll(){
+    @GetMapping("/listAllCourseInfo")
+    public CommonResp listAllCourseInfo(){
         List<CourseInfo> courseInfos = courseInfoService.list();
-        List<CourseInfoResp> courseInfoRespList = courseInfoService.listCourseInfoResp(courseInfos);
         CommonResp resp = new CommonResp<>();
-        resp.setContent(courseInfoRespList);
-        resp.setMessage("返回所有的课程");
+        if (courseInfos==null) {
+            resp.setMessage("当前没有课程");
+        } else {
+            List<CourseInfoResp> courseRespInfoList = courseInfoService.listCourseInfoResp(courseInfos);
+            resp.setContent(courseRespInfoList);
+            resp.setMessage("返回所有的课程信息");
+        }
+        return resp;
+    }
+
+    @Operation(summary = "返回所有课程")
+    @GetMapping("/listAllCourse")
+    public CommonResp listAllCourse(){
+        List<CourseInfo> courseInfos = courseInfoService.list();
+        CommonResp resp = new CommonResp<>();
+        if (courseInfos==null) {
+            resp.setMessage("当前没有课程");
+        } else {
+            List<ListAllCourseResp> courseRespList = courseInfoService.listAllCourseResp(courseInfos);
+            resp.setContent(courseRespList);
+            resp.setMessage("返回所有的课程");
+        }
         return resp;
     }
 
@@ -132,14 +148,67 @@ public class CourseController {
         return resp;
     }
 
-    @Operation(summary = "显示该课程的学生和成绩")
+    @Operation(summary = "修改该课程下的所有学生的平时和期末成绩")
     @PostMapping("/modifyAllStudent")
     public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form){
         CommonResp resp = new CommonResp<>();
-        List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.modifyAllStudent(form);
-        resp.setContent(studentAndScoreRespList);
-        resp.setMessage("修改该课程下的所有学生的平时和期末成绩");
+        boolean flag = courseInfoService.modifyAllStudent(form);
+        if(flag){
+            resp.setMessage("修改成功");
+        }else {
+            resp.setMessage("修改失败");
+            resp.setSuccess(false);
+        }
         return resp;
     }
+
+    @Operation(summary = "显示该课程的平时成绩构成")
+    @PostMapping("/listUsual/{courseId}")
+    public CommonResp listUsual(@PathVariable Long courseId){
+        CommonResp resp = new CommonResp<>();
+        UsualScoreResp usualScoreResp = courseInfoService.listUsual(courseId);
+        resp.setContent(usualScoreResp);
+        resp.setMessage("显示该课程的平时成绩构成");
+        return resp;
+    }
+
+    @Operation(summary = "修改该课程下的平时成绩构成")
+    @PostMapping("/modifyUsual")
+    public CommonResp modifyUsual(@RequestBody UsualScoreForm form){
+        CommonResp resp = new CommonResp<>();
+        boolean flag = courseInfoService.modifyUsual(form);
+        if(flag){
+            resp.setMessage("修改成功");
+        }else {
+            resp.setMessage("修改失败");
+            resp.setSuccess(false);
+        }
+        return resp;
+    }
+
+    @Operation(summary = "显示该课程的期末成绩构成")
+    @PostMapping("/listFinal/{courseId}")
+    public CommonResp listFinal(@PathVariable Long courseId){
+        CommonResp resp = new CommonResp<>();
+        FinalScoreResp finalScoreResp = courseInfoService.listFinal(courseId);
+        resp.setContent(finalScoreResp);
+        resp.setMessage("显示该课程的期末成绩构成");
+        return resp;
+    }
+
+    @Operation(summary = "修改该课程下的期末成绩构成")
+    @PostMapping("/modifyFinal")
+    public CommonResp modifyFinal(@RequestBody FinalScoreForm form){
+        CommonResp resp = new CommonResp<>();
+        boolean flag = courseInfoService.modifyFinal(form);
+        if(flag){
+            resp.setMessage("修改成功");
+        }else {
+            resp.setMessage("修改失败");
+            resp.setSuccess(false);
+        }
+        return resp;
+    }
+
 
 }

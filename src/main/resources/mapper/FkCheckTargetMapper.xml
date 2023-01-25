@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.FkCheckTargetMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.FkCheckTarget">
+            <id property="checkId" column="check_id" jdbcType="BIGINT"/>
+            <id property="targetId" column="target_id" jdbcType="BIGINT"/>
+            <result property="targetRatio" column="target_ratio" jdbcType="DECIMAL"/>
+            <result property="targetCount" column="target_count" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        check_id,target_id,target_ratio,
+        target_count
+    </sql>
+
+    <select id="selectAllByTargetId" resultType="hashmap" parameterType="long">
+        select f.check_id as checkId,f.target_ratio as targetRatio,f.target_count as targetCount,t.name as checkName
+        from u_courseinfo.fk_check_target f left join u_courseinfo.target_info t on f.target_id=t.id
+        where
+        target_id = #{targetId,jdbcType=NUMERIC}
+    </select>
+    <delete id="delByCheckIdAndTargetId">
+        <foreach collection="list" item="item" separator=";">
+            delete
+            from u_courseinfo.fk_check_target
+            where check_id = #{item.checkId,jdbcType=NUMERIC}
+            AND target_id = #{item.targetId,jdbcType=NUMERIC}
+        </foreach>
+    </delete>
+    <insert id="insertBatch">
+        insert into u_courseinfo.fk_check_target(check_id,target_id,target_ratio,
+        target_count)
+        values
+        <foreach collection="fkCheckTargetCollection" item="item" separator=",">
+            (#{item.checkId,jdbcType=NUMERIC},#{item.targetId,jdbcType=NUMERIC},#{item.targetRatio,jdbcType=DECIMAL},
+            #{item.targetCount,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+</mapper>

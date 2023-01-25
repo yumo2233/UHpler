@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.FkTargetFinalMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.FkTargetFinal">
+            <result property="targetId" column="target_id" jdbcType="BIGINT"/>
+            <result property="first" column="first" jdbcType="TINYINT"/>
+            <result property="second" column="second" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        target_id,first,second
+    </sql>
+    <select id="selectAllByTargetId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_courseinfo.fk_target_final
+        where
+        target_id = #{targetId,jdbcType=NUMERIC}
+    </select>
+
+    <insert id="insertBatch">
+        insert into u_courseinfo.fk_target_final(target_id,first,second)
+        values
+        <foreach collection="fkTargetFinalCollection" item="item" separator=",">
+            (#{item.targetId,jdbcType=NUMERIC},#{item.first,jdbcType=NUMERIC},#{item.second})
+        </foreach>
+    </insert>
+    <delete id="delByTargetId">
+        <foreach collection="list" item="item" separator=";">
+            delete
+            from u_courseinfo.fk_target_final
+            where target_id = #{item.targetId,jdbcType=NUMERIC}
+        </foreach>
+    </delete>
+</mapper>

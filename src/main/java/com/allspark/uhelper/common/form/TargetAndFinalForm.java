@@ -3,6 +3,7 @@ package com.allspark.uhelper.common.form;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,10 +16,13 @@ import java.util.List;
 @Data
 @Schema(description = "单个课程目标和期末考试对应题号的关系表单")
 public class TargetAndFinalForm {
+    @Schema(description = "对应的课程目标id")
+    private Long targetId;
 
-    @Schema(description = "大题题号列表")
-    private List<List<Integer>> first;
+    @Schema(description = "对应的课程目标名称")
+    private String targetName;
 
-    @Schema(description = "小题题号列表")
-    private List<Integer> second;
+    @Schema(description = "题号列表")
+    private HashMap<Integer,Integer[]> first;
+
 }
