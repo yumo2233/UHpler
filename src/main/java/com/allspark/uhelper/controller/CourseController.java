@@ -1,5 +1,6 @@
 package com.allspark.uhelper.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.allspark.uhelper.common.form.*;
 import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
@@ -27,9 +28,10 @@ import java.util.List;
  * @Date 2023/1/17 2:17
  * @Version 1.0
  **/
-@Tag(name = "CourseController")
+@Tag(name = "CourseController",description = "课程接口")
 @RestController
 @RequestMapping("/course")
+@SaCheckLogin
 public class CourseController {
 
     @Autowired

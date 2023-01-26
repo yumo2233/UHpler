@@ -8,20 +8,21 @@ package com.allspark.uhelper.controller;
  * @Version 1.0
  **/
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.hutool.json.JSONObject;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.exception.BusinessException;
 import com.allspark.uhelper.common.util.CommonResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 统一异常处理、数据预处理等
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class ControllerExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
@@ -70,5 +71,15 @@ public class ControllerExceptionHandler {
         commonResp.setMessage("系统出现异常，请联系管理员！");
         return commonResp;
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(NotLoginException.class)
+    public String unLoginHandler(Exception e) {
+        JSONObject json = new JSONObject();
+        json.set("error", e.getMessage());
+        return json.toString();
+    }
+
 }
 
