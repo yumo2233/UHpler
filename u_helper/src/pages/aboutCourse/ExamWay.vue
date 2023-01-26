@@ -37,13 +37,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { GlobalDataProps } from '@/store'
 import AddExamway, { Aemitter } from '@/components/aboutCourse/AddExamway.vue'
 import axios from 'axios'
 import { apis } from '@/common/apis'
+console.log(5)
 
 export default defineComponent({
   props: {
@@ -63,24 +64,30 @@ export default defineComponent({
     const addEaxmWay = () => {
       info.value.checkList.push({
         id: Date.now(),
-        courseId: Date.now() + 1,
+        courseId: Date.now(),
         ratio: 0,
         name: ''
       })
     }
     const backOrSave = ref(0)
-    const usual = ref(info.value.usualRatio || 0)
-    const final = ref(info.value.finalRatio || 0)
+    const usual = computed({
+      get: () => info.value.usualRatio,
+      set: (value) => {
+        store.commit('modeUsual', value)
+      }
+    })
+    const final = computed({
+      get: () => info.value.finalRatio,
+      set: (value) => {
+        store.commit('modelFinal', value)
+      }
+    })
     const message = ref('')
     const centerDialogVisible = ref(false)
     const back = () => {
       centerDialogVisible.value = true
       message.value = '是否返回课程列表页，返回将不会保存已修改信息'
     }
-    watch([usual, final], () => {
-      info.value.finalRatio = final.value
-      info.value.usualRatio = usual.value
-    })
     const submitChange = () => {
       if (!store.state.isAdd) {
         axios.post(apis.modfiy, JSON.stringify(info.value)).then(res => {
@@ -104,20 +111,17 @@ export default defineComponent({
         let sum = 0
         for (let i = 0, len = info.value.checkList.length; i < len; i++) {
           console.log(len)
-          sum += info.value.checkList[i].ratio
+          sum += +info.value.checkList[i].ratio
         }
-        console.log(sum)
         if (sum !== 100) {
           console.log('sum!==100')
-          if (!confirm('当前所有考核方式比重，相加不等于1，是否继续保存')) {
+          if (!confirm('当前所有考核方式比重相加不等于1,是否继续保存')) {
             console.log('quit')
             return false
           } else {
-            console.log('save')
             submitChange()
           }
         } else {
-          console.log('sum = 100')
           submitChange()
         }
       }
@@ -162,6 +166,7 @@ export default defineComponent({
     }
   }
 })
+console.log(6)
 </script>
 
 <style scoped>

@@ -17,7 +17,7 @@
       <add-target-info :index="index+1" :info="o"></add-target-info>
     </template>
     <div>
-      <el-button type="primary" @click="addEaxmWay">增加课程目标</el-button>
+      <el-button type="primary" @click="addTargetWay">增加课程目标</el-button>
       <el-button @click="handleBack">返回</el-button>
       <el-button type="primary" @click="handleSave5">保存</el-button>
     </div>
@@ -44,7 +44,7 @@ export default defineComponent({
     const message = ref('')
     const centerDialogVisible = ref(false)
     const backOrSave = ref(0)
-    const addEaxmWay = () => {
+    const addTargetWay = () => {
       info.value.targetList.push({
         id: Date.now(),
         courseId: Date.now(),
@@ -89,12 +89,7 @@ export default defineComponent({
       if (len < 2) {
         alert('请至少保留一个课程目标信息！')
       } else {
-        for (let i = 0; i < len; i++) {
-          if (info.value.targetList[i].id === id) {
-            info.value.targetList.splice(i, 1)
-            break
-          }
-        }
+        store.commit('removeThisWay', id)
       }
     })
     emitter.on('on-target-change', ({ index, value }) => {
@@ -106,18 +101,11 @@ export default defineComponent({
       }
     })
     onBeforeMount(() => {
-      axios.get(apis.gradlist).then(res => {
-        if (res.status !== 200) {
-          alert('获取毕业要求列表失败')
-          router.push('/')
-        } else {
-          store.commit('addGraduationList', res.data.content)
-        }
-      })
+      store.dispatch('addGraduationList')
     })
     return {
       centerDialogVisible,
-      addEaxmWay,
+      addTargetWay,
       handleBack,
       handleSave5,
       handleSave6,

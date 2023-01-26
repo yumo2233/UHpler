@@ -79,12 +79,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onBeforeMount, computed, Ref, watch } from 'vue'
+import { defineComponent, ref, onBeforeMount, computed, Ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { apis } from '@/common/apis'
+console.log(1)
 export default defineComponent({
   name: 'BasicInfo',
   props: {
@@ -114,19 +115,70 @@ export default defineComponent({
     }
     const cascaderRef: Ref = ref(null)
     // #region input
-    const academy = ref(num || 1)
-    const unit = ref(info.value.unit || '')
-    const teacher = ref(info.value.teacher || '')
-    const name = ref(info.value.name || '')
+    const academy = ref(num)
+    const unit = computed({
+      get: () => info.value.unit,
+      set: (value) => {
+        store.commit('modeUnit', value)
+      }
+    })
+    const teacher = computed({
+      get: () => info.value.teacher,
+      set: (value) => {
+        store.commit('modeTeacher', value)
+      }
+    })
+    const name = computed({
+      get: () => info.value.name,
+      set: (value) => {
+        store.commit('modeName', value)
+      }
+    })
+    const id = computed({
+      get: () => info.value.id,
+      set: (value) => {
+        store.commit('modeId', value)
+      }
+    })
+    const allPeriod = computed({
+      get: () => info.value.allPeriod,
+      set: (value) => {
+        store.commit('modeAllP', value)
+      }
+    })
+    const theoryPeriod = computed({
+      get: () => info.value.theoryPeriod,
+      set: (value) => {
+        store.commit('modeTheory', value)
+      }
+    })
+    const runPeriod = computed({
+      get: () => info.value.runPeriod,
+      set: (value) => {
+        store.commit('modeRunP', value)
+      }
+    })
+    const score = computed({
+      get: () => info.value.score,
+      set: (value) => {
+        store.commit('modeScore', value)
+      }
+    })
+    const studentNum = computed({
+      get: () => info.value.studentNum,
+      set: (value) => {
+        store.commit('modeStuNum', value)
+      }
+    })
+    const checkObj = computed({
+      get: () => info.value.checkList,
+      set: (value) => {
+        store.commit('modeObj', value)
+      }
+    })
     const courseKind = ref(11)
-    const id = ref(info.value.number || '')
-    const allPeriod = ref(info.value.allPeriod || 0)
-    const theoryPeriod = ref(info.value.theoryPeriod || 0)
-    const runPeriod = ref(info.value.runPeriod || 0)
-    const score = ref(info.value.score || 0)
-    const studentNum = ref(info.value.studentNum || 0)
+    // #endregion
     const message = ref('')
-    const checkObj = ref(info.value.classList || null)
     const centerDialogVisible = ref(false)
     const backOrSave = ref(0)
     onBeforeMount(() => {
@@ -137,17 +189,6 @@ export default defineComponent({
       multiple: true,
       emitPath: true
     }
-    watch([unit, teacher, name, id, allPeriod, theoryPeriod, runPeriod, score, studentNum, message], () => {
-      info.value.unit = unit.value
-      info.value.teacher = teacher.value
-      info.value.name = name.value
-      info.value.id = +id.value
-      info.value.allPeriod = allPeriod.value
-      info.value.theoryPeriod = theoryPeriod.value
-      info.value.runPeriod = runPeriod.value
-      info.value.score = score.value
-      info.value.studentNum = studentNum.value
-    })
     const updateValue = () => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -168,7 +209,6 @@ export default defineComponent({
         label: 'Option2'
       }
     ]
-    // #endregion
     const handleSave1 = () => {
       // 身份验证
       // eslint-disable-next-line no-constant-condition
@@ -182,6 +222,7 @@ export default defineComponent({
       if (backOrSave.value) {
         backOrSave.value = 0
         if (!store.state.isAdd) {
+          console.log(info.value)
           axios.post(apis.modfiy, JSON.stringify(info.value)).then(res => {
             console.log('props.info exits modefied', res.status)
           })
@@ -230,6 +271,7 @@ export default defineComponent({
     }
   }
 })
+console.log(2)
 </script>
 
 <style scoped>

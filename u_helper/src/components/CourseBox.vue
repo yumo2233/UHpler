@@ -1,17 +1,31 @@
 <template>
   <div class="container">
-    <div v-if="isFirst">
-      <span class="plus">+</span> <br>
-      <span class="addCourse">新增课程</span>
-    </div>
+    <template v-if="isFirst">
+        <div style="width: 100%;height: 100%;">
+        <span class="plus">+</span> <br>
+        <span class="addCourse">新增课程</span>
+      </div>
+    </template>
     <template v-else>
       <div style="width: 100%;height: 100%;">
         <div class="left_color_box"></div>
-        <span class="academy">{{ courses && courses.unit }}</span>
+        <span class="academy">{{ courses && courses.college }}</span>
         <span v-if="isAuthor"><el-icon><Edit /></el-icon></span>
         <span v-else><el-icon><View /></el-icon></span>
         <span class="course">{{ courses && `${courses.name} (${courses.id})` }}</span>
         <span class="teacher">{{ courses && courses.teacher }}</span>
+        <span>
+          <el-dropdown v-if="isAuthor" class="more">
+            <span class="el-dropdown-link">
+              <el-icon><MoreFilled /></el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="goCopy">copy</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </span>
       </div>
     </template>
   </div>
@@ -19,7 +33,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue'
-import { ICourses } from '@/store/index'
+import { ICourses, GlobalDataProps } from '@/store/index'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'CourseBox',
   props: {
@@ -31,10 +47,17 @@ export default defineComponent({
       type: Object as PropType<ICourses>
     }
   },
-  setup () {
+  setup (props) {
+    const store = useStore<GlobalDataProps>()
+    const router = useRouter()
     const isAuthor = ref(true)
+    const goCopy = () => {
+      store.commit('addOne')
+      router.push({ path: '/course', query: { id: props.courses?.id } })
+    }
     return {
-      isAuthor
+      isAuthor,
+      goCopy
     }
   }
 })
@@ -104,5 +127,16 @@ i {
   position: absolute;
   top: 20px;
   right: 25px;
+}
+.more {
+  position: absolute;
+  bottom: 60px;
+  right: 0px;
+}
+.example-showcase .el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
 }
 </style>

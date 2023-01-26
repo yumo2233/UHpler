@@ -1,7 +1,9 @@
 export const apis = {
-  course: '/course/listAll',
+  course: '/course/listAllCourse',
   modfiy: '/course/modifyOne',
   addone: '/course/addOne',
   classlist: '/course/listAllClass',
-  gradlist: '/course/listAllGraduate'
+  gradlist: '/course/listAllGraduate',
+  getOne: '/course/listOne',
+  usualGrade: '/course/listAllStudent'
 }

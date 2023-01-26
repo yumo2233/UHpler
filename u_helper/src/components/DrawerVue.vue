@@ -23,7 +23,8 @@ import { ElMessageBox } from 'element-plus'
 type NoReturn = () => void
 type Event = {
   'on-drawer-open': NoReturn,
-  'on-drawer-close': NoReturn
+  'on-drawer-close': NoReturn,
+  'on-update-usual-grade': object
 }
 export const demitter = mitt<Event>()
 export default defineComponent({
@@ -47,5 +48,8 @@ function confirmClick () {
 }
 demitter.on('on-drawer-open', () => {
   drawer.value = true
+})
+demitter.on('on-update-usual-grade', (row: object) => {
+  console.log(row)
 })
 </script>

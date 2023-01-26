@@ -8,6 +8,7 @@ interface checkArray {
   ratio: number,
   name: string
 }
+type checkName = 'id' | 'courseId' | 'ratio' | 'name'
 interface targetArray {
   id: number,
   courseId: number,
@@ -16,6 +17,7 @@ interface targetArray {
   name: string,
   graduateId: number
 }
+type targetName = 'id' | 'courseId' | 'content' | 'number' | 'name' | 'graduateId'
 export interface ICourses {
   name: string
   teacher: string
@@ -42,27 +44,39 @@ export interface ICourses {
   targetList: targetArray[]
 }
 
-interface IAccount {
-  isFirst?: boolean
-  userAvator?: string
-  userId: number
+interface stuProps {
+  name: string
+  id: number
+  classId: number
+  className: string
+  number: number
+  index: number
+  usualScore: number[]
+  finalScore: number[]
 }
-interface ICurrentUser {
-  id: number;
-  userName: string;
-  userId: number;
-  Tcourses: ICourses[];
-  avator: string;
-}
+
+// interface IAccount {
+//   isFirst?: boolean
+//   userAvator?: string
+//   userId: number
+// }
+// interface ICurrentUser {
+//   id: number;
+//   userName: string;
+//   userId: number;
+//   Tcourses: ICourses[];
+//   avator: string;
+// }
 export interface GlobalDataProps{
   isLogin: boolean
-  user: ICurrentUser
+  // user: ICurrentUser
   token?: string
   courses: ICourses[]
-  accountInfo: IAccount
+  // accountInfo: IAccount
   classList: []
   currentCourse: ICourses
   graduationList: []
+  stuGrade: stuProps[]
   isAdd: boolean
 }
 
@@ -71,8 +85,24 @@ const getAndCommit = async (url: string, mutationName: string, commit: Commit) =
   commit(mutationName, data)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const checkAndCommit = (state: { token?: string; isLogin?: boolean; courses?: never[]; classList?: never[]; currentCourse: any; graduationList?: never[]; isAdd?: boolean }, name: checkName, id: number, value: string | number) => {
+  const tmp = state.currentCourse.checkList.find((item: checkArray) => (item as checkArray).id === id)
+  if (tmp) {
+    (tmp[name] as number | string) = value
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const examAndCommit = (state: { token?: string; isLogin?: boolean; courses?: never[]; classList?: never[]; currentCourse: any; graduationList?: never[]; isAdd?: boolean }, name: targetName, id: number, value: string | number) => {
+  const tmp = state.currentCourse.targetList.find((item: targetArray) => (item as targetArray).id === id)
+  if (tmp) {
+    (tmp[name] as number | string) = value
+  }
+}
 export default createStore({
   state: {
+    // user: {},
     token: localStorage.getItem('token') || '',
     isLogin: false,
     courses: [],
@@ -103,24 +133,76 @@ export default createStore({
       targetList: []
     },
     graduationList: [],
+    stuGrade: [],
     isAdd: false
   },
   getters: {
   },
   mutations: {
+    // #region
+    modeUnit (state, rawData) {
+      state.currentCourse.unit = rawData
+    },
+    modeTeacher (state, rawData) {
+      state.currentCourse.teacher = rawData
+    },
+    modeName (state, rawData) {
+      state.currentCourse.name = rawData
+    },
+    modeId (state, rawData) {
+      state.currentCourse.id = rawData
+    },
+    modeAllP (state, rawData) {
+      state.currentCourse.allPeriod = rawData
+    },
+    modeTheory (state, rawData) {
+      state.currentCourse.theoryPeriod = rawData
+    },
+    modeRunP (state, rawData) {
+      state.currentCourse.runPeriod = rawData
+    },
+    modeScore (state, rawData) {
+      state.currentCourse.score = rawData
+    },
+    modeStuNum (state, rawData) {
+      state.currentCourse.studentNum = rawData
+    },
+    modeObj (state, rawData) {
+      state.currentCourse.checkList = rawData
+    },
+    modeUsual (state, rawData) {
+      state.currentCourse.usualRatio = rawData
+    },
+    modelFinal (state, rawData) {
+      state.currentCourse.finalRatio = rawData
+    },
+    updateName (state, rawData) {
+      checkAndCommit(state, 'name', rawData.index, rawData.value)
+    },
+    updateRatio (state, rawData) {
+      checkAndCommit(state, 'ratio', rawData.index, rawData.value)
+    },
+    updateExName (state, rawData) {
+      examAndCommit(state, 'name', rawData.index, rawData.value)
+    },
+    updateExId (state, rawData) {
+      examAndCommit(state, 'id', rawData.index, rawData.value)
+    },
+    updateExTar (state, rawData) {
+      examAndCommit(state, 'content', rawData.index, rawData.value)
+    },
+    updateExGra (state, rawData) {
+      examAndCommit(state, 'graduateId', rawData.index, rawData.value)
+    },
+    // #endregion
     getCourse (state, rawData) {
-      // if (rawData.success) {
-      //   state.courses = rawData.content
-      // } else {
-      //   alert('获取课程信息失败，请刷新重试')
-      // }
       state.courses = rawData.content
     },
     getClassList (state, rawData) {
       state.classList = rawData.content
     },
     addCurrentCourse (state, rawData) {
-      state.currentCourse = rawData
+      state.currentCourse = rawData.content
     },
     clearCurrentCourse (state) {
       state.currentCourse = {
@@ -150,13 +232,25 @@ export default createStore({
       }
     },
     addGraduationList (state, rawData) {
-      state.graduationList = rawData
+      state.graduationList = rawData.content
     },
     addOne (state) {
       state.isAdd = true
     },
     noAddOne (state) {
       state.isAdd = false
+    },
+    getUsualGrade (state, rawData) {
+      state.stuGrade = rawData.content
+    },
+    removeThisWay (state, rawData) {
+      const len = state.currentCourse.targetList.length
+      for (let i = 0; i < len; i++) {
+        if ((state.currentCourse.targetList[i] as targetArray).id === rawData) {
+          state.currentCourse.targetList.splice(i, 1)
+          break
+        }
+      }
     }
   },
   actions: {
@@ -165,6 +259,15 @@ export default createStore({
     },
     getClassList ({ commit }) {
       getAndCommit(apis.classlist, 'getClassList', commit)
+    },
+    addCurrentCourse ({ commit }, courseId) {
+      getAndCommit(`${apis.getOne}/${courseId}`, 'addCurrentCourse', commit)
+    },
+    addGraduationList ({ commit }) {
+      getAndCommit(apis.gradlist, 'addGraduationList', commit)
+    },
+    getUsualGrade ({ commit }, id) {
+      getAndCommit(`${apis.usualGrade}/${id}`, 'getUsualGrade', commit)
     }
   }
 })

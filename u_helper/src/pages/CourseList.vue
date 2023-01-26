@@ -1,10 +1,10 @@
 <template>
   <el-row :gutter="20" justify="start">
-    <router-link to="/course">
-      <el-col :span="6">
+    <el-col :span="6">
+      <router-link to="/course">
         <course-box @click="addOne" :is-first="true"></course-box>
-      </el-col>
-    </router-link>
+      </router-link>
+    </el-col>
     <el-col :span="6" v-for="o in courseList" :key="o.id" class="autoMation">
       <router-link :to="{
         path: '/course',
@@ -32,6 +32,7 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     onBeforeMount(() => {
       store.dispatch('getCourse')
+      store.commit('clearCurrentCourse')
     })
     const courseList = computed(() => store.state.courses)
     const addOne = () => {

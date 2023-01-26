@@ -10,7 +10,7 @@
       <target-info :isAuthor="false"></target-info>
     </el-tab-pane>
     <el-tab-pane label="平时成绩管理" name="fourth">
-      <grade-manage :isAuthor="false"></grade-manage>
+      <usual-grade :is-author="false"></usual-grade>
     </el-tab-pane>
     <el-tab-pane label="期末成绩管理" name="fifth">期末成绩管理</el-tab-pane>
     <el-tab-pane label="课程报告(个人)" name="sixth">课程报告(个人)</el-tab-pane>
@@ -23,10 +23,10 @@ import type { TabsPaneContext } from 'element-plus'
 import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import store, { GlobalDataProps } from '@/store'
+import { GlobalDataProps } from '@/store'
 import ExamWay from './aboutCourse/ExamWay.vue'
 import TargetInfo from './aboutCourse/TargetInfo.vue'
-import GradeManage from './aboutCourse/GradeManage.vue'
+import UsualGrade from './aboutCourse/UsualGrade.vue'
 import BasicInfo from './aboutCourse/BasicInfo.vue'
 export default defineComponent({
   name: 'CourseManage',
@@ -34,7 +34,7 @@ export default defineComponent({
     BasicInfo,
     ExamWay,
     TargetInfo,
-    GradeManage
+    UsualGrade
   }
 })
 </script>
@@ -44,22 +44,15 @@ const route = useRoute()
 const activeName = ref('first')
 // const isAuthor = ref(false)
 const courseId = route.query.id
-console.log(courseId)
+const store = useStore<GlobalDataProps>()
 if (courseId) {
-  // store.dispatch('getCourse').then(res => { // 此处供修改信息时刷新页面所用
-  const store = useStore<GlobalDataProps>()
-  store.commit('addCurrentCourse', store.state.courses.find(item => item.id === +courseId))
-  // })
-  // isAuthor.value = courseInfo?.userId === store.state.user.userId
-} else {
-  if (!store.state.isAdd) {
-    store.commit('clearCurrentCourse')
-  }
+  store.dispatch('addCurrentCourse', courseId)
 }
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
 </script>
+
 <style scoped>
 .demo-tabs > .el-tabs__content {
   padding: 32px;

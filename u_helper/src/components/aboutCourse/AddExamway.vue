@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import mitt from 'mitt'
@@ -34,38 +34,23 @@ export default defineComponent({
   name: 'AddExamway',
   setup (props) {
     const store = useStore<GlobalDataProps>()
-    const examName = ref(props.info?.name || '')
-    const Ratio = ref(props.info?.ratio || 0)
+    const checkList = computed(() => store.state.currentCourse.checkList)
+    const examName = computed({
+      get: () => checkList.value.find(item => item.id === props.info?.id)?.name,
+      set: (value) => {
+        store.commit('updateName', { value: value, index: props.info?.id })
+      }
+    })
+    const Ratio = computed({
+      get: () => checkList.value.find(item => item.id === props.info?.id)?.ratio,
+      set: (value) => {
+        store.commit('updateRatio', { value, index: props.info?.id })
+      }
+    })
     const removeThisWay = () => {
       Aemitter.emit('on-item-delete', props.info?.id)
     }
-    watch([examName, Ratio], () => {
-      const index = props.index || -1
-      if (index > 0) {
-        store.state.currentCourse.checkList[index - 1].name = examName.value
-      } else {
-        console.log('保存新增考核方式名称失败')
-      }
-    })
-    // const updateName = () => {
-    //   const index = props.index || -1
-    //   if (index > 0) {
-    //     store.state.currentCourse.checkList[index - 1].name = examName.value
-    //   } else {
-    //     console.log('保存新增考核方式名称失败')
-    //   }
-    // }
-    // const updateRatio = () => {
-    //   const index = props.index || -1
-    //   if (index > 0) {
-    //     store.state.currentCourse.checkList[index - 1].ratio = +Ratio.value
-    //   } else {
-    //     console.log('保存新增考核方式比重失败')
-    //   }
-    // }
     return {
-      // updateRatio,
-      // updateName,
       examName,
       removeThisWay,
       Ratio

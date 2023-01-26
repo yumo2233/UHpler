@@ -16,17 +16,18 @@
     <span>
       <i>* </i><span>关联毕业要求：</span>
       <span class="right">
-        <el-cascader v-model="value" :options="options" :show-all-levels="false" style="width: 343px;bottom: 16px;" clearable/>
+        <el-cascader v-model="checkObj" ref="casRef" :options="options" :props="customProps" :show-all-levels="false" style="width: 343px;bottom: 16px;" clearable/>
       </span>
     </span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue'
+import { defineComponent, computed, Ref, ref } from 'vue'
 import mitt from 'mitt'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
+
 type Remove = {
   'on-target-remove': number,
   'on-target-change': {
@@ -43,59 +44,59 @@ export default defineComponent({
   name: 'AddTargetInfo',
   setup (props) {
     const store = useStore<GlobalDataProps>()
-    const examName = ref(props.info?.name || '')
-    const id = ref(props.info?.number || '')
-    const target = ref(props.info?.content || '')
-    const info = computed(() => store.state.currentCourse)
+    const targetList = computed(() => store.state.currentCourse.targetList)
+    const casRef: Ref = ref(null)
+    const examName = computed({
+      get: () => targetList.value.find(item => item.id === props.info?.id)?.name,
+      set: (value) => {
+        store.commit('updateExName', { value, index: props.info?.id })
+      }
+    })
+    const id = computed({
+      get: () => targetList.value.find(item => item.id === props.info?.id)?.id,
+      set: (value) => {
+        store.commit('updateExId', { value, index: props.info?.id })
+      }
+    })
+    const target = computed({
+      get: () => targetList.value.find(item => item.id === props.info?.id)?.content,
+      set: (value) => {
+        store.commit('updateExTar', { value, index: props.info?.id })
+      }
+    })
+    const checkObj = computed({
+      get: () => targetList.value.find(item => item.id === props.info?.id)?.graduateId,
+      set: (value) => {
+        store.commit('updateExGra', { value, index: props.info?.id })
+      }
+    })
+    const customProps = {
+      multiple: true,
+      emitPath: true
+    }
+    // const updateVal = () => {
+    //   try {
+    //     const value = (casRef.value?.getCheckedNodes(true) as []).map((ele: any) => ele.val)
+    //     console.log(value)
+    //   } catch (err) {
+    //     alert('error')
+    //   }
+    // }
+    // const info = computed(() => store.state.currentCourse)
     const removeThisWay = () => {
       emitter.emit('on-target-remove', props.info?.id)
     }
-    const value = ref(props.info?.graduateId || '')
+    // const value = ref(props.info?.graduateId || '')
     const options = computed(() => store.state.graduationList)
-    watch([examName, id, target, value], () => {
-      const index = props.index || -1
-      if (index > 0) {
-        info.value.targetList[index - 1].name = examName.value
-        info.value.targetList[index - 1].number = id.value
-        info.value.targetList[index - 1].content = target.value
-        info.value.targetList[index - 1].graduateId = value.value[1]
-      }
-    })
-    // const updateName = () => {
-    //   if (index > 0) {
-    //     store.state.currentCourse.targetList[index - 1].name = examName.value
-    //   } else {
-    //     console.log('保存新增考核方式名称失败')
-    //   }
-    // }
-    // const updateId = () => {
-    //   if (index > 0) {
-    //     store.state.currentCourse.targetList[index - 1].number = id.value
-    //   } else {
-    //     console.log('保存新增考核方式名称失败')
-    //   }
-    // }
-    // const updateContent = () => {
-    //   if (index > 0) {
-    //     store.state.currentCourse.targetList[index - 1].content = target.value
-    //   } else {
-    //     console.log('保存新增考核方式名称失败')
-    //   }
-    // }
-    // const changeValue = () => {
-    //   if (index > 0) {
-    //     store.state.currentCourse.targetList[index - 1].graduateId = value.value
-    //   } else {
-    //     console.log('保存新增考核方式名称失败')
-    //   }
-    // }
     return {
       examName,
       removeThisWay,
       options,
-      value,
       id,
-      target
+      target,
+      casRef,
+      checkObj,
+      customProps
       // updateName,
       // updateId,
       // updateContent,
@@ -103,6 +104,7 @@ export default defineComponent({
     }
   }
 })
+console.log(11)
 </script>
 
 <style scoped>
