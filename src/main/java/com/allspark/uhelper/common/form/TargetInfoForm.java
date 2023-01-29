@@ -25,7 +25,7 @@ public class TargetInfoForm implements Serializable {
     private Long id;
 
     /**
-     * 对应的课程
+     * 课程id
      */
     private Long courseId;
 
