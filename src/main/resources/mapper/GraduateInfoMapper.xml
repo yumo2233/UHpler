@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allspark.uhelper.db.mapper.GraduateInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.GraduateInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="college" column="college" jdbcType="INTEGER"/>
+            <result property="grade" column="grade" jdbcType="INTEGER"/>
+            <result property="professional" column="professional" jdbcType="VARCHAR"/>
+            <result property="graduateCount" column="graduate_count" jdbcType="INTEGER"/>
+            <result property="graduateTargetCount" column="graduate_target_count" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,college,grade,
+        professional,graduate_count,graduate_target_count,
+        name,user_id
+    </sql>
+
+    <select id="selectNameById" resultType="string">
+        select name
+        from u_graduateinfo.graduate_info
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
+
+
+    <insert id="insertStudent">
+        insert into u_classinfo.student_info(id,index,name,number,class_id)
+        values
+        <foreach collection="studentInfoCollection" item="item" separator=",">
+            (#{item.id,jdbcType=NUMERIC},#{item.index,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},
+            #{item.number,jdbcType=INTEGER},#{item.class_id,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+</mapper>
