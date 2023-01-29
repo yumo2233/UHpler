@@ -40,4 +40,9 @@
             #{item.targetCount,jdbcType=NUMERIC})
         </foreach>
     </insert>
+    <select id="selectCheckIdByTargetId" resultType="long">
+        select check_id
+        from u_courseinfo.fk_check_target
+        where target_id = #{targetId,jdbcType=NUMERIC}
+    </select>
 </mapper>

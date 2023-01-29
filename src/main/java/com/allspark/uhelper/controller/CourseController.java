@@ -141,30 +141,40 @@ public class CourseController {
         return resp;
     }
 
-    @Operation(summary = "显示该课程的学生和成绩")
-    @GetMapping("/listAllStudent/{courseId}")
-    public CommonResp listAllStudent(@PathVariable  Long courseId){
-        CommonResp resp = new CommonResp<>();
+//    @Operation(summary = "显示该课程的学生和成绩")
+//    @GetMapping("/listAllStudent/{courseId}")
+//    public CommonResp listAllStudent(@PathVariable  Long courseId){
+//        CommonResp resp = new CommonResp<>();
+//
+//        List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.listAllStudent(courseId);
+//        resp.setContent(studentAndScoreRespList);
+//        resp.setMessage("显示该课程下的所有学生的平时和期末成绩");
+//        return resp;
+//    }
 
-        List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.listAllStudent(courseId);
-        resp.setContent(studentAndScoreRespList);
-        resp.setMessage("显示该课程下的所有学生的平时和期末成绩");
+    @Operation(summary = "显示该课程的学生和平时成绩")
+    @GetMapping("/listAllStudentUsual/{courseId}")
+    public CommonResp listAllStudentUsual(@PathVariable  Long courseId){
+        CommonResp resp = new CommonResp<>();
+        List<StudentUsualScoreResp> StudentUsualScoreRespList = courseInfoService.listAllStudentUsualScore(courseId);
+        resp.setContent(StudentUsualScoreRespList);
+        resp.setMessage("显示该课程下的所有学生的平时成绩");
         return resp;
     }
 
-    @Operation(summary = "修改该课程下的所有学生的平时和期末成绩")
-    @PostMapping("/modifyAllStudent")
-    public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form){
-        CommonResp resp = new CommonResp<>();
-        boolean flag = courseInfoService.modifyAllStudent(form);
-        if(flag){
-            resp.setMessage("修改成功");
-        }else {
-            resp.setMessage("修改失败");
-            resp.setSuccess(false);
-        }
-        return resp;
-    }
+//    @Operation(summary = "修改该课程下的所有学生的平时和期末成绩")
+//    @PostMapping("/modifyAllStudent")
+//    public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form){
+//        CommonResp resp = new CommonResp<>();
+//        boolean flag = courseInfoService.modifyAllStudent(form);
+//        if(flag){
+//            resp.setMessage("修改成功");
+//        }else {
+//            resp.setMessage("修改失败");
+//            resp.setSuccess(false);
+//        }
+//        return resp;
+//    }
 
     @Operation(summary = "显示该课程的平时成绩构成")
     @GetMapping("/listUsual/{courseId}")
