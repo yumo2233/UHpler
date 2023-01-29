@@ -28,6 +28,11 @@
         where id = #{id,jdbcType=NUMERIC}
     </select>
 
+    <select id="selectCollegeAndGrade" resultType="com.allspark.uhelper.common.form.Class_info">
+        select *
+        from u_classinfo.class_info
+    </select>
+
 
     <insert id="insertStudent">
         insert into u_classinfo.student_info(id,index,name,number,class_id)
@@ -37,4 +42,6 @@
             #{number,jdbcType=INTEGER},#{class_id,jdbcType=NUMERIC})
         </foreach>
     </insert>
+
+
 </mapper>

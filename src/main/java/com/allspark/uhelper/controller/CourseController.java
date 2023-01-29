@@ -34,7 +34,7 @@ import java.util.Map;
 @Tag(name = "CourseController",description = "课程接口")
 @RestController
 @RequestMapping("/course")
-@SaCheckLogin
+//@SaCheckLogin
 public class CourseController {
 
     @Autowired
@@ -51,8 +51,7 @@ public class CourseController {
 
     @Operation(summary = "返回所有课程信息")
 
-    @GetMapping("/listAll")
-    public CommonResp listAll() {
+
 
     @GetMapping("/listAllCourseInfo")
     public CommonResp listAllCourseInfo(){
@@ -178,9 +177,19 @@ public class CourseController {
     }
 
 
+    @Operation(summary = "返回所有学院和专业")
+    @GetMapping("/CollegeAndGrade")
+    public CommonResp selectCollegeAndGrade() {
+        CommonResp resp = new CommonResp();
+        HashMap map = graduateInfoService.selectCollegeAndGrade();
+        resp.setContent(map);
+        return resp;
+    }
+
+
     @Operation(summary = "显示该课程的学生和成绩")
     @GetMapping("/listAllStudent/{courseId}")
-    public CommonResp listAllStudent(@PathVariable  Long courseId){
+    public CommonResp listAllStudent(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
 
         List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.listAllStudent(courseId);

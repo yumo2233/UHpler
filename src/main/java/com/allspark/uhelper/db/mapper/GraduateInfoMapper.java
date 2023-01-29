@@ -2,6 +2,7 @@ package com.allspark.uhelper.db.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.allspark.uhelper.common.form.Class_info;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,7 +18,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @DS("u_graduateinfo")
 public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
 
-    String selectNameById(@Param("id") Long id);
+    public String selectNameById(@Param("id") Long id);
+
+    public Class_info selectCollegeAndGrade();
 
     public void insertStudent(@Param("studentInfoCollection") Map param);
 
