@@ -41,4 +41,14 @@
             #{item.name,jdbcType=VARCHAR})
         </foreach>
     </insert>
+    <select id="selectCountByCourseId" resultType="long">
+        select count(1)
+        from u_courseinfo.check_info
+        where course_id=#{courseId};
+    </select>
+    <select id="selectRatioById" resultType="decimal">
+        select ratio
+        from u_courseinfo.check_info
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
 </mapper>

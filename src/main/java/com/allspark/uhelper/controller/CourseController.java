@@ -12,11 +12,19 @@ import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +39,7 @@ import java.util.List;
 @Tag(name = "CourseController",description = "课程接口")
 @RestController
 @RequestMapping("/course")
-@SaCheckLogin
+//@SaCheckLogin
 public class CourseController {
 
     @Autowired
@@ -212,6 +220,20 @@ public class CourseController {
             resp.setSuccess(false);
         }
         return resp;
+    }
+
+    @Operation(summary = "下载平时成绩表格")
+    @GetMapping("/downloadUsual/{courseId}")
+    public ResponseEntity<InputStreamResource> downloadUsual(@PathVariable Long courseId) throws IOException {
+        boolean flag = courseInfoService.downLoadUsual(courseId);
+        FileSystemResource fileSystemResource=new FileSystemResource("D:\\uhelperTest\\"+courseId+".xlsx");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName()+".xlsx").build());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(fileSystemResource.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(fileSystemResource.getInputStream()));
     }
 
 
