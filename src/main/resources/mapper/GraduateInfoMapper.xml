@@ -28,7 +28,7 @@
         where id = #{id,jdbcType=NUMERIC}
     </select>
 
-    <select id="selectCollegeAndGrade" resultType="com.allspark.uhelper.common.form.Class_info">
+    <select id="selectCollegeAndGrade" resultType="HashMap">
         select *
         from u_classinfo.class_info
     </select>
