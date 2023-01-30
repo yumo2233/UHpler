@@ -18,16 +18,27 @@
         <el-table-column label="班级" prop="className"/>
         <el-table-column label="学号" prop="number"/>
         <el-table-column label="姓名" prop="name"/>
-        <template v-for="i in info.targetList" :key="i.id">
+        <template v-for="(i, Iindex) in info.targetList" :key="i.id">
           <el-table-column :label="i.name">
-            <template v-for="(j, index) in info.checkList" :key="j.id">
+            <template v-if="i.checkList">
+              <template v-for="(t) in i.checkList" :key="t.id">
+                <el-table-column :label="t.name">
+                  <template #default="scope">
+                    <span>{{ stu[scope.$index].usualScore[checkList.indexOf(t)] }}</span>
+                  </template>
+                </el-table-column>
+              </template>
+            </template>
+            <template v-else v-for="(j, index) in info.checkList" :key="j.id">
               <el-table-column :label="j.name">
                 <template #default="scope">
                   <span>{{ stu[scope.$index].usualScore[index] }}</span>
                 </template>
               </el-table-column>
             </template>
-            <el-table-column label="总分"/>
+            <el-table-column label="总分">
+              {{ Iindex }}
+            </el-table-column>
             <el-table-column label="得分"/>
           </el-table-column>
         </template>
@@ -64,7 +75,9 @@ export default defineComponent({
     const message = ref('')
     const centerDialogVisible = ref(false)
     const info = computed(() => store.state.currentCourse)
+    const checkList = computed(() => store.state.currentCourse.checkList)
     const stu = computed(() => store.state.stuGrade)
+    const totalScore = computed(() => store.getters.totalScore)
     const handleOpen = () => {
       demitter.emit('on-drawer-open', () => null)
     }
@@ -87,9 +100,10 @@ export default defineComponent({
       centerDialogVisible,
       grade,
       stu,
-      goEdit
+      goEdit,
+      checkList,
+      totalScore
     }
   }
 })
-console.log(8)
 </script>

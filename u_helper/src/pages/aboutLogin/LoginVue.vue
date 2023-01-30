@@ -6,15 +6,16 @@
     <div class="right">
       <h3>欢迎登录U助教系统</h3>
       <el-input v-model="userName" placeholder="请输入您的工号" clearable size="large" style="margin-bottom: 10px;" @blur="isUser"/>
-      <span class="red" v-show="usererror">{{ umessage }}</span>
+      <span class="red pos1" v-show="usererror">{{ umessage }}</span>
       <el-input v-model="password" placeholder="请输入登录密码" size="large" style="margin-top: 20px;margin-bottom: 10px;" show-password @blur="isPass"/>
-      <span class="red" v-show="passerror">{{ pmessage }}</span>
+      <span class="red pos2" v-show="passerror">{{ pmessage }}</span>
       <el-button @click="login" class="button" type="primary">登 录</el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import store from '@/store'
 import { defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'LoginVue',
@@ -31,18 +32,22 @@ export default defineComponent({
       if (!userName.value) {
         usererror.value = true
         umessage.value = '工号不能为空！'
+      } else {
+        usererror.value = false
       }
     }
     const isPass = () => {
       if (!password.value) {
         passerror.value = true
         pmessage.value = '密码不能为空！'
+      } else {
+        passerror.value = false
       }
     }
     const login = () => {
-      if (!passerror.value && !usererror.value) {
-        // axios请求
-        console.log(111)
+      if (!passerror.value && !usererror.value && userName.value && password.value) {
+        const info = JSON.stringify({ number: userName.value, password: password.value })
+        store.dispatch('login', info)
       } else {
         return false
       }
@@ -104,5 +109,16 @@ h3 {
   left: 0;
   right: 0;
   margin: 0 auto;
+}
+.pos1 {
+  position: absolute;
+  left: 25px;
+  bottom: 140px;
+}
+.pos2 {
+  /* background-color: red; */
+  position: absolute;
+  left: 25px;
+  bottom: 60px;
 }
 </style>

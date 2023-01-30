@@ -5,6 +5,7 @@ import CourseManage from '@/pages/CourseManage.vue'
 import CourseList from '@/pages/CourseList.vue'
 import ClassManage from '@/pages/ClassManage.vue'
 import LoginVue from '@/pages/aboutLogin/LoginVue.vue'
+import FirstLogin from '@/pages/aboutLogin/FirstLogin.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -25,6 +26,10 @@ const router = createRouter({
     path: '/login',
     name: 'login',
     component: LoginVue
+  }, {
+    path: '/change',
+    name: 'change',
+    component: FirstLogin
   }]
 })
 

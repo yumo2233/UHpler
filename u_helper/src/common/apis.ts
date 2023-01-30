@@ -5,5 +5,8 @@ export const apis = {
   classlist: '/course/listAllClass',
   gradlist: '/course/listAllGraduate',
   getOne: '/course/listOne',
-  usualGrade: '/course/listAllStudent'
+  usualGrade: '/course/listAllStudent',
+  login: '/user/login',
+  change: '/user/updatePassword',
+  listCollege: 'course/CollegeAndGrade'
 }

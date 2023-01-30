@@ -2,7 +2,7 @@ import { createStore, Commit } from 'vuex'
 import axios from 'axios'
 import { apis } from '@/common/apis'
 
-interface checkArray {
+export interface checkArray {
   id: number,
   courseId: number,
   ratio: number,
@@ -15,7 +15,8 @@ interface targetArray {
   content: string,
   number: string,
   name: string,
-  graduateId: number
+  graduateId: number,
+  checkList?: checkArray[]
 }
 type targetName = 'id' | 'courseId' | 'content' | 'number' | 'name' | 'graduateId'
 export interface ICourses {
@@ -60,16 +61,17 @@ interface stuProps {
 //   userAvator?: string
 //   userId: number
 // }
-// interface ICurrentUser {
-//   id: number;
-//   userName: string;
-//   userId: number;
-//   Tcourses: ICourses[];
-//   avator: string;
-// }
+interface ICurrentUser {
+  number: number;
+  isFirst?: boolean;
+  userName: string;
+  Tcourses: ICourses[];
+  avator: string;
+  isLogin: boolean;
+}
 export interface GlobalDataProps{
   isLogin: boolean
-  // user: ICurrentUser
+  user: ICurrentUser
   token?: string
   courses: ICourses[]
   // accountInfo: IAccount
@@ -102,9 +104,8 @@ const examAndCommit = (state: { token?: string; isLogin?: boolean; courses?: nev
 }
 export default createStore({
   state: {
-    // user: {},
+    user: { isLogin: false, isFirst: true },
     token: localStorage.getItem('token') || '',
-    isLogin: false,
     courses: [],
     classList: [],
     currentCourse: {
@@ -137,6 +138,9 @@ export default createStore({
     isAdd: false
   },
   getters: {
+    // totalScore (state, index) {
+    //   // let score = 0
+    // }
   },
   mutations: {
     // #region
@@ -251,6 +255,14 @@ export default createStore({
           break
         }
       }
+    },
+    login (state, rawData) {
+      state.user = { ...rawData, isLogin: true }
+      localStorage.setItem('token', rawData.token)
+      axios.defaults.headers.common.Authorization = rawData.token
+    },
+    notFirstLogin (state) {
+      state.user.isFirst = false
     }
   },
   actions: {
@@ -268,6 +280,15 @@ export default createStore({
     },
     getUsualGrade ({ commit }, id) {
       getAndCommit(`${apis.usualGrade}/${id}`, 'getUsualGrade', commit)
+    },
+    login ({ commit }, info) {
+      return axios.post(apis.login, info).then(res => {
+        if (res.data.success) {
+          commit('login', res.data.content)
+        } else {
+          alert('账号或密码错误')
+        }
+      })
     }
   }
 })

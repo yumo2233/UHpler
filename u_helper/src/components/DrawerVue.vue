@@ -1,11 +1,19 @@
 <template>
-  <el-drawer v-model="drawer" size="50%">
+  <el-drawer v-model="drawer" size="50%" @close="isEdit=false">
     <template #header>
       <h4>平时成绩管理</h4>
     </template>
     <template #default>
-      <div>
-      </div>
+      <template v-if="isEdit">
+        <h3>{{ rowInfo.name }}</h3>
+        <template v-for="(o, index) in checkList" :key="o.id">
+          <span>{{ o.name }}</span>
+          <el-input-number v-model="rowInfo.usualScore[index]" :min="0" :max="100"/> <br>
+        </template>
+      </template>
+      <template v-else>
+        <choose-list></choose-list>
+      </template>
     </template>
     <template #footer>
       <div style="flex: auto">
@@ -17,9 +25,12 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent, computed } from 'vue'
 import mitt from 'mitt'
 import { ElMessageBox } from 'element-plus'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
+import ChooseList from './ChooseList.vue'
 type NoReturn = () => void
 type Event = {
   'on-drawer-open': NoReturn,
@@ -28,12 +39,20 @@ type Event = {
 }
 export const demitter = mitt<Event>()
 export default defineComponent({
-  name: 'DrawerVue'
+  name: 'DrawerVue',
+  components: {
+    ChooseList
+  }
 })
 </script>
 
 <script lang="ts" setup>
+const store = useStore<GlobalDataProps>()
 const drawer = ref(false)
+const isEdit = ref(false)
+const rowInfo = ref()
+const checkList = computed(() => store.state.currentCourse.checkList)
+const stu = computed(() => store.state.stuGrade)
 function cancelClick () {
   drawer.value = false
 }
@@ -50,6 +69,16 @@ demitter.on('on-drawer-open', () => {
   drawer.value = true
 })
 demitter.on('on-update-usual-grade', (row: object) => {
-  console.log(row)
+  isEdit.value = true
+  rowInfo.value = row
+  const len = checkList.value.length
+  const currentStu = stu.value.find(item => item.id === rowInfo.value.id)
+  const slen = currentStu?.usualScore.length || 0
+  const dif = len - slen
+  if (dif > 0) {
+    for (let i = 0; i < dif; i++) {
+      currentStu?.usualScore.push(0)
+    }
+  }
 })
 </script>
