@@ -36,15 +36,20 @@ public class UserController {
         HashMap map = userInfoService.login(form);
         Long userId = (Long) map.get("userId");
         Integer isFirst = (Integer) map.get("isFirst");
+        HashMap param = new HashMap();
+        param.put("isFirst", isFirst);
+        param.put("number",form.getNumber());
+        param.put("userName", map.get("userName"));
         CommonResp resp = new CommonResp();
         resp.setSuccess(userId!=null?true:false);
         if (userId!=null) {
             StpUtil.login(userId);
             resp.setMessage("登陆成功");
+            param.put("token", StpUtil.getTokenValue());
         } else {
             resp.setMessage("登陆失败");
         }
-        resp.setContent(isFirst);
+        resp.setContent(param);
         return resp;
     }
 

@@ -21,6 +21,8 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
     Integer selectIsFirstByNumber(@Param("number") String number);
 
+    UserInfo selectAllByNumber(@Param("number") String number);
+
 
 
 }

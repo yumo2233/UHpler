@@ -25,6 +25,8 @@ public interface FkCheckTargetMapper extends BaseMapper<FkCheckTarget> {
 
     int insertBatch(@Param("fkCheckTargetCollection") Collection<FkCheckTarget> fkCheckTargetCollection);
 
+    ArrayList<Long> selectCheckIdByTargetId(@Param("targetId") Long targetId);
+
 }
 
 

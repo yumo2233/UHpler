@@ -6,13 +6,11 @@ import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.pojo.CourseInfo;
-import com.allspark.uhelper.service.GraduateInfoService;
 import com.allspark.uhelper.service.impl.ClassInfoServiceImpl;
 import com.allspark.uhelper.service.impl.CourseInfoServiceImpl;
 import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +20,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @ClassName CourseController
@@ -44,18 +41,12 @@ public class CourseController {
     private ClassInfoServiceImpl classInfoService;
 
     @Autowired
-    private GraduateInfoService graduateInfoService;
-
-    @Autowired
     private GraduateTargetInfoServiceImpl graduateTargetInfoService;
 
     @Operation(summary = "返回所有课程信息")
 
-
-
     @GetMapping("/listAllCourseInfo")
     public CommonResp listAllCourseInfo(){
-
         List<CourseInfo> courseInfos = courseInfoService.list();
         CommonResp resp = new CommonResp<>();
         if (courseInfos==null) {
@@ -143,46 +134,11 @@ public class CourseController {
 
     @Operation(summary = "显示毕业指标点列表(二级显示)")
     @GetMapping("/listAllGraduate")
-    public CommonResp listAllGraduate() {
+    public CommonResp listAllGraduate(){
         CommonResp resp = new CommonResp<>();
         List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
         resp.setContent(collegeTrees);
         resp.setMessage("返回所有的毕业指标点");
-        return resp;
-    }
-
-
-    @Operation(summary = "返回指标点和指标内容")
-    @PostMapping("/searchTarget")
-    public CommonResp<Map> searchTargetById(@RequestBody int id) {
-        HashMap map = graduateTargetInfoService.searchTargetById(id);
-        CommonResp resp = new CommonResp<>();
-        resp.setContent(map);
-        return resp;
-    }
-//int id,int index,String name,int number, int class_id
-
-    @Operation(summary = "增加单个学生信息")
-    @PostMapping("/insertStudnet")
-    public CommonResp insertStudent(@RequestBody int id) {
-        HashMap map = new HashMap();
-        map.put("id", id);
-        //map.put("index",index);
-        // map.put("name",name);
-        //map.put("number",number);
-        //map.put("class_id",class_id);
-        CommonResp resp = new CommonResp();
-        graduateInfoService.insertStudent(map);
-        return resp;
-    }
-
-
-    @Operation(summary = "返回所有学院和专业")
-    @GetMapping("/CollegeAndGrade")
-    public CommonResp selectCollegeAndGrade() {
-        CommonResp resp = new CommonResp();
-        HashMap map = graduateInfoService.selectCollegeAndGrade();
-        resp.setContent(map);
         return resp;
     }
 
@@ -259,7 +215,6 @@ public class CourseController {
         }
         return resp;
     }
-
 
 
 }

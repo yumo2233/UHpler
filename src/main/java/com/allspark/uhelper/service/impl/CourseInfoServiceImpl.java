@@ -61,6 +61,9 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     @Autowired
     private TransactionTemplate transactionTemplate;
 
+    @Resource
+    private StudentUsualScoreMapper studentUsualScoreMapper;
+
 
     public List<CourseInfoResp> listCourseInfoResp(List<CourseInfo> course){
         List<CourseInfoResp> courseInfoResps = new ArrayList<>();
@@ -269,6 +272,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         for (StudentScoreInfo studentScoreInfo : studentScoreInfoList) {
             map.put(studentScoreInfo.getId(), studentScoreInfo);
         }
+
         for (StudentAndScoreResp studentAndScoreResp : studentAndScoreRespList) {
             StudentScoreInfo studentScoreInfo = new StudentScoreInfo();
             if (!map.containsKey(studentAndScoreResp.getId())) {
@@ -285,7 +289,41 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         }
         return studentAndScoreRespList;
     }
+    /**
+    * @author 86159
+    * @Description 查询学生平时成绩列表
+    * @Date 16:59 2023/1/29
+    * @Param [courseId]
+    * @return java.util.List<com.allspark.uhelper.common.resp.StudentUsualScoreResp>
+    **/
 
+    public List<StudentUsualScoreResp> listAllStudentUsualScore(Long courseId){
+        List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
+        List<StudentUsualScoreResp>  studentUsualScoreRespList;
+        List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(ids);
+        HashMap<String,Integer[]> map = new HashMap<>();
+        List<StudentUsualScore> studentUsualScoreList = studentUsualScoreMapper.selectAllByCourseId(courseId);
+        for (StudentUsualScore studentUsualScore : studentUsualScoreList) {
+            String flag = studentUsualScore.getTargetId().toString()+studentUsualScore.getCheckId()+studentUsualScore.getId().toString();
+            map.put(flag,JSONUtil.parse(studentUsualScore.getUsualScore()).toBean(Integer[].class));
+            System.out.println(flag);
+        }
+        studentUsualScoreRespList = CopyUtil.copyList(studentInfoList, StudentUsualScoreResp.class);
+        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
+        for (StudentUsualScoreResp studentUsualScoreResp : studentUsualScoreRespList) {
+            HashMap<Long,HashMap<Long,Integer[]>> usualMap = new HashMap();
+            for (TargetInfo targetInfo : targetInfoList) {
+                usualMap.put(targetInfo.getId(),new HashMap<>());
+                for (Long checkId : fkCheckTargetMapper.selectCheckIdByTargetId(targetInfo.getId())) {
+                    String flag = targetInfo.getId().toString() +checkId.toString()+studentUsualScoreResp.getId();
+                    System.out.println(flag);
+                    usualMap.get(targetInfo.getId()).put(checkId,map.get(flag));
+                }
+            }
+            studentUsualScoreResp.setUsual(usualMap);
+        }
+        return studentUsualScoreRespList;
+    }
 
     public boolean modifyAllStudent(StudentAndScoreListForm form) {
         boolean flag;
