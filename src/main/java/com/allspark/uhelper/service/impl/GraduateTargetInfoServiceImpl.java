@@ -1,5 +1,8 @@
 package com.allspark.uhelper.service.impl;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.db.mapper.GraduateInfoMapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -18,18 +21,23 @@ import java.util.List;
 * @author 86159
 * @description 针对表【graduate_target_info(指标点信息表)】的数据库操作Service实现
 * @createDate 2023-01-20 19:07:15
-*/
+ */
 @Service
 @DS("u_graduateinfo")
 public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInfoMapper, GraduateTargetInfo>
-    implements GraduateTargetInfoService{
+        implements GraduateTargetInfoService {
+
 
     @Resource
     private GraduateInfoMapper graduateInfoMapper;
+
+    @Resource
+    private GraduateTargetInfoMapper graduateTargetInfoMapper;
+
     public List<NAryTree> listAll2() {
         List<NAryTree> graduateTree = new ArrayList<>();
         List<GraduateTargetInfo> list = list();
-        HashMap<Long,NAryTree> graMap = new HashMap<>();
+        HashMap<Long, NAryTree> graMap = new HashMap<>();
 
         for (GraduateTargetInfo graduateTargetInfo : list) {
             if (!graMap.containsKey(graduateTargetInfo.getGraduateId())) {
@@ -54,6 +62,14 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         return graduateTree;
     }
 
+
+    @Override
+    public HashMap searchTargetById(int id) {
+        HashMap map = graduateTargetInfoMapper.searchTargetById(id);
+        //JSONArray tag = JSONUtil.parseArray(MapUtil.getStr(map, "tag"));
+        //map.replace(tag,"tag");
+        return map;
+    }
 }
 
 

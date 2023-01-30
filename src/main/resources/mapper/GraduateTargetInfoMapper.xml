@@ -5,14 +5,27 @@
 <mapper namespace="com.allspark.uhelper.db.mapper.GraduateTargetInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.GraduateTargetInfo">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="content" column="content" jdbcType="VARCHAR"/>
-            <result property="graduateId" column="graduate_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="graduateId" column="graduate_id" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,content,
+        id
+        ,name,content,
         graduate_id
     </sql>
+
+    <select id="searchTargetById" parameterType="int" resultType="HashMap">
+        SELECT name,
+               content
+        FROM u_graduateinfo.graduate_target_info
+        WHERE id = ${id}
+    </select>
+
+    <!--要以excel表格的形式插入，暂时搁置!-->
+    <insert id="insertTarget">
+        insert into u_graduateinfo.graduate_target_info()
+    </insert>
 </mapper>
