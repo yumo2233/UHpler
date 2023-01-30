@@ -38,6 +38,8 @@ public class UserController {
         Integer isFirst = (Integer) map.get("isFirst");
         HashMap param = new HashMap();
         param.put("isFirst", isFirst);
+        param.put("number",form.getNumber());
+        param.put("userName", map.get("userName"));
         CommonResp resp = new CommonResp();
         resp.setSuccess(userId!=null?true:false);
         if (userId!=null) {

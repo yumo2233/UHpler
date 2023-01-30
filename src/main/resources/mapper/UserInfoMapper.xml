@@ -13,8 +13,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,password,
-        number
+        `id`,`name`,`password`,
+        `number`,`is_first`
     </sql>
     <update id="update">
         update u_classinfo.user_info
@@ -28,5 +28,12 @@
         select is_first
         from u_classinfo.user_info
         where number = #{number,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllByNumber" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_classinfo.user_info
+        where
+        number = #{number,jdbcType=VARCHAR}
     </select>
 </mapper>

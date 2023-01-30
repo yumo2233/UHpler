@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 
 /**
 * @author 86159
@@ -31,10 +32,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         String password0 = form.getPassword();
         String password1 = SaSecureUtil.md5BySalt(password0, number);
         Long userId = userInfoMapper.login(number, password1);
-        Integer isFirst = userInfoMapper.selectIsFirstByNumber(number);
+        UserInfo userInfo = userInfoMapper.selectAllByNumber(number);
         HashMap map = new HashMap();
-        map.put("isFirst",isFirst);
+        map.put("isFirst",(Integer)userInfo.getIsFirst());
         map.put("userId",userId);
+        map.put("userName", userInfo.getName());
+
         return map;
     }
 
