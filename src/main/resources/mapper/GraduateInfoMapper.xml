@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.allspark.uhelper.db.mapper.GraduateInfoMapper">
-
+<!-- 数据库问题!-->
     <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.GraduateInfo">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="college" column="college" jdbcType="INTEGER"/>
@@ -44,4 +44,19 @@
     </insert>
 
 
+    <insert id="insertTarget" parameterType="graduateInfo">
+        INSERT INTO u_graduateinfo.graduate_info (id, college, grade, professional, graduate_count,
+                                                  graduate_target_count, name, user_id)
+        VALUES (#{id}, #{grade}, #{grade}, #{professional}, #{graduate_count}, #{graduate_target_count}, #{name},
+                #{user_id})
+
+    </insert>
+
+    <insert id="insertTargetBatch">
+        INSERT INTO u_graduateinfo.graduate_target_info (id, college, grade, professional,
+        graduate_count,graduate_target_count,name,user_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.college},#{item.grade},#{item.professional},#{item.graduate_count},#{item.graduate_target_count},#{name},#{user_id})
+        </foreach>
+    </insert>
 </mapper>

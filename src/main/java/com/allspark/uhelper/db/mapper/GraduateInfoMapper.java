@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,6 +24,8 @@ public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
     public ArrayList<HashMap> selectCollegeAndGrade();
 
     public void insertStudent(@Param("studentInfoCollection") Map param);
+
+    public int insertTarget(GraduateInfo graduateTargetInfo);
 
 }
 

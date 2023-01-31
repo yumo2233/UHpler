@@ -1,6 +1,5 @@
 package com.allspark.uhelper.db.mapper;
 
-import com.allspark.uhelper.common.form.GraduateTargetForm;
 import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -18,9 +17,9 @@ public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo>
 
     public HashMap searchTargetById(int id);
 
-    public int insertTarget(GraduateTargetInfo graduateTargetInfo);
+    public void insertTarget(long id);
 
-
+    public boolean deleteTarget(long id);
 }
 
 

@@ -25,21 +25,15 @@
     </select>
 
 
-    <insert id="insertTargetBatch">
-        INSERT INTO u_graduateinfo.graduate_target_info (id, college, grade, professional,
-        graduate_count,graduate_target_count,name,user_id) VALUES
-        <foreach collection="list" separator="," item="item">
-            (#{item.id},#{item.college},#{item.grade},#{item.professional},#{item.graduate_count},#{item.graduate_target_count},#{name},#{user_id})
-        </foreach>
-    </insert>
-
-
     <insert id="insertTarget" parameterType="graduateTargetInfo">
-        INSERT INTO u_graduateinfo.graduate_info (id, college, grade, professional, graduate_count,
-                                                  graduate_target_count, name, user_id)
-        VALUES (#{id}, #{grade}, #{grade}, #{professional}, #{graduate_count}, #{graduate_target_count}, #{name},
-                #{user_id})
-
+        INSERT INTO u_graduateinfo.graduate_target_info(id, name, content, graduate_id)
+        values (#{id}, #{name}, #{content}, #{graduate_id})
     </insert>
+
+    <delete id="deleteTarget">
+        DELETE
+        FROM u_graduateinfo.graduate_target_info
+        where id = #{id}
+    </delete>
 
 </mapper>

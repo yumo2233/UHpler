@@ -1,5 +1,6 @@
 package com.allspark.uhelper.service.impl;
 
+import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
@@ -35,6 +36,13 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     public ArrayList<HashMap> selectCollegeAndGrade() {
         ArrayList<HashMap> list = graduateInfoMapper.selectCollegeAndGrade();
         return list;
+    }
+
+    @Override
+    public int insertInfoTarget(GraduateInfo graduateTargetInfo) {
+
+        graduateInfoMapper.insertTarget(graduateTargetInfo);
+        return 1;
     }
 }
 

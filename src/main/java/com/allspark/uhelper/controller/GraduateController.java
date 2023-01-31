@@ -1,7 +1,9 @@
 package com.allspark.uhelper.controller;
 
 import com.allspark.uhelper.common.form.GraduateTargetForm;
+import com.allspark.uhelper.common.form.GraduateTargetInfoForm;
 import com.allspark.uhelper.common.util.CommonResp;
+import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.allspark.uhelper.service.GraduateInfoService;
 import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
@@ -67,17 +69,32 @@ public class GraduateController {
 
     @Operation(summary = "添加毕业要求和指标点")
     @PostMapping("/insertTarget")
-    public CommonResp insertTarget(@RequestBody GraduateTargetForm targetForm) {
-        GraduateTargetInfo graduateTargetInfo = new GraduateTargetInfo();
+    public CommonResp insertTarget(@RequestBody GraduateTargetInfoForm targetForm) {
+        GraduateInfo graduateTargetInfo = new GraduateInfo();
         CommonResp resp = new CommonResp<>();
         graduateTargetInfo.setId(targetForm.getId());
         graduateTargetInfo.setCollege(targetForm.getCollege());
         graduateTargetInfo.setGrade(targetForm.getGrade());
         graduateTargetInfo.setProfessional(targetForm.getProfessional());
         graduateTargetInfo.setGraduate_count(targetForm.getGraduate_count());
+        graduateTargetInfo.setGraduate_target_count(targetForm.getGraduate_target_count());
         graduateTargetInfo.setName(targetForm.getName());
         graduateTargetInfo.setUser_id(targetForm.getUser_id());
-        graduateTargetInfoService.insertTarget(graduateTargetInfo);
+        graduateInfoService.insertInfoTarget(graduateTargetInfo);
         return resp;
+    }
+
+    @Operation(summary = "删除毕业指标点")
+    @PostMapping("/deleteTarget")
+    public CommonResp deleteTarget(@RequestBody GraduateTargetForm targetForm) {
+        Long id = targetForm.getId();
+        boolean flag = graduateTargetInfoService.deleteTarget(id);
+        CommonResp commonResp = new CommonResp();
+        if (flag) {
+            commonResp.setMessage("删除成功");
+        } else {
+            commonResp.setMessage("删除失败");
+        }
+        return commonResp;
     }
 }
