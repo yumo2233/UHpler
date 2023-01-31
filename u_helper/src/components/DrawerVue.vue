@@ -31,6 +31,8 @@ import { ElMessageBox } from 'element-plus'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import ChooseList from './ChooseList.vue'
+import axios from 'axios'
+import { apis } from '@/common/apis'
 type NoReturn = () => void
 type Event = {
   'on-drawer-open': NoReturn,
@@ -51,6 +53,7 @@ const store = useStore<GlobalDataProps>()
 const drawer = ref(false)
 const isEdit = ref(false)
 const rowInfo = ref()
+const info = computed(() => store.state.currentCourse)
 const checkList = computed(() => store.state.currentCourse.checkList)
 const stu = computed(() => store.state.stuGrade)
 function cancelClick () {
@@ -59,7 +62,11 @@ function cancelClick () {
 function confirmClick () {
   ElMessageBox.confirm('确认保存当前信息？')
     .then(() => {
-      drawer.value = false
+      axios.post(apis.modefyChecklist, JSON.stringify({ courseId: info.value.id, targetAndCheckFormList: info.value.targetList })).then(res => {
+        // if (res.data.success) {
+        alert('保存成功')
+        // }
+      })
     })
     .catch(() => {
       // catch error

@@ -9,5 +9,6 @@ export const apis = {
   login: '/user/login',
   change: '/user/updatePassword',
   listCollege: 'course/CollegeAndGrade',
-  modefyUsual: '/course/modifyUsual'
+  modefyUsual: '/course/modifyAllStudent',
+  modefyChecklist: '/course/modifyUsual'
 }
