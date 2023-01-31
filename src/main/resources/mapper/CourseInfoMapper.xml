@@ -35,4 +35,11 @@
         usual_ratio,final_ratio,final_id,
         user_id,user_name
     </sql>
+    <select id="selectAllById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from course_info
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
 </mapper>

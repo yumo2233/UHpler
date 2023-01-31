@@ -1,4 +1,5 @@
 package com.allspark.uhelper.db.mapper;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -23,6 +24,10 @@ public interface CheckInfoMapper extends BaseMapper<CheckInfo> {
     int delByCourseId(@Param("courseId") Long courseId);
 
     int insertBatch(@Param("checkInfoCollection") Collection<CheckInfo> checkInfoCollection);
+
+    Long selectCountByCourseId(Long courseId);
+
+    BigDecimal selectRatioById(@Param("id") Long id);
 
 }
 

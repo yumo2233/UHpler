@@ -45,4 +45,19 @@
         from u_courseinfo.fk_check_target
         where target_id = #{targetId,jdbcType=NUMERIC}
     </select>
+
+    <select id="selectTargetCountByCheckId" resultType="integer">
+        select target_count
+        from u_courseinfo.fk_check_target
+        where check_id = #{checkId,jdbcType=NUMERIC}
+    </select>
+    <select id="selectTargetCountByCheckIdIn" resultMap="BaseResultMap">
+        select target_count
+        from u_courseinfo.fk_check_target
+        where
+        check_id in
+        <foreach collection="checkIdList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=NUMERIC}
+        </foreach>
+    </select>
 </mapper>

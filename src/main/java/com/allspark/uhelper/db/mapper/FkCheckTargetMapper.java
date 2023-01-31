@@ -27,6 +27,10 @@ public interface FkCheckTargetMapper extends BaseMapper<FkCheckTarget> {
 
     ArrayList<Long> selectCheckIdByTargetId(@Param("targetId") Long targetId);
 
+    List<Integer> selectTargetCountByCheckId(@Param("checkId") Long checkId);
+
+    List<Integer> selectTargetCountByCheckIdIn(@Param("checkIdList") Collection<Long> checkIdList);
+
 }
 
 

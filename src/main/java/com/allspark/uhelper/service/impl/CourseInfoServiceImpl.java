@@ -1,6 +1,11 @@
 package com.allspark.uhelper.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.allspark.uhelper.common.form.*;
 import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.db.mapper.*;
@@ -8,6 +13,7 @@ import com.allspark.uhelper.db.pojo.*;
 import com.allspark.uhelper.utils.CopyUtil;
 import com.allspark.uhelper.utils.SnowFlake10;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.service.CourseInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +22,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
 * @author 86159
@@ -262,22 +270,60 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 
     }
 
+    /**
+    * @author 86159
+    * @Description 返回成绩列表按照学生信息加成绩数组
+    * @Date 22:11 2023/1/30
+    * @Param [courseId]
+    * @return java.util.List<com.allspark.uhelper.common.resp.StudentAndScoreResp>
+    **/
+
     public List<StudentAndScoreResp> listAllStudent(Long courseId){
         List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
         List<StudentAndScoreResp>  studentAndScoreRespList;
         List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(ids);
         List<StudentScoreInfo> studentScoreInfoList = studentScoreInfoMapper.selectAllByCourseId(courseId);
+        StudentAndScoreResp studentAndScoreResp1 = new StudentAndScoreResp();
+        studentAndScoreResp1.setId(0L);
+        studentAndScoreResp1.setClassId(0L);
+        studentAndScoreResp1.setClassName("示例");
+        studentAndScoreResp1.setName("示例");
+        studentAndScoreResp1.setNumber("示例");
+//        List<CheckInfo> checkInfoList = checkInfoMapper.selectAllByCourseId(courseId);
+//        List<Integer> countList = fkCheckTargetMapper.selectTargetCountByCheckIdIn(checkInfoList.stream().map(CheckInfo::getId).collect(Collectors.toList()));
+//        checkCount = countList.stream().reduce(Integer::sum).orElse(0);
+        int usualScoreCount =0;
+        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
+        for (TargetInfo targetInfo : targetInfoList) {
+            for (HashMap hashMap : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
+                int count = (Integer) hashMap.get("targetCount");
+                usualScoreCount+=count;
+            }
+        }
+        Integer[] fullScore = new Integer[usualScoreCount];
+        Integer[] emptyScore = new Integer[usualScoreCount];
+        for (int i=0;i<usualScoreCount;i++) {
+            fullScore[i]=100;
+            emptyScore[i]=0;
+        }
+        studentAndScoreResp1.setUsualScore(fullScore);
+        studentAndScoreResp1.setFinalScore(fullScore);
         studentAndScoreRespList = CopyUtil.copyList(studentInfoList, StudentAndScoreResp.class);
+        studentAndScoreRespList.add(0,studentAndScoreResp1);
         HashMap<Long,StudentScoreInfo> map = new HashMap<>();
         for (StudentScoreInfo studentScoreInfo : studentScoreInfoList) {
             map.put(studentScoreInfo.getId(), studentScoreInfo);
         }
-
+        int i=0;
         for (StudentAndScoreResp studentAndScoreResp : studentAndScoreRespList) {
+            if (i==0) {
+                i=1;
+                continue;
+            }
             StudentScoreInfo studentScoreInfo = new StudentScoreInfo();
             if (!map.containsKey(studentAndScoreResp.getId())) {
-             studentScoreInfo.setUsualScore("[0]");
-             studentScoreInfo.setFinalScore("[0]");
+             studentScoreInfo.setUsualScore(emptyScore);
+             studentScoreInfo.setFinalScore(emptyScore);
              studentScoreInfo.setId(studentAndScoreResp.getId());
              studentScoreInfo.setCourseId(courseId);
             } else {
@@ -291,7 +337,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     }
     /**
     * @author 86159
-    * @Description 查询学生平时成绩列表
+    * @Description 查询学生平时成绩列表到每个考核方式
     * @Date 16:59 2023/1/29
     * @Param [courseId]
     * @return java.util.List<com.allspark.uhelper.common.resp.StudentUsualScoreResp>
@@ -434,6 +480,152 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         }));
 
         return flag;
+    }
+
+    public boolean downLoadUsual(Long courseId) {
+        double usualRatio = courseInfoMapper.selectAllById(courseId).getUsualRatio().doubleValue();
+        boolean flag=false;
+        List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
+        List<StudentAndScoreResp>  studentAndScoreRespList;
+        List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(ids);
+        List<StudentScoreInfo> studentScoreInfoList = studentScoreInfoMapper.selectAllByCourseId(courseId);
+        StudentAndScoreResp studentAndScoreResp1 = new StudentAndScoreResp();
+        studentAndScoreResp1.setId(0L);
+        studentAndScoreResp1.setClassId(0L);
+        studentAndScoreResp1.setClassName("示例");
+        studentAndScoreResp1.setName("示例");
+        studentAndScoreResp1.setNumber("示例");
+        List tableHeader1 = new ArrayList();
+        int usualScoreCount =0;
+        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
+        for (TargetInfo targetInfo : targetInfoList) {
+            for (HashMap hashMap : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
+                int count = (Integer) hashMap.get("targetCount");
+                usualScoreCount+=count;
+            }
+        }
+        Integer[] fullScore = new Integer[usualScoreCount];
+        Integer[] emptyScore = new Integer[usualScoreCount];
+        for (int i=0;i<usualScoreCount;i++) {
+            fullScore[i]=100;
+            emptyScore[i]=0;
+        }
+        studentAndScoreResp1.setUsualScore(fullScore);
+        studentAndScoreResp1.setFinalScore(fullScore);
+        studentAndScoreRespList = CopyUtil.copyList(studentInfoList, StudentAndScoreResp.class);
+        StudentAndScoreResp studentAndScoreResp0 = new StudentAndScoreResp();
+        studentAndScoreRespList.add(0,studentAndScoreResp0);
+        studentAndScoreRespList.add(1,studentAndScoreResp1);
+        HashMap<Long,StudentScoreInfo> map = new HashMap<>();
+        for (StudentScoreInfo studentScoreInfo : studentScoreInfoList) {
+            map.put(studentScoreInfo.getId(), studentScoreInfo);
+        }
+        int i=0;
+        List usualScoreList = new ArrayList();
+        tableHeader1.add("班级");
+        tableHeader1.add("学号");
+        tableHeader1.add("姓名");
+        for (StudentAndScoreResp studentAndScoreResp : studentAndScoreRespList) {
+            List usualSore = new ArrayList();
+            if (i==0) {
+                usualSore.add("");
+                usualSore.add("");
+                usualSore.add("");
+                int scoreListIndex = 3;
+                for (TargetInfo targetInfo : targetInfoList) {
+                    tableHeader1.add(targetInfo.getName());
+                    for (HashMap map1 : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
+                        int count = (Integer) map1.get("targetCount");
+                        String checkName = (String) map1.get("checkName");
+                        for (int j=scoreListIndex,k=1;j<count+scoreListIndex;j++,k++) {
+                            usualSore.add(checkName+k);
+                            tableHeader1.add("---");
+                        }
+                        scoreListIndex+=count;
+                        usualSore.add("该方式总分");
+                        usualSore.add("该方式得分");
+                        tableHeader1.add("---");
+                        tableHeader1.add("---");
+                        scoreListIndex+=2;
+                    }
+                    usualSore.add("该目标总分");
+                    usualSore.add("该目标得分");
+                    tableHeader1.add(targetInfo.getName());
+                }
+                usualSore.add("总分");
+                usualSore.add("得分");
+                i+=1;
+                usualScoreList.add(usualSore);
+                tableHeader1.add("平时成绩");
+                tableHeader1.add("平时成绩");
+                continue;
+
+            }
+            StudentScoreInfo studentScoreInfo = new StudentScoreInfo();
+            if (i==1) {
+                studentScoreInfo.setFinalScore(fullScore);
+                studentScoreInfo.setUsualScore(fullScore);
+                studentScoreInfo.setId(studentAndScoreResp.getId());
+                studentScoreInfo.setCourseId(courseId);
+                i+=1;
+            }else if (!map.containsKey(studentAndScoreResp.getId())) {
+                studentScoreInfo.setUsualScore(emptyScore);
+                studentScoreInfo.setFinalScore(emptyScore);
+                studentScoreInfo.setId(studentAndScoreResp.getId());
+                studentScoreInfo.setCourseId(courseId);
+            } else {
+                studentScoreInfo=map.get(studentAndScoreResp.getId());
+            }
+            Integer[] integers = JSONUtil.parse(studentScoreInfo.getUsualScore()).toBean(Integer[].class);
+            Collections.addAll(usualSore, integers);
+            int scoreListIndex = 0;
+            double usualAllScore=0;
+            double usualAllReScore=0;
+            for (TargetInfo targetInfo : targetInfoList) {
+                double targetAllScore=0;
+                double targetAllReScore=0;
+                for (HashMap map1 : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
+                    int count = (Integer) map1.get("targetCount");
+                    BigDecimal checkRatio = (BigDecimal) checkInfoMapper.selectRatioById((Long) map1.get("checkId"));
+                    BigDecimal thisRatio = (BigDecimal) map1.get("targetRatio");
+                    int sum=0;
+                    for (int j=scoreListIndex;j<count+scoreListIndex;j++) {
+                        sum+=(int)usualSore.get(j);
+                    }
+                    scoreListIndex+=count;
+                    double avg = sum/count;
+                    double allScore = checkRatio.doubleValue()*thisRatio.doubleValue()*avg;
+                    double reallyScore = allScore*usualRatio;
+                    usualSore.add(scoreListIndex,allScore);
+                    usualSore.add(scoreListIndex+1,reallyScore);
+                    scoreListIndex+=2;
+                    targetAllScore+=allScore;
+                    targetAllReScore+=reallyScore;
+                }
+                usualSore.add(scoreListIndex,targetAllScore);
+                usualSore.add(scoreListIndex+1,targetAllReScore);
+                usualAllReScore+=targetAllReScore;
+                usualAllScore+=targetAllScore;
+                scoreListIndex+=2;
+            }
+            usualSore.add(usualAllScore);
+            usualSore.add(usualAllReScore);
+            usualSore.add(0,classInfoMapper.selectNameById(studentAndScoreResp.getClassId()));
+            usualSore.add(1,studentAndScoreResp.getNumber());
+            usualSore.add(2,studentAndScoreResp.getName());
+            usualScoreList.add(usualSore);
+        }
+        usualScoreList.add(0,tableHeader1);
+        File file = new File("D:\\uhelperTest\\" + courseId + ".xlsx");
+        FileUtil.del(file);
+        ExcelWriter writer = ExcelUtil.getWriter("D:\\uhelperTest\\"+courseId+".xlsx");
+        // 合并单元格后的标题行，使用默认标题样式
+        // 一次性写出内容，使用默认样式，强制输出标题
+        writer.write(usualScoreList, true);
+        // 关闭writer，释放内存
+        writer.close();
+        return flag;
+
     }
 }
 
