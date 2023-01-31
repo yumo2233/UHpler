@@ -286,16 +286,23 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         StudentAndScoreResp studentAndScoreResp1 = new StudentAndScoreResp();
         studentAndScoreResp1.setId(0L);
         studentAndScoreResp1.setClassId(0L);
-        studentAndScoreResp1.setClassName("0");
-        studentAndScoreResp1.setName("0");
-        studentAndScoreResp1.setNumber("0");
-        Integer checkCount;
-        List<CheckInfo> checkInfoList = checkInfoMapper.selectAllByCourseId(courseId);
-        List<Integer> countList = fkCheckTargetMapper.selectTargetCountByCheckIdIn(checkInfoList.stream().map(CheckInfo::getId).collect(Collectors.toList()));
-        checkCount = countList.stream().reduce(Integer::sum).orElse(0);
-        Integer[] fullScore = new Integer[checkCount];
-        Integer[] emptyScore = new Integer[checkCount];
-        for (int i=0;i<checkCount;i++) {
+        studentAndScoreResp1.setClassName("示例");
+        studentAndScoreResp1.setName("示例");
+        studentAndScoreResp1.setNumber("示例");
+//        List<CheckInfo> checkInfoList = checkInfoMapper.selectAllByCourseId(courseId);
+//        List<Integer> countList = fkCheckTargetMapper.selectTargetCountByCheckIdIn(checkInfoList.stream().map(CheckInfo::getId).collect(Collectors.toList()));
+//        checkCount = countList.stream().reduce(Integer::sum).orElse(0);
+        int usualScoreCount =0;
+        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
+        for (TargetInfo targetInfo : targetInfoList) {
+            for (HashMap hashMap : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
+                int count = (Integer) hashMap.get("targetCount");
+                usualScoreCount+=count;
+            }
+        }
+        Integer[] fullScore = new Integer[usualScoreCount];
+        Integer[] emptyScore = new Integer[usualScoreCount];
+        for (int i=0;i<usualScoreCount;i++) {
             fullScore[i]=100;
             emptyScore[i]=0;
         }
@@ -485,11 +492,11 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         StudentAndScoreResp studentAndScoreResp1 = new StudentAndScoreResp();
         studentAndScoreResp1.setId(0L);
         studentAndScoreResp1.setClassId(0L);
-        studentAndScoreResp1.setClassName("0");
-        studentAndScoreResp1.setName("0");
-        studentAndScoreResp1.setNumber("0");
-        int usualScoreCount =0;
+        studentAndScoreResp1.setClassName("示例");
+        studentAndScoreResp1.setName("示例");
+        studentAndScoreResp1.setNumber("示例");
         List tableHeader1 = new ArrayList();
+        int usualScoreCount =0;
         List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
         for (TargetInfo targetInfo : targetInfoList) {
             for (HashMap hashMap : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
@@ -506,7 +513,9 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         studentAndScoreResp1.setUsualScore(fullScore);
         studentAndScoreResp1.setFinalScore(fullScore);
         studentAndScoreRespList = CopyUtil.copyList(studentInfoList, StudentAndScoreResp.class);
-        studentAndScoreRespList.add(0,studentAndScoreResp1);
+        StudentAndScoreResp studentAndScoreResp0 = new StudentAndScoreResp();
+        studentAndScoreRespList.add(0,studentAndScoreResp0);
+        studentAndScoreRespList.add(1,studentAndScoreResp1);
         HashMap<Long,StudentScoreInfo> map = new HashMap<>();
         for (StudentScoreInfo studentScoreInfo : studentScoreInfoList) {
             map.put(studentScoreInfo.getId(), studentScoreInfo);
@@ -518,7 +527,6 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         tableHeader1.add("姓名");
         for (StudentAndScoreResp studentAndScoreResp : studentAndScoreRespList) {
             List usualSore = new ArrayList();
-
             if (i==0) {
                 usualSore.add("");
                 usualSore.add("");
@@ -546,13 +554,21 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 }
                 usualSore.add("总分");
                 usualSore.add("得分");
-                i=1;
+                i+=1;
                 usualScoreList.add(usualSore);
+                tableHeader1.add("平时成绩");
+                tableHeader1.add("平时成绩");
                 continue;
 
             }
             StudentScoreInfo studentScoreInfo = new StudentScoreInfo();
-            if (!map.containsKey(studentAndScoreResp.getId())) {
+            if (i==1) {
+                studentScoreInfo.setFinalScore(fullScore);
+                studentScoreInfo.setUsualScore(fullScore);
+                studentScoreInfo.setId(studentAndScoreResp.getId());
+                studentScoreInfo.setCourseId(courseId);
+                i+=1;
+            }else if (!map.containsKey(studentAndScoreResp.getId())) {
                 studentScoreInfo.setUsualScore(emptyScore);
                 studentScoreInfo.setFinalScore(emptyScore);
                 studentScoreInfo.setId(studentAndScoreResp.getId());
@@ -605,27 +621,9 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         ExcelWriter writer = ExcelUtil.getWriter("D:\\uhelperTest\\"+courseId+".xlsx");
         // 合并单元格后的标题行，使用默认标题样式
         // 一次性写出内容，使用默认样式，强制输出标题
-        int tableHeaderIndex=0;
-//        writer.merge(2,"学号",false);
-//        writer.merge(3,"学号",false);
-//        for (TargetInfo targetInfo : targetInfoList) {
-//            for (HashMap hashMap : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
-//                Map map1 = new HashMap();
-//                int targetCount = (Integer) hashMap.get("targetCount");
-//                map1.put("checkRatio",checkInfoMapper.selectById((Long)hashMap.get("checkId")).getRatio());
-//                map1.put("thisRatio",hashMap.get("targetRatio"));
-//                writer.merge(tableHeaderIndex,tableHeaderIndex+targetCount,);
-//            }
-//
-//        }
         writer.write(usualScoreList, true);
         // 关闭writer，释放内存
         writer.close();
-//        for (TargetInfo targetInfo : targetInfoList) {
-//            for (HashMap map : fkCheckTargetMapper.selectAllByTargetId(targetInfo.getId())) {
-//
-//            }
-//        }
         return flag;
 
     }
