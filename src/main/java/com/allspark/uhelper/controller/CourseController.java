@@ -236,5 +236,19 @@ public class CourseController {
                 .body(new InputStreamResource(fileSystemResource.getInputStream()));
     }
 
+    @Operation(summary = "下载课程报告")
+    @GetMapping("/downloadReport/{courseId}")
+    public ResponseEntity<InputStreamResource> downloadReport(@PathVariable Long courseId) throws IOException {
+        courseInfoService.downloadReport(courseId);
+        FileSystemResource fileSystemResource=new FileSystemResource("D:\\uhelperTest\\"+courseId+".docx");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName()+".docx").build());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(fileSystemResource.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(fileSystemResource.getInputStream()));
+    }
+
 
 }

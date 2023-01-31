@@ -1,9 +1,7 @@
 package com.allspark.uhelper.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.log.Log;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.allspark.uhelper.common.form.*;
@@ -13,9 +11,11 @@ import com.allspark.uhelper.db.pojo.*;
 import com.allspark.uhelper.utils.CopyUtil;
 import com.allspark.uhelper.utils.SnowFlake10;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.service.CourseInfoService;
+import com.spire.doc.*;
+import com.spire.doc.documents.Paragraph;
+import com.spire.doc.fields.TextRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -25,7 +25,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
 * @author 86159
@@ -65,6 +64,12 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 
     @Resource
     private FkTargetFinalMapper fkTargetFinalMapper;
+
+    @Resource
+    private FkTargetGarduateMapper fkTargetGarduateMapper;
+
+    @Resource
+    private GraduateTargetInfoMapper graduateTargetInfoMapper;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -343,33 +348,33 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
     * @return java.util.List<com.allspark.uhelper.common.resp.StudentUsualScoreResp>
     **/
 
-    public List<StudentUsualScoreResp> listAllStudentUsualScore(Long courseId){
-        List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
-        List<StudentUsualScoreResp>  studentUsualScoreRespList;
-        List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(ids);
-        HashMap<String,Integer[]> map = new HashMap<>();
-        List<StudentUsualScore> studentUsualScoreList = studentUsualScoreMapper.selectAllByCourseId(courseId);
-        for (StudentUsualScore studentUsualScore : studentUsualScoreList) {
-            String flag = studentUsualScore.getTargetId().toString()+studentUsualScore.getCheckId()+studentUsualScore.getId().toString();
-            map.put(flag,JSONUtil.parse(studentUsualScore.getUsualScore()).toBean(Integer[].class));
-            System.out.println(flag);
-        }
-        studentUsualScoreRespList = CopyUtil.copyList(studentInfoList, StudentUsualScoreResp.class);
-        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
-        for (StudentUsualScoreResp studentUsualScoreResp : studentUsualScoreRespList) {
-            HashMap<Long,HashMap<Long,Integer[]>> usualMap = new HashMap();
-            for (TargetInfo targetInfo : targetInfoList) {
-                usualMap.put(targetInfo.getId(),new HashMap<>());
-                for (Long checkId : fkCheckTargetMapper.selectCheckIdByTargetId(targetInfo.getId())) {
-                    String flag = targetInfo.getId().toString() +checkId.toString()+studentUsualScoreResp.getId();
-                    System.out.println(flag);
-                    usualMap.get(targetInfo.getId()).put(checkId,map.get(flag));
-                }
-            }
-            studentUsualScoreResp.setUsual(usualMap);
-        }
-        return studentUsualScoreRespList;
-    }
+//    public List<StudentUsualScoreResp> listAllStudentUsualScore(Long courseId){
+//        List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
+//        List<StudentUsualScoreResp>  studentUsualScoreRespList;
+//        List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(ids);
+//        HashMap<String,Integer[]> map = new HashMap<>();
+//        List<StudentUsualScore> studentUsualScoreList = studentUsualScoreMapper.selectAllByCourseId(courseId);
+//        for (StudentUsualScore studentUsualScore : studentUsualScoreList) {
+//            String flag = studentUsualScore.getTargetId().toString()+studentUsualScore.getCheckId()+studentUsualScore.getId().toString();
+//            map.put(flag,JSONUtil.parse(studentUsualScore.getUsualScore()).toBean(Integer[].class));
+//            System.out.println(flag);
+//        }
+//        studentUsualScoreRespList = CopyUtil.copyList(studentInfoList, StudentUsualScoreResp.class);
+//        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
+//        for (StudentUsualScoreResp studentUsualScoreResp : studentUsualScoreRespList) {
+//            HashMap<Long,HashMap<Long,Integer[]>> usualMap = new HashMap();
+//            for (TargetInfo targetInfo : targetInfoList) {
+//                usualMap.put(targetInfo.getId(),new HashMap<>());
+//                for (Long checkId : fkCheckTargetMapper.selectCheckIdByTargetId(targetInfo.getId())) {
+//                    String flag = targetInfo.getId().toString() +checkId.toString()+studentUsualScoreResp.getId();
+//                    System.out.println(flag);
+//                    usualMap.get(targetInfo.getId()).put(checkId,map.get(flag));
+//                }
+//            }
+//            studentUsualScoreResp.setUsual(usualMap);
+//        }
+//        return studentUsualScoreRespList;
+//    }
 
     public boolean modifyAllStudent(StudentAndScoreListForm form) {
         boolean flag;
@@ -625,7 +630,108 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         // 关闭writer，释放内存
         writer.close();
         return flag;
+    }
 
+    public void downloadReport(Long courseId){
+        ArrayList<Long> ids = new ArrayList<>();
+        ids.add(courseId);
+        List<CourseInfo> courseInfos = listByIds(ids);
+        List<CourseInfoResp> courseInfoRespList = listCourseInfoResp(courseInfos);
+        CourseInfoResp courseInfo = courseInfoRespList.get(0);
+        Document document = new Document("D:\\uhelperTest\\" + "模板" + ".docx");
+        Map<String,String> docMap = new HashMap<>();
+        docMap.put("${courseName}", courseInfo.getName());
+        docMap.put("${college}",courseInfo.getCollege().getName());
+        docMap.put("${unit}",courseInfo.getUnit());
+        docMap.put("${teacher}",courseInfo.getTeacher());
+        docMap.put("${name}",courseInfo.getName());
+        docMap.put("${nature}",courseInfo.getNature().getName());
+        docMap.put("${number}",courseInfo.getNumber());
+        docMap.put("${allPeriod}",courseInfo.getAllPeriod().toString());
+        docMap.put("${theoryPeriod}",courseInfo.getTheoryPeriod().toString());
+        docMap.put("${runPeriod}",courseInfo.getRunPeriod().toString());
+        docMap.put("${score}",courseInfo.getScore().toString());
+        List<CourseInfo> preCourseInfo = courseInfoMapper.selectAllByIdIn(courseInfo.getPreList());
+        String preList = new String();
+        for(int i=0;i<preCourseInfo.size();i++){
+            if (i==0) {
+                preList=preCourseInfo.get(i).getName();
+            }else {
+                preList=preList+"，"+preCourseInfo.get(i).getName();
+            }
+        }
+        docMap.put("${preList}",preList);
+        String classList = new String();
+        Integer studentCount=0;
+        List<Long> longs = fkClassCourseMapper.selectClassIdByCourseId(courseId);
+        int i=0;
+        for (ClassInfo selectBatchId : classInfoMapper.selectBatchIds(longs)) {
+            studentCount+=selectBatchId.getHeadcount();
+            if (i==0) {
+                i=1;
+                classList = selectBatchId.getProfessional()+selectBatchId.getName();
+            } else {
+                classList = classList+"，"+selectBatchId.getProfessional()+selectBatchId.getName();
+            }
+        }
+        docMap.put("${classList}",classList);
+        docMap.put("${studentNum}",studentCount.toString());
+        docMap.put("${semester}",courseInfo.getSemester().getName());
+        int j=1;
+        int targetCount=0;
+        String courseTarget = new String("");
+        List<Map<String,String>> targetTableList = new ArrayList<>();
+        for (TargetInfo targetInfo : targetInfoMapper.selectAllByCourseId(courseId)) {
+            String name = targetInfo.getName();
+            String number = targetInfo.getNumber();
+            String content = targetInfo.getContent();
+            GraduateTargetInfo graduateTargetInfo = graduateTargetInfoMapper.selectById(targetInfo.getGraduateId());
+            String graduateName = graduateTargetInfo.getName();
+            courseTarget = courseTarget+j+"."+name+"（"+number+"）"+"："+content+"（"+"支撑毕业要求"+graduateName+"）"+"\n";
+            HashMap<String, String> targetHashMap = new HashMap<>();
+            targetHashMap.put(name, graduateName+graduateTargetInfo.getContent());
+            targetTableList.add(targetHashMap);
+            j++;
+            targetCount++;
+        }
+        HashMap<String, String> targetTableHeadHashMap = new HashMap<>();
+        targetTableHeadHashMap.put("课程目标","支撑的毕业要求指标点");
+        targetTableList.add(0,targetTableHeadHashMap);
+        docMap.put("${courseTarget}",courseTarget);
+        docMap.put("${usualRatio}",courseInfo.getUsualRatio().doubleValue()*100+"");
+        String checkList = new String();
+        int c=0;
+        for (CheckInfo checkInfo : checkInfoMapper.selectAllByCourseId(courseId)) {
+            if (c==0) {
+                checkList=checkInfo.getName()+"*"+checkInfo.getRatio().doubleValue()*100+"%";
+                c=1;
+            } else{
+                checkList=checkList+"+"+checkInfo.getName()+"*"+checkInfo.getRatio().doubleValue()*100+"%";
+            }
+
+        }
+        docMap.put("${checkList}",checkList);
+        docMap.put("${finalRatio}", courseInfo.getFinalRatio().doubleValue()*100+"");
+        docMap.forEach((k,v)->{
+            document.replace(k,v,true, false);
+        });
+        //table
+        Section section = document.getSections().get(0);
+        Table targetTable = section.addTable(true);
+        targetTable.resetCells(targetCount+1, 2);
+        int i1=0;
+        for (Map<String, String> stringStringMap : targetTableList) {
+            Set<Map.Entry<String, String>> entries = stringStringMap.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                TableRow tableRow = targetTable.getRows().get(i1);
+                TextRange range1 = tableRow.getCells().get(0).addParagraph().appendText(entry.getKey());
+                range1.getCharacterFormat().setFontName("华文楷体");
+                TextRange range2 = tableRow.getCells().get(1).addParagraph().appendText(entry.getValue());
+                range2.getCharacterFormat().setFontName("华文楷体");
+                i1++;
+            }
+        }
+        document.saveToFile("D:\\uhelperTest\\"+courseInfo.getId()+".docx", FileFormat.Docx);
     }
 }
 
