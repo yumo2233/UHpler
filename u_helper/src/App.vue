@@ -1,6 +1,5 @@
 <template>
-  <template v-if="!isLogin">
-  <!-- <template v-if="!isLogin || isFirst"> -->
+  <template v-if="!isLogin || isFirst">
     <login-vue v-if="!isLogin"></login-vue>
     <first-login v-else></first-login>
   </template>

@@ -6,9 +6,9 @@
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="centerDialogVisible = false">
-            Confirm
+          <el-button @click="centerDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSave9">
+            确定
           </el-button>
         </span>
       </template>
@@ -37,9 +37,13 @@
               </el-table-column>
             </template>
             <el-table-column label="总分">
-              {{ Iindex }}
+              {{ totalScore(Iindex) }}
             </el-table-column>
-            <el-table-column label="得分"/>
+            <el-table-column label="得分">
+              <template #default="scope">
+                {{ stuScore(Iindex, scope.$index) }}
+              </template>
+            </el-table-column>
           </el-table-column>
         </template>
       </el-table>
@@ -48,7 +52,7 @@
     <div style="margin-bottom: 0;">
       <el-button type="primary" :disabled="isAuthor" @click="handleDownload">下载</el-button>
       <el-button type="primary" @click="handleOpen" :disabled="isAuthor">平时成绩构成</el-button>
-      <el-button :disabled="isAuthor" type="primary" @click="centerDialogVisible = true">保存</el-button>
+      <el-button :disabled="isAuthor" type="primary" @click="handleSave8">保存</el-button>
     </div>
   </div>
 </template>
@@ -58,6 +62,9 @@ import DrawerVue, { demitter } from '@/components/DrawerVue.vue'
 import { defineComponent, ref, computed, onBeforeMount } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
+import axios from 'axios'
+import { apis } from '@/common/apis'
+import router from '@/router'
 console.log(7)
 export default defineComponent({
   props: {
@@ -78,6 +85,7 @@ export default defineComponent({
     const checkList = computed(() => store.state.currentCourse.checkList)
     const stu = computed(() => store.state.stuGrade)
     const totalScore = computed(() => store.getters.totalScore)
+    const stuScore = computed(() => store.getters.stuScore)
     const handleOpen = () => {
       demitter.emit('on-drawer-open', () => null)
     }
@@ -92,6 +100,18 @@ export default defineComponent({
       handleOpen()
       demitter.emit('on-update-usual-grade', row)
     }
+    const handleSave8 = () => {
+      centerDialogVisible.value = true
+      message.value = '确认保存当前信息？'
+    }
+    const handleSave9 = () => {
+      centerDialogVisible.value = false
+      axios.post(apis.modefyUsual, JSON.stringify({ courseID: info.value.id, studentAndScoreFormList: stu.value })).then(res => {
+        // if (res.data.success) {
+        router.push('/')
+        // }
+      })
+    }
     return {
       info,
       message,
@@ -102,7 +122,10 @@ export default defineComponent({
       stu,
       goEdit,
       checkList,
-      totalScore
+      totalScore,
+      stuScore,
+      handleSave8,
+      handleSave9
     }
   }
 })

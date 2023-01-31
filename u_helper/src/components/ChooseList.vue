@@ -7,7 +7,9 @@
         <span style="margin-left: 20px;">
           <i class="red">*</i>
           <span>占同考核方式权重</span>
-          <el-input v-model="j.ratio" style="width: 50px;" class="w-50 m-2" placeholder="Please Input" /> % <br>
+          <el-input v-model="j.ratio2" style="width: 50px;" class="w-50 m-2" /> %
+          考核次数
+          <el-input v-model="j.time" style="width: 50px;" class="w-50 m-2" /> <br>
         </span>
       </template>
     </div>

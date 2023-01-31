@@ -66,7 +66,9 @@ export default defineComponent({
         id: Date.now(),
         courseId: Date.now(),
         ratio: 0,
-        name: ''
+        name: '',
+        ratio2: 0,
+        time: 1
       })
     }
     const backOrSave = ref(0)

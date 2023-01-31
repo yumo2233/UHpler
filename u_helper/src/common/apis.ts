@@ -8,5 +8,6 @@ export const apis = {
   usualGrade: '/course/listAllStudent',
   login: '/user/login',
   change: '/user/updatePassword',
-  listCollege: 'course/CollegeAndGrade'
+  listCollege: 'course/CollegeAndGrade',
+  modefyUsual: '/course/modifyUsual'
 }

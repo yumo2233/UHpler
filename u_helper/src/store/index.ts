@@ -6,7 +6,9 @@ export interface checkArray {
   id: number,
   courseId: number,
   ratio: number,
-  name: string
+  name: string,
+  ratio2: number,
+  time: number
 }
 type checkName = 'id' | 'courseId' | 'ratio' | 'name'
 interface targetArray {
@@ -104,7 +106,7 @@ const examAndCommit = (state: { token?: string; isLogin?: boolean; courses?: nev
 }
 export default createStore({
   state: {
-    user: { isLogin: false, isFirst: true },
+    user: { isLogin: true, isFirst: false },
     token: localStorage.getItem('token') || '',
     courses: [],
     classList: [],
@@ -138,9 +140,27 @@ export default createStore({
     isAdd: false
   },
   getters: {
-    // totalScore (state, index) {
-    //   // let score = 0
-    // }
+    totalScore: (state) => (index: number) => {
+      let score = 0
+      const targetList = (state.currentCourse.targetList[index] as targetArray).checkList
+      const len = targetList?.length || 0
+      for (let i = 0; i < len; i++) {
+        score += 100 * ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
+      }
+      return score / 10000
+    },
+    stuScore: (state) => (index: number, stuIndex: number) => {
+      let score = 0
+      const checkList = state.currentCourse.checkList
+      const targetList = (state.currentCourse.targetList[index] as targetArray).checkList
+      const len = targetList?.length || 0
+      const stuInfo = (state.stuGrade[stuIndex] as stuProps).usualScore
+      for (let i = 0; i < len; i++) {
+        const currentTotal = stuInfo[checkList.indexOf((targetList as [])[i])]
+        score += currentTotal * ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
+      }
+      return score / 10000
+    }
   },
   mutations: {
     // #region
