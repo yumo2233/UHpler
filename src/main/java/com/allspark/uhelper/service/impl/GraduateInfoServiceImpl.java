@@ -1,6 +1,5 @@
 package com.allspark.uhelper.service.impl;
 
-import cn.hutool.core.map.MapUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
@@ -9,6 +8,8 @@ import com.allspark.uhelper.db.mapper.GraduateInfoMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,6 +29,12 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     public void insertStudent(Map param) {
         graduateInfoMapper.insertStudent(param);
 
+    }
+
+    @Override
+    public ArrayList<HashMap> selectCollegeAndGrade() {
+        ArrayList<HashMap> list = graduateInfoMapper.selectCollegeAndGrade();
+        return list;
     }
 }
 

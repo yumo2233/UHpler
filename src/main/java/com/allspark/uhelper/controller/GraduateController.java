@@ -1,16 +1,16 @@
 package com.allspark.uhelper.controller;
 
+import com.allspark.uhelper.common.form.GraduateTargetForm;
 import com.allspark.uhelper.common.util.CommonResp;
+import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.allspark.uhelper.service.GraduateInfoService;
 import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +52,32 @@ public class GraduateController {
         HashMap map = graduateTargetInfoService.searchTargetById(id);
         CommonResp resp = new CommonResp<>();
         resp.setContent(map);
+        return resp;
+    }
+
+    @Operation(summary = "返回所有学院和班级")
+    @GetMapping("/selectCollegeAndGrade")
+    public CommonResp selectCollegeAndGrade() {
+        ArrayList<HashMap> list = graduateInfoService.selectCollegeAndGrade();
+        CommonResp resp = new CommonResp<>();
+        resp.setMessage("一共用" + list.size() + "条数据");
+        resp.setContent(list);
+        return resp;
+    }
+
+    @Operation(summary = "添加毕业要求和指标点")
+    @PostMapping("/insertTarget")
+    public CommonResp insertTarget(@RequestBody GraduateTargetForm targetForm) {
+        GraduateTargetInfo graduateTargetInfo = new GraduateTargetInfo();
+        CommonResp resp = new CommonResp<>();
+        graduateTargetInfo.setId(targetForm.getId());
+        graduateTargetInfo.setCollege(targetForm.getCollege());
+        graduateTargetInfo.setGrade(targetForm.getGrade());
+        graduateTargetInfo.setProfessional(targetForm.getProfessional());
+        graduateTargetInfo.setGraduate_count(targetForm.getGraduate_count());
+        graduateTargetInfo.setName(targetForm.getName());
+        graduateTargetInfo.setUser_id(targetForm.getUser_id());
+        graduateTargetInfoService.insertTarget(graduateTargetInfo);
         return resp;
     }
 }

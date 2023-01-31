@@ -1,5 +1,6 @@
 package com.allspark.uhelper.db.mapper;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -17,7 +18,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @DS("u_graduateinfo")
 public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
 
-    String selectNameById(@Param("id") Long id);
+    public String selectNameById(@Param("id") Long id);
+
+    public ArrayList<HashMap> selectCollegeAndGrade();
 
     public void insertStudent(@Param("studentInfoCollection") Map param);
 

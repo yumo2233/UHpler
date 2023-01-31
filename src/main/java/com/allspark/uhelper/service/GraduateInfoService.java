@@ -4,6 +4,8 @@ import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,5 +16,7 @@ import java.util.Map;
 public interface GraduateInfoService extends IService<GraduateInfo> {
 
     public void insertStudent(@Param("studentInfoCollection") Map param);
+
+    public ArrayList<HashMap> selectCollegeAndGrade();
 
 }

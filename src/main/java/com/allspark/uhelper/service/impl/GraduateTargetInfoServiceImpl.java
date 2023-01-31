@@ -3,6 +3,7 @@ package com.allspark.uhelper.service.impl;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
+import com.allspark.uhelper.common.form.GraduateTargetForm;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.db.mapper.GraduateInfoMapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -69,6 +70,13 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         //JSONArray tag = JSONUtil.parseArray(MapUtil.getStr(map, "tag"));
         //map.replace(tag,"tag");
         return map;
+    }
+
+    @Override
+    public int insertTarget(GraduateTargetInfo graduateTargetInfo) {
+
+        graduateTargetInfoMapper.insertTarget(graduateTargetInfo);
+        return 1;
     }
 }
 

@@ -1,20 +1,19 @@
-package com.allspark.uhelper.db.pojo;
+package com.allspark.uhelper.common.form;
 
 import com.allspark.uhelper.myenum.CollegeEnum;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
- * 指标点信息表
- * @TableName graduate_target_info
+ * @author Pzr
+ * @create 2023/1/30 - 21:20
  */
-@TableName(value = "graduate_target_info")
 @Data
-public class GraduateTargetInfo implements Serializable {
+@Schema(description = "前端返回的毕业指标点名称和内容")
+public class GraduateTargetForm implements Serializable {
     /**
      * 毕业要求id
      */
@@ -56,11 +55,5 @@ public class GraduateTargetInfo implements Serializable {
      */
     private String user_id;
 
-    /**
-     * 外键连接的毕业要求
-     */
-    private Long graduateId;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
