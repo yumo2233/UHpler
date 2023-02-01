@@ -124,7 +124,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             map.put("message", s);
             return map;
         }
-        SnowFlake10 snowFlake = new SnowFlake10();
+//        SnowFlake10 snowFlake = new SnowFlake10();
         CourseInfo courseInfo = CopyUtil.copy(courseInfoForm, CourseInfo.class);
         List<Long> classList = courseInfoForm.getClassList();
         List<Long> preList = courseInfoForm.getPreList();
@@ -166,12 +166,12 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         if (CollectionUtils.isEmpty(checkInfoList)) {
             CheckInfo checkInfo = new CheckInfo();
             checkInfo.setCourseId(courseId);
-            checkInfo.setId(snowFlake.nextId());
+            checkInfo.setId(0L);
             checkInfo.setRatio(new BigDecimal(0));
             checkInfoList.add(checkInfo);
         } else {
             for (CheckInfo checkInfo : checkInfoList) {
-                checkInfo.setId(snowFlake.nextId());
+                checkInfo.setId(0L);
                 checkInfo.setCourseId(courseId);
                 count1 = count1.add(checkInfo.getRatio());
             }
@@ -189,7 +189,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         System.out.println(count1);
         if (CollectionUtils.isEmpty(targetInfoList)) {
             TargetInfo targetInfo = new TargetInfo();
-            targetInfo.setId(snowFlake.nextId());
+            targetInfo.setId(0L);
             targetInfo.setName("");
             targetInfo.setNumber("");
             targetInfo.setContent("");
@@ -199,7 +199,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         } else {
             for (TargetInfo targetInfo : targetInfoList) {
                 targetInfo.setCourseId(courseId);
-                targetInfo.setId(snowFlake.nextId());
+                targetInfo.setId(0L);
             }
         }
         map.put("courseInfo",courseInfo);
@@ -237,7 +237,6 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             fkClassCourseMapper.insertBatch(classList1);
             checkInfoMapper.insertBatch(checkInfoList);
             targetInfoMapper.insertBatch(targetInfoList);
-
             return true;
         }));
         result.put("flag", flag);
@@ -247,8 +246,8 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 
     public HashMap<String,Object> addOneCourseInfo(CourseInfoForm courseInfoForm){
         boolean flag;
-        SnowFlake10 snowFlake = new SnowFlake10();
-        courseInfoForm.setId(snowFlake.nextId());
+//        SnowFlake10 snowFlake = new SnowFlake10();
+        courseInfoForm.setId(0L);
         HashMap<String,Object> map = extractPost(courseInfoForm);
         HashMap<String,Object> result = new HashMap<>();
         if (map.containsKey("message")) {
@@ -263,7 +262,12 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         CourseInfo courseInfo = (CourseInfo)map.get("courseInfo");
 
         flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
-            save(courseInfo);
+            courseInfoMapper.insertAll(courseInfo);
+            Long courseId=courseInfo.getId();
+            preList1.forEach(item->item.setId(courseId));
+            classList1.forEach(item->item.setCourseId(courseId));
+            checkInfoList.forEach(item->item.setCourseId(courseId));
+            targetInfoList.forEach(item->item.setCourseId(courseId));
             fkPreMapper.insertBatch(preList1);
             fkClassCourseMapper.insertBatch(classList1);
             checkInfoMapper.insertBatch(checkInfoList);

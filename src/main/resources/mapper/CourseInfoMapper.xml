@@ -52,4 +52,22 @@
             #{item,jdbcType=NUMERIC}
         </foreach>
     </select>
+    <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
+        insert into u_courseinfo.course_info
+        (id, college, unit,
+         teacher, name, nature,
+         number, all_period, theory_period,
+         run_period, score, pre_else,
+         student_num, semester, usual_ratio,
+         final_ratio, final_id, user_id,
+         user_name)
+        values (#{id,jdbcType=NUMERIC}, #{college}, #{unit,jdbcType=VARCHAR},
+                #{teacher,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nature},
+                #{number,jdbcType=VARCHAR}, #{allPeriod,jdbcType=NUMERIC}, #{theoryPeriod,jdbcType=NUMERIC},
+                #{runPeriod,jdbcType=NUMERIC}, #{score,jdbcType=NUMERIC}, #{preElse,jdbcType=VARCHAR},
+                #{studentNum,jdbcType=NUMERIC}, #{semester}, #{usualRatio,jdbcType=DECIMAL},
+                #{finalRatio,jdbcType=DECIMAL}, #{finalId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
+                #{userName,jdbcType=VARCHAR})
+
+    </insert>
 </mapper>
