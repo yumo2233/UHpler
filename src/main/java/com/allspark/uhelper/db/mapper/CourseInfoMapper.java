@@ -1,4 +1,5 @@
 package com.allspark.uhelper.db.mapper;
+import java.util.Collection;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +17,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface CourseInfoMapper extends BaseMapper<CourseInfo> {
 
     CourseInfo selectAllById(@Param("id") Long id);
+
+    List<CourseInfo> selectAllByIdIn(@Param("idList") Collection<Long> idList);
 
 }
 

@@ -42,4 +42,14 @@
         where
         id = #{id,jdbcType=NUMERIC}
     </select>
+    <select id="selectAllByIdIn" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from course_info
+        where
+        id in
+        <foreach collection="idList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=NUMERIC}
+        </foreach>
+    </select>
 </mapper>

@@ -3,9 +3,10 @@ package com.allspark.uhelper.myenum;
 import com.allspark.uhelper.utils.SemesterUtil;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 
-
+@Getter
 public enum SemesterEnum {
 
     /**
