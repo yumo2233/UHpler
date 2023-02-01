@@ -35,7 +35,7 @@ public class GraduateController {
     private GraduateTargetInfoServiceImpl graduateTargetInfoService;
 
     @Operation(summary = "增加单个学生信息")
-    @PostMapping("/insertStudnet")
+    @PostMapping("/insertStudent")
     public CommonResp insertStudent(@RequestBody int id) {
         HashMap map = new HashMap();
         map.put("id", id);
@@ -48,12 +48,12 @@ public class GraduateController {
         return resp;
     }
 
-    @Operation(summary = "返回指标点和指标内容")
+    @Operation(summary = "根据id返回指标点和指标内容")
     @PostMapping("/searchTarget")
-    public CommonResp<Map> searchTargetById(@RequestBody int id) {
-        HashMap map = graduateTargetInfoService.searchTargetById(id);
+    public CommonResp<Map> searchTargetById(@RequestBody GraduateTargetForm targetForm) {
+        GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.searchTargetById(targetForm.getId());
         CommonResp resp = new CommonResp<>();
-        resp.setContent(map);
+        resp.setContent(graduateTargetInfo);
         return resp;
     }
 
@@ -67,19 +67,12 @@ public class GraduateController {
         return resp;
     }
 
-    @Operation(summary = "添加毕业要求和指标点")
-    @PostMapping("/insertTarget")
-    public CommonResp insertTarget(@RequestBody GraduateTargetInfoForm targetForm) {
-        GraduateInfo graduateTargetInfo = new GraduateInfo();
+
+    @Operation(summary = "添加毕业要求")
+    @PostMapping("/insertInfoTarget")
+    public CommonResp insertInfoTarget(@RequestBody GraduateTargetInfoForm targetForm) {
+        GraduateInfo graduateTargetInfo = graduateInfoService.transfer(targetForm);
         CommonResp resp = new CommonResp<>();
-        graduateTargetInfo.setId(targetForm.getId());
-        graduateTargetInfo.setCollege(targetForm.getCollege());
-        graduateTargetInfo.setGrade(targetForm.getGrade());
-        graduateTargetInfo.setProfessional(targetForm.getProfessional());
-        graduateTargetInfo.setGraduate_count(targetForm.getGraduate_count());
-        graduateTargetInfo.setGraduate_target_count(targetForm.getGraduate_target_count());
-        graduateTargetInfo.setName(targetForm.getName());
-        graduateTargetInfo.setUser_id(targetForm.getUser_id());
         graduateInfoService.insertInfoTarget(graduateTargetInfo);
         return resp;
     }
@@ -96,5 +89,79 @@ public class GraduateController {
             commonResp.setMessage("删除失败");
         }
         return commonResp;
+    }
+
+    @Operation(summary = "添加毕业指标点")
+    @PostMapping("/insertTarget")
+    public CommonResp insertTarget(@RequestBody GraduateTargetForm targetForm) {
+        GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(targetForm);
+        CommonResp commonResp = new CommonResp();
+        if (commonResp.getSuccess()) {
+            commonResp.setMessage("插入成功");
+        } else {
+            commonResp.setMessage("false");
+        }
+        return commonResp;
+    }
+
+    @Operation(summary = "批量插入毕业要求")
+    @PostMapping("/insertGraduateInfoBatch")
+    public CommonResp insertGraduateInfoBatch(@RequestBody ArrayList<GraduateTargetInfoForm> list) {
+        ArrayList<GraduateInfo> arrayList = new ArrayList<>();
+        for (int i = 0; i < list.size(); ++i) {
+            GraduateTargetInfoForm targetForm = list.get(i);
+            GraduateInfo graduateTargetInfo = graduateInfoService.transfer(targetForm);
+            arrayList.add(graduateTargetInfo);
+        }
+        graduateInfoService.insertGraduateInfoBatch(arrayList);
+        CommonResp commonResp = new CommonResp();
+        if (commonResp.getSuccess()) {
+            commonResp.setMessage("插入成功");
+        } else {
+            commonResp.setMessage("false");
+        }
+        return commonResp;
+    }
+
+    @Operation(summary = "更新毕业指标点")
+    @PostMapping("/updateTarget")
+    public CommonResp updateTarget(@RequestBody GraduateTargetForm targetForm) {
+        GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(targetForm);
+        boolean b = graduateTargetInfoService.updateTarget(graduateTargetInfo);
+        CommonResp commonResp = new CommonResp();
+        if (b) {
+            commonResp.setMessage("更新成功");
+        } else {
+            commonResp.setMessage("false");
+        }
+        return commonResp;
+    }
+
+    @Operation(summary = "批量更新毕业指标点")
+    @PostMapping("/updateTargetBatch")
+    public CommonResp updateTargetBatch(@RequestBody ArrayList<GraduateTargetForm> list) {
+        ArrayList<GraduateTargetInfo> arrayList = new ArrayList();
+        for (int i = 0; i < list.size(); ++i) {
+            GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(list.get(i));
+            arrayList.add(graduateTargetInfo);
+        }
+        boolean b = graduateTargetInfoService.updateTargetBatch(arrayList);
+        CommonResp commonResp = new CommonResp();
+        if (b) {
+            commonResp.setMessage("更改成功");
+        } else {
+            commonResp.setMessage("false");
+        }
+        return commonResp;
+    }
+
+    //要根据id返回所有指标点，待改动
+    @Operation(summary = "返回所有毕业指标点")
+    @GetMapping("/searchTargetBatch")
+    public CommonResp searchTargetBatch() {
+        ArrayList<HashMap> list = graduateTargetInfoService.searchTargetBatch();
+        CommonResp resp = new CommonResp();
+        resp.setContent(list);
+        return resp;
     }
 }

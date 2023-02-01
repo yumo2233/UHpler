@@ -1,7 +1,11 @@
 package com.allspark.uhelper.service.impl;
 
+import com.allspark.uhelper.common.form.GraduateTargetForm;
+import com.allspark.uhelper.common.form.GraduateTargetInfoForm;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
+import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.mapper.GraduateInfoMapper;
+import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
@@ -30,6 +34,7 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
 
     @Resource
     private GraduateTargetInfoMapper graduateTargetInfoMapper;
+
 
     public List<NAryTree> listAll2() {
         List<NAryTree> graduateTree = new ArrayList<>();
@@ -61,16 +66,32 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
 
 
     @Override
-    public HashMap searchTargetById(int id) {
-        HashMap map = graduateTargetInfoMapper.searchTargetById(id);
-        //JSONArray tag = JSONUtil.parseArray(MapUtil.getStr(map, "tag"));
-        //map.replace(tag,"tag");
-        return map;
+    public GraduateTargetInfo transferTarget(GraduateTargetForm targetForm) {
+        GraduateTargetInfo graduateTargetInfo = new GraduateTargetInfo();
+        graduateTargetInfo.setId(targetForm.getId());
+        graduateTargetInfo.setName(targetForm.getName());
+        graduateTargetInfo.setContent(targetForm.getContent());
+        graduateTargetInfo.setGraduate_id(targetForm.getGraduate_id());
+        return graduateTargetInfo;
     }
 
     @Override
-    public void insertTarget(long id) {
-        graduateTargetInfoMapper.insertTarget(id);
+    public GraduateTargetInfo searchTargetById(Long id) {
+        GraduateTargetInfo graduateTargetInfo = graduateTargetInfoMapper.searchTargetById(id);
+        //JSONArray tag = JSONUtil.parseArray(MapUtil.getStr(map, "tag"));
+        //map.replace(tag,"tag");
+        return graduateTargetInfo;
+    }
+
+    @Override
+    public ArrayList<HashMap> searchTargetBatch() {
+        ArrayList<HashMap> list = graduateTargetInfoMapper.searchTargetBatch();
+        return list;
+    }
+
+    @Override
+    public void insertTarget(GraduateTargetInfo graduateTargetInfo) {
+        graduateTargetInfoMapper.insertTarget(graduateTargetInfo);
     }
 
 
@@ -78,6 +99,24 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
     public boolean deleteTarget(long id) {
         boolean flag = false;
         if (graduateTargetInfoMapper.deleteTarget(id)) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean updateTarget(GraduateTargetInfo graduateTargetInfo) {
+        boolean flag = false;
+        if (graduateTargetInfoMapper.updateTarget(graduateTargetInfo)) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList) {
+        boolean flag = false;
+        if (graduateTargetInfoMapper.updateTargetBatch(arrayList)) {
             flag = true;
         }
         return flag;

@@ -1,6 +1,6 @@
 package com.allspark.uhelper.service.impl;
 
-import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
+import com.allspark.uhelper.common.form.GraduateTargetInfoForm;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,19 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
 
     @Resource
     private GraduateInfoMapper graduateInfoMapper;
+
+    public GraduateInfo transfer(GraduateTargetInfoForm targetForm) {
+        GraduateInfo graduateTargetInfo = new GraduateInfo();
+        graduateTargetInfo.setId(targetForm.getId());
+        graduateTargetInfo.setCollege(targetForm.getCollege());
+        graduateTargetInfo.setGrade(targetForm.getGrade());
+        graduateTargetInfo.setProfessional(targetForm.getProfessional());
+        graduateTargetInfo.setGraduate_count(targetForm.getGraduate_count());
+        graduateTargetInfo.setGraduate_target_count(targetForm.getGraduate_target_count());
+        graduateTargetInfo.setName(targetForm.getName());
+        graduateTargetInfo.setUser_id(targetForm.getUser_id());
+        return graduateTargetInfo;
+    }
 
     @Override
     public void insertStudent(Map param) {
@@ -41,8 +55,13 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     @Override
     public int insertInfoTarget(GraduateInfo graduateTargetInfo) {
 
-        graduateInfoMapper.insertTarget(graduateTargetInfo);
+        graduateInfoMapper.insertGraduateInfo(graduateTargetInfo);
         return 1;
+    }
+
+    @Override
+    public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList) {
+        graduateInfoMapper.insertGraduateInfoBatch(graduateInfoList);
     }
 }
 

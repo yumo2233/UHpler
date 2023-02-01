@@ -59,7 +59,7 @@ public class GraduateInfo implements Serializable {
     /**
      * 外键连接的毕业要求
      */
-    private Long graduateId;
+  //  private Long graduateId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

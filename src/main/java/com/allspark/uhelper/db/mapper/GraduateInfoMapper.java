@@ -1,9 +1,9 @@
 package com.allspark.uhelper.db.mapper;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,7 +25,9 @@ public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
 
     public void insertStudent(@Param("studentInfoCollection") Map param);
 
-    public int insertTarget(GraduateInfo graduateTargetInfo);
+    public int insertGraduateInfo(GraduateInfo graduateTargetInfo);
+
+    public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList);
 
 }
 

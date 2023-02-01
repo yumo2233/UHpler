@@ -5,14 +5,14 @@
 <mapper namespace="com.allspark.uhelper.db.mapper.GraduateInfoMapper">
 <!-- 数据库问题!-->
     <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.GraduateInfo">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="college" column="college" jdbcType="INTEGER"/>
-            <result property="grade" column="grade" jdbcType="INTEGER"/>
-            <result property="professional" column="professional" jdbcType="VARCHAR"/>
-            <result property="graduateCount" column="graduate_count" jdbcType="INTEGER"/>
-            <result property="graduateTargetCount" column="graduate_target_count" jdbcType="INTEGER"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="college" column="college" jdbcType="INTEGER"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+        <result property="professional" column="professional" jdbcType="VARCHAR"/>
+        <result property="graduate_count" column="graduate_count" jdbcType="INTEGER"/>
+        <result property="graduate_target_count" column="graduate_target_count" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="user_id" column="user_id" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -44,7 +44,7 @@
     </insert>
 
 
-    <insert id="insertTarget" parameterType="graduateInfo">
+    <insert id="insertGraduateInfo" parameterType="graduateInfo">
         INSERT INTO u_graduateinfo.graduate_info (id, college, grade, professional, graduate_count,
                                                   graduate_target_count, name, user_id)
         VALUES (#{id}, #{grade}, #{grade}, #{professional}, #{graduate_count}, #{graduate_target_count}, #{name},
@@ -52,11 +52,11 @@
 
     </insert>
 
-    <insert id="insertTargetBatch">
-        INSERT INTO u_graduateinfo.graduate_target_info (id, college, grade, professional,
+    <insert id="insertGraduateInfoBatch">
+        INSERT INTO u_graduateinfo.graduate_info (id, college, grade, professional,
         graduate_count,graduate_target_count,name,user_id) VALUES
         <foreach collection="list" separator="," item="item">
-            (#{item.id},#{item.college},#{item.grade},#{item.professional},#{item.graduate_count},#{item.graduate_target_count},#{name},#{user_id})
+            (#{item.id},#{item.college},#{item.grade},#{item.professional},#{item.graduate_count},#{item.graduate_target_count},#{item.name},#{item.user_id})
         </foreach>
     </insert>
 </mapper>

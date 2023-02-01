@@ -1,8 +1,12 @@
 package com.allspark.uhelper.service;
 
+import com.allspark.uhelper.common.form.GraduateTargetForm;
+import com.allspark.uhelper.common.form.GraduateTargetInfoForm;
+import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -12,9 +16,17 @@ import java.util.HashMap;
  */
 public interface GraduateTargetInfoService extends IService<GraduateTargetInfo> {
 
-    public HashMap searchTargetById(int id);
+    public GraduateTargetInfo transferTarget(GraduateTargetForm targetForm);
 
-    public void insertTarget(long id);
+    public GraduateTargetInfo searchTargetById(Long id);
+
+    public ArrayList<HashMap> searchTargetBatch();
+
+    public void insertTarget(GraduateTargetInfo graduateTargetInfo);
 
     public boolean deleteTarget(long id);
+
+    public boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
+
+    public boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
 }
