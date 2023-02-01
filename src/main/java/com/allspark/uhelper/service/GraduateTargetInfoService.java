@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author 86159
@@ -23,6 +24,8 @@ public interface GraduateTargetInfoService extends IService<GraduateTargetInfo> 
     public ArrayList<HashMap> searchTargetBatch();
 
     public void insertTarget(GraduateTargetInfo graduateTargetInfo);
+
+    public void insertTargetBatch(List<GraduateTargetInfo> list);
 
     public boolean deleteTarget(long id);
 

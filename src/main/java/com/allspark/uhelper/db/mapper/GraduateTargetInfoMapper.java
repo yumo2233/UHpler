@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author 86159
@@ -19,6 +20,8 @@ public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo>
     public GraduateTargetInfo searchTargetById(long id);
 
     public void insertTarget(GraduateTargetInfo graduateTargetInfo);
+
+    public void insertTargetBatch(List<GraduateTargetInfo> list);
 
     public boolean deleteTarget(long id);
 

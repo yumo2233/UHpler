@@ -31,7 +31,14 @@
 
     <insert id="insertTarget" parameterType="graduateTargetInfo">
         INSERT INTO u_graduateinfo.graduate_target_info(id, name, content, graduate_id)
-        values (#{id}, #{name}, #{content}, #{graduate_id})
+        VALUES (#{id}, #{name}, #{content}, #{graduate_id})
+    </insert>
+
+    <insert id="insertTargetBatch">
+        INSERT INTO u_graduateinfo.graduate_target_info(id, name, content, graduate_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.name},#{item.content},#{item.graduate_id})
+        </foreach>
     </insert>
 
     <delete id="deleteTarget">

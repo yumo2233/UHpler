@@ -56,4 +56,9 @@ public class GraduateTargetInfoForm implements Serializable {
     private String user_id;
 
 
+    /**
+     * 关联的毕业要求对应的指标点的id
+     */
+    private Long graduateId;
+
 }

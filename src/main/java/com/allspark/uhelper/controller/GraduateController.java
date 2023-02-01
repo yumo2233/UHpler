@@ -91,10 +91,30 @@ public class GraduateController {
         return commonResp;
     }
 
-    @Operation(summary = "添加毕业指标点")
+    @Operation(summary = "添加单个毕业指标点")
     @PostMapping("/insertTarget")
     public CommonResp insertTarget(@RequestBody GraduateTargetForm targetForm) {
         GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(targetForm);
+        graduateTargetInfoService.insertTarget(graduateTargetInfo);
+        CommonResp commonResp = new CommonResp();
+        if (commonResp.getSuccess()) {
+            commonResp.setMessage("插入成功");
+        } else {
+            commonResp.setMessage("false");
+        }
+        return commonResp;
+    }
+
+    @Operation(summary = "批量添加毕业指标点")
+    @PostMapping("/insertTargetBatch")
+    public CommonResp insertTargetBatch(@RequestBody ArrayList<GraduateTargetForm> list) {
+        ArrayList<GraduateTargetInfo> arrayList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            GraduateTargetForm graduateTargetForm = list.get(i);
+            GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(graduateTargetForm);
+            arrayList.add(graduateTargetInfo);
+        }
+        graduateTargetInfoService.insertTargetBatch(arrayList);
         CommonResp commonResp = new CommonResp();
         if (commonResp.getSuccess()) {
             commonResp.setMessage("插入成功");

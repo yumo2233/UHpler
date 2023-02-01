@@ -94,6 +94,11 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         graduateTargetInfoMapper.insertTarget(graduateTargetInfo);
     }
 
+    @Override
+    public void insertTargetBatch(List<GraduateTargetInfo> list) {
+        graduateTargetInfoMapper.insertTargetBatch(list);
+    }
+
 
     @Override
     public boolean deleteTarget(long id) {
