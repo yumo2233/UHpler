@@ -3,16 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.allspark.uhelper.db.mapper.GraduateInfoMapper">
-
+<!-- 数据库问题!-->
     <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.GraduateInfo">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="college" column="college" jdbcType="INTEGER"/>
-            <result property="grade" column="grade" jdbcType="INTEGER"/>
-            <result property="professional" column="professional" jdbcType="VARCHAR"/>
-            <result property="graduateCount" column="graduate_count" jdbcType="INTEGER"/>
-            <result property="graduateTargetCount" column="graduate_target_count" jdbcType="INTEGER"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="college" column="college" jdbcType="INTEGER"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+        <result property="professional" column="professional" jdbcType="VARCHAR"/>
+        <result property="graduate_count" column="graduate_count" jdbcType="INTEGER"/>
+        <result property="graduate_target_count" column="graduate_target_count" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="user_id" column="user_id" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,6 +28,11 @@
         where id = #{id,jdbcType=NUMERIC}
     </select>
 
+    <select id="selectCollegeAndGrade" resultType="HashMap">
+        select *
+        from u_classinfo.class_info
+    </select>
+
 
     <insert id="insertStudent">
         insert into u_classinfo.student_info(id,index,name,number,class_id)
@@ -35,6 +40,23 @@
         <foreach collection="studentInfoCollection" item="item" separator=",">
             (#{id,jdbcType=NUMERIC},#{index,jdbcType=INTGER},#{name,jdbcType=VARCHAR},
             #{number,jdbcType=INTEGER},#{class_id,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+
+
+    <insert id="insertGraduateInfo" parameterType="graduateInfo">
+        INSERT INTO u_graduateinfo.graduate_info (id, college, grade, professional, graduate_count,
+                                                  graduate_target_count, name, user_id)
+        VALUES (#{id}, #{grade}, #{grade}, #{professional}, #{graduate_count}, #{graduate_target_count}, #{name},
+                #{user_id})
+
+    </insert>
+
+    <insert id="insertGraduateInfoBatch">
+        INSERT INTO u_graduateinfo.graduate_info (id, college, grade, professional,
+        graduate_count,graduate_target_count,name,user_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.college},#{item.grade},#{item.professional},#{item.graduate_count},#{item.graduate_target_count},#{item.name},#{item.user_id})
         </foreach>
     </insert>
 </mapper>

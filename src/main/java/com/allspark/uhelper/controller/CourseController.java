@@ -52,6 +52,7 @@ public class CourseController {
     private GraduateTargetInfoServiceImpl graduateTargetInfoService;
 
     @Operation(summary = "返回所有课程信息")
+
     @GetMapping("/listAllCourseInfo")
     public CommonResp listAllCourseInfo() {
         List<CourseInfo> courseInfos = courseInfoService.list();
@@ -148,6 +149,7 @@ public class CourseController {
         resp.setMessage("返回所有的毕业指标点");
         return resp;
     }
+
 
     @Operation(summary = "显示该课程的学生和成绩")
     @GetMapping("/listAllStudent/{courseId}")

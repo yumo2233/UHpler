@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
+import org.junit.Test;
 
 @Getter
 public enum CollegeEnum {
@@ -31,3 +32,4 @@ public enum CollegeEnum {
     private final String name;
 
 }
+

@@ -1,5 +1,6 @@
 package com.allspark.uhelper.db.pojo;
 
+import com.allspark.uhelper.myenum.CollegeEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,7 +12,7 @@ import lombok.Data;
  * 指标点信息表
  * @TableName graduate_target_info
  */
-@TableName(value ="graduate_target_info")
+@TableName(value = "graduate_target_info")
 @Data
 public class GraduateTargetInfo implements Serializable {
     /**
@@ -33,8 +34,11 @@ public class GraduateTargetInfo implements Serializable {
     /**
      * 外键连接的毕业要求
      */
-    private Long graduateId;
+    private Long graduate_id;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
+
+

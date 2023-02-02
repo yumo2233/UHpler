@@ -4,7 +4,9 @@ import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author 86159
@@ -15,9 +17,19 @@ import java.util.HashMap;
 @DS("u_graduateinfo")
 public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo> {
 
-    public HashMap searchTargetById(int id);
+    public GraduateTargetInfo searchTargetById(long id);
 
+    public void insertTarget(GraduateTargetInfo graduateTargetInfo);
 
+    public void insertTargetBatch(List<GraduateTargetInfo> list);
+
+    public boolean deleteTarget(long id);
+
+    public boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
+
+    public boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
+
+    public ArrayList<HashMap> searchTargetBatch();
 }
 
 
