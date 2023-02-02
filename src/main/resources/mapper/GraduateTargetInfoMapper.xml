@@ -25,8 +25,11 @@
     </select>
 
     <select id="searchTargetBatch" resultType="HashMap">
-        SELECT *
+        SELECT id,
+               name,
+               content
         FROM u_graduateinfo.graduate_target_info
+        WHERE graduate_id = #{graduate_id}
     </select>
 
     <insert id="insertTarget" parameterType="graduateTargetInfo">
@@ -44,7 +47,8 @@
     <delete id="deleteTarget">
         DELETE
         FROM u_graduateinfo.graduate_target_info
-        where id = #{id}
+        where graduate_id = #{graduate_id}
+          AND name = #{name}
     </delete>
 
     <update id="updateTarget">
@@ -64,7 +68,6 @@
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             UPDATE u_graduateinfo.graduate_target_info
             <set>
-
                 <if test="item.name != null and item.name != ''">
                     name = #{item.name},
                 </if>
@@ -72,7 +75,7 @@
                     content = #{item.content},
                 </if>
             </set>
-            where id = #{item.id}
+            WHERE graduate_id = #{item.graduate_id}
         </foreach>
     </update>
 </mapper>

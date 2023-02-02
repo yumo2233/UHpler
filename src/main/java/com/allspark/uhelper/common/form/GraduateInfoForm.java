@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @Schema(description = "前端返回的毕业信息")
-public class GraduateTargetInfoForm implements Serializable {
+public class GraduateInfoForm implements Serializable {
     /**
      * 毕业要求id
      */

@@ -29,6 +29,17 @@ public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
 
     public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList);
 
+    public boolean deleteGraduateInfo(GraduateInfo graduateInfo);
+
+    public boolean updateGraduationName(GraduateInfo graduateInfo);
+
+    public long selectId(GraduateInfo graduateInfo);
+
+    public long selectIdByname(GraduateInfo graduateInfo);
+
+    public int selectGraduate_target_count(GraduateInfo graduateInfo);
+
+    public void updateGraduate_target_count(GraduateInfo graduateInfo);
 }
 
 

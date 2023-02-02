@@ -59,4 +59,56 @@
             (#{item.id},#{item.college},#{item.grade},#{item.professional},#{item.graduate_count},#{item.graduate_target_count},#{item.name},#{item.user_id})
         </foreach>
     </insert>
+
+    <delete id="deleteGraduateInfo">
+        DELETE
+        FROM u_graduateinfo.graduate_info
+        WHERE grade = #{grade}
+          AND professional = #{professional}
+          AND name = #{name}
+    </delete>
+
+    <update id="updateGraduationName">
+        UPDATE u_graduateinfo.graduate_info
+        <set>
+            <if test="name != null and name !=''">
+                name = #{name},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!-- 唯一性 -->
+    <select id="selectId" resultType="long">
+        SELECT id
+        FROM u_graduateinfo.graduate_info
+        WHERE grade = #{grade}
+          AND professional = #{professional}
+          AND name = #{name}
+    </select>
+
+    <select id="selectIdByname" resultType="long">
+        SELECT id
+        FROM u_graduateinfo.graduate_info
+        WHERE name = #{name}
+          AND grade = #{grade}
+          AND professional = #{professional}
+    </select>
+
+    <select id="selectGraduate_target_count" resultType="int">
+        SELECT graduate_target_count
+        FROM u_graduateinfo.graduate_info
+        where name = #{name}
+          AND grade = #{grade}
+          AND professional = #{professional}
+    </select>
+
+    <update id="updateGraduate_target_count">
+        UPDATE u_graduateinfo.graduate_info
+        <set>
+            <if test="graduate_target_count != null and graduate_target_count !=''">
+                graduate_target_count = #{graduate_target_count},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -1,6 +1,6 @@
 package com.allspark.uhelper.service.impl;
 
-import com.allspark.uhelper.common.form.GraduateTargetInfoForm;
+import com.allspark.uhelper.common.form.GraduateInfoForm;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
@@ -27,17 +27,18 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     @Resource
     private GraduateInfoMapper graduateInfoMapper;
 
-    public GraduateInfo transfer(GraduateTargetInfoForm targetForm) {
-        GraduateInfo graduateTargetInfo = new GraduateInfo();
-        graduateTargetInfo.setId(targetForm.getId());
-        graduateTargetInfo.setCollege(targetForm.getCollege());
-        graduateTargetInfo.setGrade(targetForm.getGrade());
-        graduateTargetInfo.setProfessional(targetForm.getProfessional());
-        graduateTargetInfo.setGraduate_count(targetForm.getGraduate_count());
-        graduateTargetInfo.setGraduate_target_count(targetForm.getGraduate_target_count());
-        graduateTargetInfo.setName(targetForm.getName());
-        graduateTargetInfo.setUser_id(targetForm.getUser_id());
-        return graduateTargetInfo;
+    public GraduateInfo transfer(GraduateInfoForm targetForm) {
+        GraduateInfo graduateInfo = new GraduateInfo();
+        graduateInfo.setId(targetForm.getId());
+        graduateInfo.setCollege(targetForm.getCollege());
+        graduateInfo.setGrade(targetForm.getGrade());
+        graduateInfo.setProfessional(targetForm.getProfessional());
+        graduateInfo.setGraduate_count(targetForm.getGraduate_count());
+        graduateInfo.setGraduate_target_count(targetForm.getGraduate_target_count());
+        graduateInfo.setName(targetForm.getName());
+        graduateInfo.setUser_id(targetForm.getUser_id());
+
+        return graduateInfo;
     }
 
     @Override
@@ -62,6 +63,20 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     @Override
     public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList) {
         graduateInfoMapper.insertGraduateInfoBatch(graduateInfoList);
+    }
+
+    @Override
+    public boolean deleteGraduateInfo(GraduateInfo graduateInfo) {
+        boolean b = graduateInfoMapper.deleteGraduateInfo(graduateInfo);
+        return b;
+    }
+
+    @Override
+    public boolean updateGraduationName(GraduateInfo graduateInfo) {
+        long id = graduateInfoMapper.selectId(graduateInfo);
+        graduateInfo.setId(id);
+        boolean b = graduateInfoMapper.updateGraduationName(graduateInfo);
+        return b;
     }
 }
 
