@@ -58,5 +58,11 @@ public class StudentAndScoreResp {
      * 期末成绩列表
      */
 
-    private Integer[] finalScore;
+    private Integer[] finalScore1;
+
+    private Integer[] finalScore2;
+
+    private Integer[] finalScore3;
+
+    private Integer[] finalScore4;
 }
