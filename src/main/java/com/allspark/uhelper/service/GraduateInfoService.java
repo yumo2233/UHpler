@@ -23,11 +23,13 @@ public interface GraduateInfoService extends IService<GraduateInfo> {
 
     public ArrayList<HashMap> selectCollegeAndGrade();
 
-    public int insertInfoTarget(GraduateInfo graduateInfo);
+    public int insertGraduateInfo(GraduateInfo graduateInfo);
 
     public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList);
 
     public boolean deleteGraduateInfo(GraduateInfo graduateInfo);
 
     public boolean updateGraduationName(GraduateInfo graduateInfo);
+
+    public ArrayList<HashMap> selectGraduateInfoByGradeAndProfessional(GraduateInfo graduateInfo);
 }

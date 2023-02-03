@@ -78,4 +78,10 @@
             WHERE graduate_id = #{item.graduate_id}
         </foreach>
     </update>
+
+    <select id="selectGraduateTargetCount" resultType="int">
+        SELECT COUNT(*)
+        FROM u_graduateinfo.graduate_target_info
+        WHERE graduate_id = #{graduate_id}
+    </select>
 </mapper>

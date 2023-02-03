@@ -40,6 +40,8 @@ public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
     public int selectGraduate_target_count(GraduateInfo graduateInfo);
 
     public void updateGraduate_target_count(GraduateInfo graduateInfo);
+
+    public ArrayList<HashMap> selectGraduateInfoByGradeAndProfessional(GraduateInfo graduateInfo);
 }
 
 

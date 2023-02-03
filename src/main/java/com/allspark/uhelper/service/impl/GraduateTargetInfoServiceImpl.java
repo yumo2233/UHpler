@@ -195,6 +195,12 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         // }
         // return true;
     }
+
+    @Override
+    public int selectGraduateTargetCount(long graduate_id) {
+        int count = graduateTargetInfoMapper.selectGraduateTargetCount(graduate_id);
+        return count;
+    }
 }
 
 

@@ -30,6 +30,8 @@ public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo>
     public boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
 
     public ArrayList<HashMap> searchTargetBatch(long graduate_id);
+
+    public int selectGraduateTargetCount(long graduate_id);
 }
 
 

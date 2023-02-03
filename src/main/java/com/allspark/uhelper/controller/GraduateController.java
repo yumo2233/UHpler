@@ -3,6 +3,7 @@ package com.allspark.uhelper.controller;
 import com.allspark.uhelper.common.form.GraduateInfoForm;
 import com.allspark.uhelper.common.form.GraduateTargetForm;
 import com.allspark.uhelper.common.util.CommonResp;
+import com.allspark.uhelper.db.mapper.GraduateInfoMapper;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.allspark.uhelper.service.GraduateInfoService;
@@ -57,6 +58,16 @@ public class GraduateController {
         return resp;
     }
 
+    @Operation(summary = "根据年级专业返回毕业要求的名称和个数")
+    @PostMapping("selectGraduateInfoByGP")
+    public CommonResp<ArrayList> selectGraduateInfoByGradeAndProfessional(@RequestBody GraduateInfoForm graduateInfoForm) {
+        GraduateInfo graduateInfo = graduateInfoService.transfer(graduateInfoForm);
+        ArrayList<HashMap> list = graduateInfoService.selectGraduateInfoByGradeAndProfessional(graduateInfo);
+        CommonResp commonResp = new CommonResp();
+        commonResp.setContent(list);
+        return commonResp;
+    }
+
     @Operation(summary = "返回所有学院和班级")
     @GetMapping("/selectCollegeAndGrade")
     public CommonResp selectCollegeAndGrade() {
@@ -73,7 +84,12 @@ public class GraduateController {
     public CommonResp insertInfoTarget(@RequestBody GraduateInfoForm targetForm) {
         GraduateInfo graduateTargetInfo = graduateInfoService.transfer(targetForm);
         CommonResp resp = new CommonResp<>();
-        graduateInfoService.insertInfoTarget(graduateTargetInfo);
+        graduateInfoService.insertGraduateInfo(graduateTargetInfo);
+        if (resp.getSuccess()) {
+            resp.setMessage("插入成功");
+        } else {
+            resp.setMessage("false");
+        }
         return resp;
     }
 
@@ -81,8 +97,12 @@ public class GraduateController {
     @PostMapping("/deleteGraduateInfo")
     public CommonResp deleteGraduateInfo(@RequestBody GraduateInfoForm graduateInfoForm) {
         GraduateInfo graduateInfo = graduateInfoService.transfer(graduateInfoForm);
-        boolean b = graduateInfoService.deleteGraduateInfo(graduateInfo);
         CommonResp commonResp = new CommonResp();
+        if (graduateInfo.getName() == null) {
+            commonResp.setMessage("毕业要求名称为空");
+            return commonResp;
+        }
+        boolean b = graduateInfoService.deleteGraduateInfo(graduateInfo);
         if (b) {
             commonResp.setMessage("删除成功");
         } else {
@@ -169,20 +189,26 @@ public class GraduateController {
     @Operation(summary = "批量插入毕业要求")
     @PostMapping("/insertGraduateInfoBatch")
     public CommonResp insertGraduateInfoBatch(@RequestBody ArrayList<GraduateInfoForm> list) {
-        ArrayList<GraduateInfo> arrayList = new ArrayList<>();
-        for (int i = 0; i < list.size(); ++i) {
-            GraduateInfoForm targetForm = list.get(i);
-            GraduateInfo graduateTargetInfo = graduateInfoService.transfer(targetForm);
-            arrayList.add(graduateTargetInfo);
+        try {
+            ArrayList<GraduateInfo> arrayList = new ArrayList<>();
+            for (int i = 0; i < list.size(); ++i) {
+                GraduateInfoForm targetForm = list.get(i);
+                GraduateInfo graduateTargetInfo = graduateInfoService.transfer(targetForm);
+                arrayList.add(graduateTargetInfo);
+            }
+            graduateInfoService.insertGraduateInfoBatch(arrayList);
+            CommonResp commonResp = new CommonResp();
+            if (commonResp.getSuccess()) {
+                commonResp.setMessage("插入成功");
+            }
+            return commonResp;
+        } catch (Exception e) {
+            CommonResp commonResp = new CommonResp();
+            commonResp.setSuccess(false);
+            commonResp.setContent("请检查输入字数是否超过限制");
+            commonResp.setMessage("系统出现异常，请联系管理员！");
+            return commonResp;
         }
-        graduateInfoService.insertGraduateInfoBatch(arrayList);
-        CommonResp commonResp = new CommonResp();
-        if (commonResp.getSuccess()) {
-            commonResp.setMessage("插入成功");
-        } else {
-            commonResp.setMessage("false");
-        }
-        return commonResp;
     }
 
     @Operation(summary = "更新毕业指标点")
@@ -227,4 +253,6 @@ public class GraduateController {
         resp.setContent(list);
         return resp;
     }
+
+
 }

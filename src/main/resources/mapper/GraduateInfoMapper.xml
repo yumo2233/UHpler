@@ -109,6 +109,15 @@
                 graduate_target_count = #{graduate_target_count},
             </if>
         </set>
-        WHERE id = #{id}
+        WHERE
+        id = #{id}
     </update>
+
+    <select id="selectGraduateInfoByGradeAndProfessional" resultType="HashMap">
+        SELECT graduate_count,
+               name
+        FROM u_graduateinfo.graduate_info
+        WHERE professional = #{professional}
+          AND grade = #{grade}
+    </select>
 </mapper>

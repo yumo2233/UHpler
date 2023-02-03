@@ -31,4 +31,6 @@ public interface GraduateTargetInfoService extends IService<GraduateTargetInfo> 
     public boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
 
     public void updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
+
+    public int selectGraduateTargetCount(long graduate_id);
 }
