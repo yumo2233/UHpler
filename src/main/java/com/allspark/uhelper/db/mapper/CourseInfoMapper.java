@@ -20,6 +20,8 @@ public interface CourseInfoMapper extends BaseMapper<CourseInfo> {
 
     List<CourseInfo> selectAllByIdIn(@Param("idList") Collection<Long> idList);
 
+    int insertAll(CourseInfo courseInfo);
+
 }
 
 

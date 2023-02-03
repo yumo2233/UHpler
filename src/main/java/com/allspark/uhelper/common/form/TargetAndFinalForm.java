@@ -22,7 +22,16 @@ public class TargetAndFinalForm {
     @Schema(description = "对应的课程目标名称")
     private String targetName;
 
-    @Schema(description = "题号列表")
-    private HashMap<Integer,Integer[]> first;
+    @Schema(description = "题号列表1")
+    private Integer[] first1;
+
+    @Schema(description = "题号列表2")
+    private Integer[] first2;
+
+    @Schema(description = "题号列表3")
+    private Integer[] first3;
+
+    @Schema(description = "题号列表4")
+    private Integer[] first4;
 
 }

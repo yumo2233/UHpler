@@ -36,7 +36,7 @@ import java.util.List;
  * @Date 2023/1/17 2:17
  * @Version 1.0
  **/
-@Tag(name = "CourseController",description = "课程接口")
+@Tag(name = "CourseController", description = "课程接口")
 @RestController
 @RequestMapping("/course")
 //@SaCheckLogin
@@ -54,10 +54,10 @@ public class CourseController {
     @Operation(summary = "返回所有课程信息")
 
     @GetMapping("/listAllCourseInfo")
-    public CommonResp listAllCourseInfo(){
+    public CommonResp listAllCourseInfo() {
         List<CourseInfo> courseInfos = courseInfoService.list();
         CommonResp resp = new CommonResp<>();
-        if (courseInfos==null) {
+        if (courseInfos == null) {
             resp.setMessage("当前没有课程");
         } else {
             List<CourseInfoResp> courseRespInfoList = courseInfoService.listCourseInfoResp(courseInfos);
@@ -69,10 +69,10 @@ public class CourseController {
 
     @Operation(summary = "返回所有课程")
     @GetMapping("/listAllCourse")
-    public CommonResp listAllCourse(){
+    public CommonResp listAllCourse() {
         List<CourseInfo> courseInfos = courseInfoService.list();
         CommonResp resp = new CommonResp<>();
-        if (courseInfos==null) {
+        if (courseInfos == null) {
             resp.setMessage("当前没有课程");
         } else {
             List<ListAllCourseResp> courseRespList = courseInfoService.listAllCourseResp(courseInfos);
@@ -84,7 +84,7 @@ public class CourseController {
 
     @Operation(summary = "返回单个课程信息")
     @GetMapping("/listOne/{courseId}")
-    public CommonResp listOne(@PathVariable Long courseId){
+    public CommonResp listOne(@PathVariable Long courseId) {
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(courseId);
         List<CourseInfo> courseInfos = courseInfoService.listByIds(ids);
@@ -98,12 +98,12 @@ public class CourseController {
 
     @Operation(summary = "修改单个课程信息")
     @PostMapping("/modifyOne")
-    public CommonResp listOne(@Valid @RequestBody CourseInfoForm course){
+    public CommonResp listOne(@Valid @RequestBody CourseInfoForm course) {
         CommonResp resp = new CommonResp<>();
-        HashMap<String,Object> result =courseInfoService.modifyOneCourseInfo(course);
+        HashMap<String, Object> result = courseInfoService.modifyOneCourseInfo(course);
         if ((Boolean) result.get("flag")) {
             resp.setMessage("修改成功！");
-        } else if (result.containsKey("message")){
+        } else if (result.containsKey("message")) {
             resp.setSuccess(false);
             resp.setMessage((String) result.get("message"));
         } else {
@@ -115,12 +115,12 @@ public class CourseController {
 
     @Operation(summary = "增加单个课程信息")
     @PostMapping("/addOne")
-    public CommonResp addOne(@Valid @RequestBody CourseInfoForm course){
+    public CommonResp addOne(@Valid @RequestBody CourseInfoForm course) {
         CommonResp resp = new CommonResp<>();
-        HashMap<String,Object> result = courseInfoService.addOneCourseInfo(course);
+        HashMap<String, Object> result = courseInfoService.addOneCourseInfo(course);
         if ((Boolean) result.get("flag")) {
             resp.setMessage("增加成功！");
-        } else if (result.containsKey("message")){
+        } else if (result.containsKey("message")) {
             resp.setSuccess(false);
             resp.setMessage((String) result.get("message"));
         } else {
@@ -132,7 +132,7 @@ public class CourseController {
 
     @Operation(summary = "显示班级列表(三级显示)")
     @GetMapping("/listAllClass")
-    public CommonResp listAllClass(){
+    public CommonResp listAllClass() {
         CommonResp resp = new CommonResp<>();
         List<NAryTree> collegeTrees = classInfoService.listAll3();
         resp.setContent(collegeTrees);
@@ -142,7 +142,7 @@ public class CourseController {
 
     @Operation(summary = "显示毕业指标点列表(二级显示)")
     @GetMapping("/listAllGraduate")
-    public CommonResp listAllGraduate(){
+    public CommonResp listAllGraduate() {
         CommonResp resp = new CommonResp<>();
         List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
         resp.setContent(collegeTrees);
@@ -164,12 +164,12 @@ public class CourseController {
 
     @Operation(summary = "修改该课程下的所有学生的平时和期末成绩")
     @PostMapping("/modifyAllStudent")
-    public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form){
+    public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form) {
         CommonResp resp = new CommonResp<>();
         boolean flag = courseInfoService.modifyAllStudent(form);
-        if(flag){
+        if (flag) {
             resp.setMessage("修改成功");
-        }else {
+        } else {
             resp.setMessage("修改失败");
             resp.setSuccess(false);
         }
@@ -178,7 +178,7 @@ public class CourseController {
 
     @Operation(summary = "显示该课程的平时成绩构成")
     @GetMapping("/listUsual/{courseId}")
-    public CommonResp listUsual(@PathVariable Long courseId){
+    public CommonResp listUsual(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
         UsualScoreResp usualScoreResp = courseInfoService.listUsual(courseId);
         resp.setContent(usualScoreResp);
@@ -188,12 +188,12 @@ public class CourseController {
 
     @Operation(summary = "修改该课程下的平时成绩构成")
     @PostMapping("/modifyUsual")
-    public CommonResp modifyUsual(@RequestBody UsualScoreForm form){
+    public CommonResp modifyUsual(@RequestBody UsualScoreForm form) {
         CommonResp resp = new CommonResp<>();
         boolean flag = courseInfoService.modifyUsual(form);
-        if(flag){
+        if (flag) {
             resp.setMessage("修改成功");
-        }else {
+        } else {
             resp.setMessage("修改失败");
             resp.setSuccess(false);
         }
@@ -202,7 +202,7 @@ public class CourseController {
 
     @Operation(summary = "显示该课程的期末成绩构成")
     @GetMapping("/listFinal/{courseId}")
-    public CommonResp listFinal(@PathVariable Long courseId){
+    public CommonResp listFinal(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
         FinalScoreResp finalScoreResp = courseInfoService.listFinal(courseId);
         resp.setContent(finalScoreResp);
@@ -212,12 +212,12 @@ public class CourseController {
 
     @Operation(summary = "修改该课程下的期末成绩构成")
     @PostMapping("/modifyFinal")
-    public CommonResp modifyFinal(@RequestBody FinalScoreForm form){
+    public CommonResp modifyFinal(@RequestBody FinalScoreForm form) {
         CommonResp resp = new CommonResp<>();
         boolean flag = courseInfoService.modifyFinal(form);
-        if(flag){
+        if (flag) {
             resp.setMessage("修改成功");
-        }else {
+        } else {
             resp.setMessage("修改失败");
             resp.setSuccess(false);
         }
@@ -228,9 +228,23 @@ public class CourseController {
     @GetMapping("/downloadUsual/{courseId}")
     public ResponseEntity<InputStreamResource> downloadUsual(@PathVariable Long courseId) throws IOException {
         boolean flag = courseInfoService.downLoadUsual(courseId);
-        FileSystemResource fileSystemResource=new FileSystemResource("D:\\uhelperTest\\"+courseId+".xlsx");
+        FileSystemResource fileSystemResource = new FileSystemResource("D:\\uhelperTest\\" + courseId + "usual" + ".xlsx");
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName()+".xlsx").build());
+        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName() + "平时成绩" + ".xlsx").build());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(fileSystemResource.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(fileSystemResource.getInputStream()));
+    }
+
+    @Operation(summary = "下载期末成绩表格")
+    @GetMapping("/downloadFinal/{courseId}")
+    public ResponseEntity<InputStreamResource> downloadFinal(@PathVariable Long courseId) throws IOException {
+        courseInfoService.downloadFinal(courseId);
+        FileSystemResource fileSystemResource = new FileSystemResource("D:\\uhelperTest\\" + courseId + "final" + ".xlsx");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName() + "平时成绩" + ".xlsx").build());
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentLength(fileSystemResource.contentLength())
@@ -242,9 +256,9 @@ public class CourseController {
     @GetMapping("/downloadReport/{courseId}")
     public ResponseEntity<InputStreamResource> downloadReport(@PathVariable Long courseId) throws IOException {
         courseInfoService.downloadReport(courseId);
-        FileSystemResource fileSystemResource=new FileSystemResource("D:\\uhelperTest\\"+courseId+".docx");
+        FileSystemResource fileSystemResource = new FileSystemResource("D:\\uhelperTest\\" + courseId + ".docx");
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName()+".docx").build());
+        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName() + ".docx").build());
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentLength(fileSystemResource.contentLength())
