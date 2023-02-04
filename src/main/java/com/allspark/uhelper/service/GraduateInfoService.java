@@ -1,6 +1,7 @@
 package com.allspark.uhelper.service;
 
 import com.allspark.uhelper.common.form.GraduateInfoForm;
+import com.allspark.uhelper.common.resp.GradeAndProfessionalResp;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
@@ -32,4 +33,10 @@ public interface GraduateInfoService extends IService<GraduateInfo> {
     public boolean updateGraduationName(GraduateInfo graduateInfo);
 
     public ArrayList<HashMap> selectGraduateInfoByGradeAndProfessional(GraduateInfo graduateInfo);
+
+    public List<Integer> selectGrade();
+
+    public List<String> selectProfessional();
+
+    public ArrayList<GradeAndProfessionalResp> selectGradeAndProfessional();
 }

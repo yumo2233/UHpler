@@ -1,6 +1,7 @@
 package com.allspark.uhelper.service.impl;
 
 import com.allspark.uhelper.common.form.GraduateInfoForm;
+import com.allspark.uhelper.common.resp.GradeAndProfessionalResp;
 import com.allspark.uhelper.db.mapper.GraduateTargetInfoMapper;
 import com.allspark.uhelper.utils.UuidUtils;
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -92,6 +93,32 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     public ArrayList<HashMap> selectGraduateInfoByGradeAndProfessional(GraduateInfo graduateInfo) {
         ArrayList<HashMap> list = graduateInfoMapper.selectGraduateInfoByGradeAndProfessional(graduateInfo);
         return list;
+    }
+
+    @Override
+    public List<Integer> selectGrade() {
+        List<Integer> list = graduateInfoMapper.selectGrade();
+        return list;
+    }
+
+    @Override
+    public List<String> selectProfessional() {
+        List<String> list = graduateInfoMapper.selectProfessional();
+        return list;
+    }
+
+    @Override
+    public ArrayList<GradeAndProfessionalResp> selectGradeAndProfessional() {
+        ArrayList<GraduateInfo> list = graduateInfoMapper.selectGradeAndProfessional();
+        ArrayList<GradeAndProfessionalResp> arrayList = new ArrayList();
+        for (int i = 0; i < list.size(); ++i) {
+            GradeAndProfessionalResp resp = new GradeAndProfessionalResp();
+            GraduateInfo graduateInfo = list.get(i);
+            resp.setProfessional(graduateInfo.getProfessional());
+            resp.setGrade(graduateInfo.getGrade());
+            arrayList.add(resp);
+        }
+        return arrayList;
     }
 }
 

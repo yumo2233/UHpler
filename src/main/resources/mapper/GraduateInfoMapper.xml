@@ -120,4 +120,21 @@
         WHERE professional = #{professional}
           AND grade = #{grade}
     </select>
+
+    <select id="selectGrade" resultType="int">
+        SELECT grade
+        FROM u_graduateinfo.graduate_info
+        GROUP BY grade
+    </select>
+
+    <select id="selectProfessional" resultType="string">
+        SELECT professional
+        FROM u_graduateinfo.graduate_info
+        GROUP BY professional
+    </select>
+
+    <select id="selectGradeAndProfessional" resultType="graduateInfo">
+        SELECT grade, professional
+        FROM u_graduateinfo.graduate_info
+    </select>
 </mapper>
