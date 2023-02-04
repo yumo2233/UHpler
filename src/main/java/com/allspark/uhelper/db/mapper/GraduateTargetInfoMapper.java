@@ -23,13 +23,15 @@ public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo>
 
     public void insertTargetBatch(List<GraduateTargetInfo> list);
 
-    public boolean deleteTarget(long id);
+    public boolean deleteTarget(GraduateTargetInfo graduateTargetInfo);
 
     public boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
 
     public boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
 
-    public ArrayList<HashMap> searchTargetBatch();
+    public ArrayList<HashMap> searchTargetBatch(long graduate_id);
+
+    public int selectGraduateTargetCount(long graduate_id);
 }
 
 

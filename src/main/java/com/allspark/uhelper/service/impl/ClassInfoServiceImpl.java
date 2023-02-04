@@ -63,7 +63,7 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
 //                for (ClassInfo classInfo : list) {
 //                    if (collegeTree.getLabel().equals(classInfo.getCollege().getName())&&professionalTree.getLabel().equals(classInfo.getProfessional())) {
 //                        NAryTree classTree = new NAryTree();
-//                        classTree.setValue(classInfo.getId());
+//                        classTree.setValue(classInfo.UuidUtils());
 //                        classTree.setLabel(classInfo.getName().toString());
 //                        professionalTree.getChildren().add(classTree);
 //                    }

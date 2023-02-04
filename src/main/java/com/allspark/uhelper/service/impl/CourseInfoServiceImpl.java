@@ -297,7 +297,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         studentAndScoreResp1.setName("示例");
         studentAndScoreResp1.setNumber("示例");
 //        List<CheckInfo> checkInfoList = checkInfoMapper.selectAllByCourseId(courseId);
-//        List<Integer> countList = fkCheckTargetMapper.selectTargetCountByCheckIdIn(checkInfoList.stream().map(CheckInfo::getId).collect(Collectors.toList()));
+//        List<Integer> countList = fkCheckTargetMapper.selectTargetCountByCheckIdIn(checkInfoList.stream().map(CheckInfo::UuidUtils).collect(Collectors.toList()));
 //        checkCount = countList.stream().reduce(Integer::sum).orElse(0);
         int usualScoreCount = 0;
         int finalCount = 0;
@@ -408,7 +408,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 //        HashMap<String,Integer[]> map = new HashMap<>();
 //        List<StudentUsualScore> studentUsualScoreList = studentUsualScoreMapper.selectAllByCourseId(courseId);
 //        for (StudentUsualScore studentUsualScore : studentUsualScoreList) {
-//            String flag = studentUsualScore.getTargetId().toString()+studentUsualScore.getCheckId()+studentUsualScore.getId().toString();
+//            String flag = studentUsualScore.getTargetId().toString()+studentUsualScore.getCheckId()+studentUsualScore.UuidUtils().toString();
 //            map.put(flag,JSONUtil.parse(studentUsualScore.getUsualScore()).toBean(Integer[].class));
 //            System.out.println(flag);
 //        }
@@ -417,11 +417,11 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
 //        for (StudentUsualScoreResp studentUsualScoreResp : studentUsualScoreRespList) {
 //            HashMap<Long,HashMap<Long,Integer[]>> usualMap = new HashMap();
 //            for (TargetInfo targetInfo : targetInfoList) {
-//                usualMap.put(targetInfo.getId(),new HashMap<>());
-//                for (Long checkId : fkCheckTargetMapper.selectCheckIdByTargetId(targetInfo.getId())) {
-//                    String flag = targetInfo.getId().toString() +checkId.toString()+studentUsualScoreResp.getId();
+//                usualMap.put(targetInfo.UuidUtils(),new HashMap<>());
+//                for (Long checkId : fkCheckTargetMapper.selectCheckIdByTargetId(targetInfo.UuidUtils())) {
+//                    String flag = targetInfo.UuidUtils().toString() +checkId.toString()+studentUsualScoreResp.UuidUtils();
 //                    System.out.println(flag);
-//                    usualMap.get(targetInfo.getId()).put(checkId,map.get(flag));
+//                    usualMap.get(targetInfo.UuidUtils()).put(checkId,map.get(flag));
 //                }
 //            }
 //            studentUsualScoreResp.setUsual(usualMap);

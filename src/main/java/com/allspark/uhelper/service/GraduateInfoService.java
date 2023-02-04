@@ -1,8 +1,7 @@
 package com.allspark.uhelper.service;
 
-import com.allspark.uhelper.common.form.GraduateTargetInfoForm;
+import com.allspark.uhelper.common.form.GraduateInfoForm;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
-import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,15 +17,19 @@ import java.util.Map;
  */
 public interface GraduateInfoService extends IService<GraduateInfo> {
 
-    public GraduateInfo transfer(GraduateTargetInfoForm targetForm);
+    public GraduateInfo transfer(GraduateInfoForm targetForm);
 
     public void insertStudent(@Param("studentInfoCollection") Map param);
 
     public ArrayList<HashMap> selectCollegeAndGrade();
 
-    public int insertInfoTarget(GraduateInfo graduateInfo);
+    public int insertGraduateInfo(GraduateInfo graduateInfo);
 
     public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList);
 
+    public boolean deleteGraduateInfo(GraduateInfo graduateInfo);
 
+    public boolean updateGraduationName(GraduateInfo graduateInfo);
+
+    public ArrayList<HashMap> selectGraduateInfoByGradeAndProfessional(GraduateInfo graduateInfo);
 }

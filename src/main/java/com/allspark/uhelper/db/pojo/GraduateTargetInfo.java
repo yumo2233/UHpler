@@ -36,6 +36,20 @@ public class GraduateTargetInfo implements Serializable {
      */
     private Long graduate_id;
 
+    /**
+     * 年级
+     */
+    private int grade;
+
+    /**
+     * 专业
+     */
+    private String professional;
+
+    /**
+     * 毕业要求的名字
+     */
+    private String graduate_name;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
