@@ -2,6 +2,7 @@ package com.allspark.uhelper;
 
 
 
+import cn.hutool.crypto.digest.BCrypt;
 import com.allspark.uhelper.myenum.CollegeEnum;
 import com.allspark.uhelper.utils.SnowFlake;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,9 @@ class UhelperApplicationTests {
 
     @Test
     void contextLoads() {
-        long index = new SnowFlake().nextId();
-        System.out.println(index);
+//        long index = new SnowFlake().nextId();
+//        System.out.println(index);
+        System.out.println(BCrypt.hashpw("123456", BCrypt.gensalt()));
     }
 
 //    @Autowired
