@@ -1,6 +1,7 @@
 package com.allspark.uhelper.service.impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.allspark.uhelper.common.form.UserLoginForm;
 import com.allspark.uhelper.common.form.UserUpdatePasswordForm;
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -30,21 +31,21 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     public HashMap login(UserLoginForm form) {
         String number = form.getNumber();
         String password0 = form.getPassword();
-        String password1 = SaSecureUtil.md5BySalt(password0, number);
-        Long userId = userInfoMapper.login(number, password1);
         UserInfo userInfo = userInfoMapper.selectAllByNumber(number);
+        String password1 = userInfo.getPassword();
+        boolean flag = BCrypt.checkpw(password0, password1);
         HashMap map = new HashMap();
-        map.put("isFirst",(Integer)userInfo.getIsFirst());
-        map.put("userId",userId);
+        map.put("isFirst",userInfo.getIsFirst());
+        map.put("flag",flag);
         map.put("userName", userInfo.getName());
-
+        map.put("userId", userInfo.getId());
         return map;
     }
 
     public int updatePassword(UserUpdatePasswordForm form) {
         String number = form.getNumber();
         String password0 = form.getPassword();
-        String password1 = SaSecureUtil.md5BySalt(password0, number);
+        String password1 = BCrypt.hashpw(password0, BCrypt.gensalt());
         int rows = userInfoMapper.update(number, password1);
         return rows;
     }

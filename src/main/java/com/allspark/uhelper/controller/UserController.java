@@ -34,6 +34,7 @@ public class UserController {
     @PostMapping("/login")
     public CommonResp login(@RequestBody @Valid UserLoginForm form){
         HashMap map = userInfoService.login(form);
+        boolean flag = (Boolean) map.get("flag");
         Long userId = (Long) map.get("userId");
         Integer isFirst = (Integer) map.get("isFirst");
         HashMap param = new HashMap();
@@ -41,15 +42,15 @@ public class UserController {
         param.put("number",form.getNumber());
         param.put("userName", map.get("userName"));
         CommonResp resp = new CommonResp();
-        resp.setSuccess(userId!=null?true:false);
-        if (userId!=null) {
+        resp.setSuccess(flag);
+        if (flag) {
             StpUtil.login(userId);
             resp.setMessage("登陆成功");
+            resp.setContent(param);
             param.put("token", StpUtil.getTokenValue());
         } else {
             resp.setMessage("登陆失败");
         }
-        resp.setContent(param);
         return resp;
     }
 
