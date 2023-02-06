@@ -53,7 +53,7 @@ public class GraduateInfoForm implements Serializable {
     /**
      * 创建该毕业要求的用户id
      */
-    private String user_id;
+    private Long user_id;
 
 
     /**

@@ -2,6 +2,7 @@ package com.allspark.uhelper.controller;
 
 import com.allspark.uhelper.common.form.GraduateInfoForm;
 import com.allspark.uhelper.common.form.GraduateTargetForm;
+import com.allspark.uhelper.common.resp.GradeAndProfessionalResp;
 import com.allspark.uhelper.common.util.CommonResp;
 import com.allspark.uhelper.db.mapper.GraduateInfoMapper;
 import com.allspark.uhelper.db.pojo.GraduateInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -254,5 +256,68 @@ public class GraduateController {
         return resp;
     }
 
+    @Operation(summary = "返回所有年级")
+    @GetMapping("selectGrade")
+    public CommonResp selectGrade() {
+        List<HashMap> list = graduateInfoService.selectGrade();
+        CommonResp commonResp = new CommonResp();
+        if (list == null) {
+            commonResp.setMessage("未查询到相关数据");
+        }
+        commonResp.setContent(list);
+        return commonResp;
+    }
+
+    @Operation(summary = "返回所有专业")
+    @GetMapping("selectProfessional")
+    public CommonResp selectProfessional() {
+        List<HashMap> list = graduateInfoService.selectProfessional();
+        CommonResp commonResp = new CommonResp();
+        if (list == null) {
+            commonResp.setMessage("未查询到相关数据");
+            return commonResp;
+        }
+        commonResp.setContent(list);
+        return commonResp;
+    }
+
+    @Operation(summary = "返回毕业表中存在的年级班级")
+    @GetMapping("selectGP")
+    public CommonResp<ArrayList> selectGradeAndProfessional() {
+        ArrayList<GradeAndProfessionalResp> resps = graduateInfoService.selectGradeAndProfessional();
+        CommonResp commonResp = new CommonResp();
+        if (resps == null) {
+            commonResp.setMessage("未查询到相关数据");
+            return commonResp;
+        }
+        commonResp.setContent(resps);
+        return commonResp;
+    }
+
+    @Operation(summary = "分别返回毕业表中存在的年级班级")
+    @GetMapping("selectGAP")
+    public CommonResp<HashMap> selectGAndP() {
+        List<HashMap> list1 = graduateInfoService.selectProfessional();
+        List<HashMap> list2 = graduateInfoService.selectGrade();
+        HashMap map = new HashMap();
+        CommonResp commonResp = new CommonResp();
+        if (list1 == null || list2 == null) {
+            commonResp.setMessage("未查询到相关数据");
+            return commonResp;
+        }
+        map.put("grade", list1);
+        map.put("professional", list2);
+        commonResp.setContent(map);
+        return commonResp;
+    }
+
+    @Operation(summary = "返回毕业要求页面")
+    @PostMapping("selectGraduatePage")
+    public CommonResp selectall(@RequestBody GraduateInfoForm graduateInfoForm) {
+        ArrayList<HashMap> selectall = graduateInfoService.selectall(graduateInfoForm.getId());
+        CommonResp commonResp = new CommonResp();
+        commonResp.setContent(selectall);
+        return commonResp;
+    }
 
 }

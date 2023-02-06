@@ -54,7 +54,7 @@ public class GraduateInfo implements Serializable {
     /**
      * 创建该毕业要求的用户id
      */
-    private String user_id;
+    private Long user_id;
 
     /**
      * 外键连接的毕业要求

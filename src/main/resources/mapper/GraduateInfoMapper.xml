@@ -30,7 +30,7 @@
 
     <select id="selectCollegeAndGrade" resultType="HashMap">
         select *
-        from u_classinfo.class_info
+        from u_graduateinfo.graduate_info
     </select>
 
 
@@ -120,4 +120,35 @@
         WHERE professional = #{professional}
           AND grade = #{grade}
     </select>
+
+    <select id="selectGrade" resultType="int">
+        SELECT grade
+        FROM u_graduateinfo.graduate_info
+        GROUP BY grade
+    </select>
+
+    <select id="selectProfessional" resultType="string">
+        SELECT professional
+        FROM u_graduateinfo.graduate_info
+        GROUP BY professional
+    </select>
+
+    <select id="selectGradeAndProfessional" resultType="graduateInfo">
+        SELECT grade, professional
+        FROM u_graduateinfo.graduate_info
+    </select>
+
+    <select id="selectall" resultType="hashmap">
+        SELECT *
+        FROM u_graduateinfo.graduate_info
+        WHERE grade = #{grade}
+          AND professional = #{professional}
+    </select>
+
+    <select id="selectGAP" resultType="graduateInfo">
+        SELECT grade, professional
+        FROM u_graduateinfo.graduate_info
+        WHERE id = #{id}
+    </select>
+
 </mapper>
