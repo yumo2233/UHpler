@@ -1,4 +1,5 @@
 package com.allspark.uhelper.db.mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.allspark.uhelper.db.pojo.GraduateTargetInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -32,6 +33,10 @@ public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo>
     public ArrayList<HashMap> searchTargetBatch(long graduate_id);
 
     public int selectGraduateTargetCount(long graduate_id);
+
+    List<GraduateTargetInfo> selectAll();
+
+    GraduateTargetInfo selectById(@Param("id") Long id);
 }
 
 

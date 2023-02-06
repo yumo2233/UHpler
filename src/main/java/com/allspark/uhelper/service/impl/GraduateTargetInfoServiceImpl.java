@@ -38,7 +38,7 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
 
     public List<NAryTree> listAll2() {
         List<NAryTree> graduateTree = new ArrayList<>();
-        List<GraduateTargetInfo> list = list();
+        List<GraduateTargetInfo> list = graduateTargetInfoMapper.selectAll();
         HashMap<Long, NAryTree> graMap = new HashMap<>();
 
         for (GraduateTargetInfo graduateTargetInfo : list) {

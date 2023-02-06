@@ -1,7 +1,11 @@
 package com.allspark.uhelper.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
-import com.allspark.uhelper.common.form.*;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.poi.excel.ExcelWriter;
+import com.allspark.uhelper.common.form.CourseInfoForm;
+import com.allspark.uhelper.common.form.FinalScoreForm;
+import com.allspark.uhelper.common.form.StudentAndScoreListForm;
+import com.allspark.uhelper.common.form.UsualScoreForm;
 import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.common.util.CommonResp;
@@ -9,22 +13,17 @@ import com.allspark.uhelper.db.pojo.CourseInfo;
 import com.allspark.uhelper.service.impl.ClassInfoServiceImpl;
 import com.allspark.uhelper.service.impl.CourseInfoServiceImpl;
 import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
+import com.spire.doc.Document;
+import com.spire.doc.FileFormat;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -226,44 +225,40 @@ public class CourseController {
 
     @Operation(summary = "下载平时成绩表格")
     @GetMapping("/downloadUsual/{courseId}")
-    public ResponseEntity<InputStreamResource> downloadUsual(@PathVariable Long courseId) throws IOException {
-        boolean flag = courseInfoService.downLoadUsual(courseId);
-        FileSystemResource fileSystemResource = new FileSystemResource("D:\\uhelperTest\\" + courseId + "usual" + ".xlsx");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName() + "平时成绩" + ".xlsx").build());
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(fileSystemResource.contentLength())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new InputStreamResource(fileSystemResource.getInputStream()));
+    public void downloadUsual(@PathVariable Long courseId, HttpServletResponse response) throws IOException {
+        ExcelWriter writer = courseInfoService.downLoadUsual(courseId);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + courseInfoService.getById(courseId).getName() + "__usualScore" + ".xlsx");
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out, true);
+        // 关闭writer，释放内存
+        writer.close();
+        //此处记得关闭输出Servlet流
+        IoUtil.close(out);
     }
 
     @Operation(summary = "下载期末成绩表格")
     @GetMapping("/downloadFinal/{courseId}")
-    public ResponseEntity<InputStreamResource> downloadFinal(@PathVariable Long courseId) throws IOException {
-        courseInfoService.downloadFinal(courseId);
-        FileSystemResource fileSystemResource = new FileSystemResource("D:\\uhelperTest\\" + courseId + "final" + ".xlsx");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName() + "平时成绩" + ".xlsx").build());
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(fileSystemResource.contentLength())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new InputStreamResource(fileSystemResource.getInputStream()));
+    public void downloadFinal(@PathVariable Long courseId, HttpServletResponse response) throws IOException {
+        ExcelWriter writer = courseInfoService.downloadFinal(courseId);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + courseInfoService.getById(courseId).getName() + "__finalScore" + ".xlsx");
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out, true);
+        // 关闭writer，释放内存
+        writer.close();
+        //此处记得关闭输出Servlet流
+        IoUtil.close(out);
     }
 
     @Operation(summary = "下载课程报告")
     @GetMapping("/downloadReport/{courseId}")
-    public ResponseEntity<InputStreamResource> downloadReport(@PathVariable Long courseId) throws IOException {
-        courseInfoService.downloadReport(courseId);
-        FileSystemResource fileSystemResource = new FileSystemResource("D:\\uhelperTest\\" + courseId + ".docx");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(ContentDisposition.attachment().filename(courseInfoService.getById(courseId).getName() + ".docx").build());
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(fileSystemResource.contentLength())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new InputStreamResource(fileSystemResource.getInputStream()));
+    public void downloadReport(@PathVariable Long courseId, HttpServletResponse response) throws IOException {
+        Document document = courseInfoService.downloadReport(courseId);
+        response.setContentType("application/msword;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + courseInfoService.getById(courseId).getName() + "__report" + ".doc");
+        ServletOutputStream out = response.getOutputStream();
+        document.saveToStream(out, FileFormat.Doc);
     }
 
 

@@ -21,7 +21,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -565,7 +567,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         return flag;
     }
 
-    public boolean downLoadUsual(Long courseId) {
+    public ExcelWriter downLoadUsual(Long courseId) {
         double usualRatio = courseInfoMapper.selectAllById(courseId).getUsualRatio().doubleValue();
         List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
         List<StudentAndScoreResp> studentAndScoreRespList;
@@ -593,7 +595,6 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             emptyScore[i] = 0;
         }
         studentAndScoreResp1.setUsualScore(fullScore);
-//        studentAndScoreResp1.setFinalScore(fullScore);
         studentAndScoreRespList = CopyUtil.copyList(studentInfoList, StudentAndScoreResp.class);
         StudentAndScoreResp studentAndScoreResp0 = new StudentAndScoreResp();
         studentAndScoreRespList.add(0, studentAndScoreResp0);
@@ -698,18 +699,14 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             usualScoreList.add(usualSore);
         }
         usualScoreList.add(0, tableHeader1);
-        File file = new File("D:\\uhelperTest\\" + courseId + "usual" + ".xlsx");
-        FileUtil.del(file);
-        ExcelWriter writer = ExcelUtil.getWriter("D:\\uhelperTest\\" + courseId + "usual" + ".xlsx");
+        ExcelWriter writer = ExcelUtil.getWriter(true);
         // 合并单元格后的标题行，使用默认标题样式
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(usualScoreList, true);
-        // 关闭writer，释放内存
-        writer.close();
-        return true;
+        return writer;
     }
 
-    public void downloadFinal(Long courseId) {
+    public ExcelWriter downloadFinal(Long courseId) {
         List<Long> ids = fkClassCourseMapper.selectClassIdByCourseId(courseId);
         List<StudentAndScoreResp> studentAndScoreRespList;
         List<StudentInfo> studentInfoList = studentInfoMapper.listAllByClassIdIn(ids);
@@ -848,17 +845,14 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             finalScore.add(2, studentAndScoreResp.getName());
             finalScoreList.add(finalScore);
         }
-        File file = new File("D:\\uhelperTest\\" + courseId + "final" + ".xlsx");
-        FileUtil.del(file);
-        ExcelWriter writer = ExcelUtil.getWriter("D:\\uhelperTest\\" + courseId + "final" + ".xlsx");
+        ExcelWriter writer = ExcelUtil.getWriter(true);
         // 合并单元格后的标题行，使用默认标题样式
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(finalScoreList, true);
-        // 关闭writer，释放内存
-        writer.close();
+        return writer;
     }
 
-    public void downloadReport(Long courseId) {
+    public Document downloadReport(Long courseId) {
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(courseId);
         List<CourseInfo> courseInfos = listByIds(ids);
@@ -918,7 +912,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 graduateTargetInfo.setContent("无");
             }
             String graduateName = graduateTargetInfo.getName();
-            courseTarget = courseTarget + j + "." + name + "（" + number + "）" + "：" + content + "（" + "支撑毕业要求" + graduateName + "）" + "\n";
+            courseTarget = courseTarget + j + "." + name + "（" + number + "）" + "：" + content + "（" + "支撑毕业要求" + graduateName + "）" + "\n\t ";
             HashMap<String, String> targetHashMap = new HashMap<>();
             targetHashMap.put(name, graduateName + graduateTargetInfo.getContent());
             targetTableList.add(targetHashMap);
@@ -962,7 +956,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 i1++;
             }
         }
-        document.saveToFile("D:\\uhelperTest\\" + courseInfo.getId() + ".docx", FileFormat.Docx);
+        return document;
     }
 }
 
