@@ -3,6 +3,7 @@ package com.allspark.uhelper.service.impl;
 import com.allspark.uhelper.common.form.GraduateInfoForm;
 import com.allspark.uhelper.common.resp.GradeAndProfessionalResp;
 import com.allspark.uhelper.db.mapper.GraduateTargetInfoMapper;
+import com.allspark.uhelper.myenum.CollegeEnum;
 import com.allspark.uhelper.utils.UuidUtils;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -56,7 +57,28 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     @Override
     public ArrayList<HashMap> selectCollegeAndGrade() {
         ArrayList<HashMap> list = graduateInfoMapper.selectCollegeAndGrade();
-        return list;
+        ArrayList<HashMap> list1 = new ArrayList<>();
+        for (int i = 0; i < list.size(); ++i) {
+            HashMap hashMap = new HashMap();
+            HashMap map = list.get(i);
+            hashMap.put("graduateCount", map.get("graduate_count"));
+            hashMap.put("graduateTargetCount", map.get("graduate_target_count"));
+            hashMap.put("userId", map.get("user_id"));
+            hashMap.put("id", map.get("id"));
+            int m = (int) map.get("college");
+
+            String type = CollegeEnum.getEnumType(m);
+            if (type == null) {
+                hashMap.put("college", "不存在相关学院");
+            }
+
+            hashMap.put("college", type);
+            hashMap.put("grade", map.get("grade"));
+            hashMap.put("professional", map.get("professional"));
+            hashMap.put("name", map.get("name"));
+            list1.add(hashMap);
+        }
+        return list1;
     }
 
     @Override
@@ -96,15 +118,31 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     }
 
     @Override
-    public List<Integer> selectGrade() {
-        List<Integer> list = graduateInfoMapper.selectGrade();
-        return list;
+    public ArrayList<HashMap> selectGrade() {
+        ArrayList<Integer> list = graduateInfoMapper.selectGrade();
+        ArrayList<HashMap> list1 = new ArrayList<>();
+        for (int i = 0; i < list.size(); ++i) {
+            Integer integer = list.get(i);
+            HashMap map = new HashMap();
+            map.put("label", integer);
+            map.put("value", integer);
+            list1.add(map);
+        }
+        return list1;
     }
 
     @Override
-    public List<String> selectProfessional() {
-        List<String> list = graduateInfoMapper.selectProfessional();
-        return list;
+    public ArrayList<HashMap> selectProfessional() {
+        ArrayList<String> list = graduateInfoMapper.selectProfessional();
+        ArrayList<HashMap> arrayList = new ArrayList<>();
+        for (int i = 0; i < list.size(); ++i) {
+            String s = list.get(i);
+            HashMap map = new HashMap();
+            map.put("value", s);
+            map.put("label", s);
+            arrayList.add(map);
+        }
+        return arrayList;
     }
 
     @Override
@@ -119,6 +157,44 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
             arrayList.add(resp);
         }
         return arrayList;
+    }
+
+    @Override
+    public ArrayList<HashMap> selectall(long id) {
+        GraduateInfo graduateInfo = graduateInfoMapper.selectGAP(id);
+        ArrayList<HashMap> list = graduateInfoMapper.selectall(graduateInfo);
+        // ArrayList<HashMap> list = graduateInfoMapper.selectall(id);
+
+        ArrayList<HashMap> arrayList = new ArrayList<>();
+        if (list != null) {
+            HashMap hashMap = new HashMap();
+            HashMap map = list.get(0);
+            hashMap.put("college", CollegeEnum.getEnumType((Integer) map.get("college")));
+            hashMap.put("grade", map.get("grade"));
+            hashMap.put("professional", map.get("professional"));
+            arrayList.add(hashMap);
+            //循环毕业要求
+            for (int i = 0; i < list.size(); ++i) {
+                //做毕业要求
+                // ArrayList<HashMap> hashMaps = new ArrayList<>();
+                HashMap hashMap1 = list.get(i);
+                HashMap hashMap2 = new HashMap();
+                ArrayList<HashMap> arrayList2 = new ArrayList<>();
+                hashMap2.put("graduateName", hashMap1.get("name"));
+                arrayList2.add(hashMap2);
+                ArrayList<HashMap> arrayList1 = graduateTargetInfoMapper.selectGraduateTarget((Long) hashMap1.get("id"));
+                for (int j = 0; j < arrayList1.size(); ++j) {
+                    HashMap hashMap4 = arrayList1.get(j);
+                    HashMap hashMap3 = new HashMap();
+                    hashMap3.put("name", hashMap4.get("name"));
+                    hashMap3.put("content", hashMap4.get("content"));
+                    arrayList2.add(hashMap3);
+                }
+                hashMap.put("graduateName" + i, arrayList2);
+            }
+            return arrayList;
+        }
+        return null;
     }
 }
 

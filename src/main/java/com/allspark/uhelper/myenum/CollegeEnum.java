@@ -3,6 +3,7 @@ package com.allspark.uhelper.myenum;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Data;
 import lombok.Getter;
 import org.junit.Test;
 
@@ -16,15 +17,26 @@ public enum CollegeEnum {
     * @return
     **/
 
-    TONGGONG(1,"communAndInfo"),
-    DIANGONG(2,"electronAndEng"),
-    ZIDONGHUA(3,"autoMation"),
-    JISUANJI(4,"computing"),
-    JINGGUAN(5,"economyAndMag");
+    TONGGONG(1, "communAndInfo"),
+    DIANGONG(2, "electronAndEng"),
+    ZIDONGHUA(3, "autoMation"),
+    JISUANJI(4, "computing"),
+    JINGGUAN(5, "economyAndMag");
+
     CollegeEnum(int i, String s) {
-        code=i;
-        name=s;
+        code = i;
+        name = s;
     }
+
+    public static String getEnumType(int val) {
+        for (CollegeEnum type : CollegeEnum.values()) {
+            if (type.getCode() == val) {
+                return type.getName();
+            }
+        }
+        return null;
+    }
+
 
     @EnumValue
     private final Integer code;

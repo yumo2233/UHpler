@@ -84,4 +84,10 @@
         FROM u_graduateinfo.graduate_target_info
         WHERE graduate_id = #{graduate_id}
     </select>
+
+    <select id="selectGraduateTarget" resultType="hashmap">
+        SELECT *
+        FROM u_graduateinfo.graduate_target_info
+        WHERE graduate_id = #{graduate_id}
+    </select>
 </mapper>

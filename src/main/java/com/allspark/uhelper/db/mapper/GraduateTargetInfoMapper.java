@@ -17,21 +17,23 @@ import java.util.List;
 @DS("u_graduateinfo")
 public interface GraduateTargetInfoMapper extends BaseMapper<GraduateTargetInfo> {
 
-    public GraduateTargetInfo searchTargetById(long id);
+     GraduateTargetInfo searchTargetById(long id);
 
-    public void insertTarget(GraduateTargetInfo graduateTargetInfo);
+    void insertTarget(GraduateTargetInfo graduateTargetInfo);
 
-    public void insertTargetBatch(List<GraduateTargetInfo> list);
+    void insertTargetBatch(List<GraduateTargetInfo> list);
 
-    public boolean deleteTarget(GraduateTargetInfo graduateTargetInfo);
+    boolean deleteTarget(GraduateTargetInfo graduateTargetInfo);
 
-    public boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
+    boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
 
-    public boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
+    boolean updateTargetBatch(ArrayList<GraduateTargetInfo> arrayList);
 
-    public ArrayList<HashMap> searchTargetBatch(long graduate_id);
+    ArrayList<HashMap> searchTargetBatch(long graduate_id);
 
-    public int selectGraduateTargetCount(long graduate_id);
+    int selectGraduateTargetCount(long graduate_id);
+
+    ArrayList<HashMap> selectGraduateTarget(long graduate_id);
 }
 
 

@@ -43,11 +43,15 @@ public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
 
     public ArrayList<HashMap> selectGraduateInfoByGradeAndProfessional(GraduateInfo graduateInfo);
 
-    public List<Integer> selectGrade();
+    public ArrayList<Integer> selectGrade();
 
-    public List<String> selectProfessional();
+    public ArrayList<String> selectProfessional();
 
     public ArrayList<GraduateInfo> selectGradeAndProfessional();
+
+    public ArrayList<HashMap> selectall(GraduateInfo graduateInfo);
+
+    public GraduateInfo selectGAP(long id);
 }
 
 
