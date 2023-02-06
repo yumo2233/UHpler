@@ -84,4 +84,23 @@
         FROM u_graduateinfo.graduate_target_info
         WHERE graduate_id = #{graduate_id}
     </select>
+
+    <select id="selectGraduateTarget" resultType="hashmap">
+        SELECT *
+        FROM u_graduateinfo.graduate_target_info
+        WHERE graduate_id = #{graduate_id}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_graduateinfo.graduate_target_info
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_graduateinfo.graduate_target_info
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
 </mapper>

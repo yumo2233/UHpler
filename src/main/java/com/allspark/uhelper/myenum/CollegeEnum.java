@@ -26,6 +26,16 @@ public enum CollegeEnum {
         name=s;
     }
 
+    public static String getEnumType(int val) {
+        for (CollegeEnum type : CollegeEnum.values()) {
+            if (type.getCode() == val) {
+                return type.getName();
+            }
+        }
+        return null;
+    }
+
+
     @EnumValue
     private final Integer code;
     @JsonValue

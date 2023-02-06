@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.allspark.uhelper.db.mapper.GraduateInfoMapper">
-<!-- 数据库问题!-->
+    <!-- 数据库问题!-->
     <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.GraduateInfo">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="college" column="college" jdbcType="INTEGER"/>
@@ -30,7 +30,7 @@
 
     <select id="selectCollegeAndGrade" resultType="HashMap">
         select *
-        from u_classinfo.class_info
+        from u_graduateinfo.graduate_info
     </select>
 
 
@@ -120,4 +120,35 @@
         WHERE professional = #{professional}
           AND grade = #{grade}
     </select>
+
+    <select id="selectGrade" resultType="int">
+        SELECT grade
+        FROM u_graduateinfo.graduate_info
+        GROUP BY grade
+    </select>
+
+    <select id="selectProfessional" resultType="string">
+        SELECT professional
+        FROM u_graduateinfo.graduate_info
+        GROUP BY professional
+    </select>
+
+    <select id="selectGradeAndProfessional" resultType="graduateInfo">
+        SELECT grade, professional
+        FROM u_graduateinfo.graduate_info
+    </select>
+
+    <select id="selectall" resultType="hashmap">
+        SELECT *
+        FROM u_graduateinfo.graduate_info
+        WHERE grade = #{grade}
+          AND professional = #{professional}
+    </select>
+
+    <select id="selectGAP" resultType="graduateInfo">
+        SELECT grade, professional
+        FROM u_graduateinfo.graduate_info
+        WHERE id = #{id}
+    </select>
+
 </mapper>
