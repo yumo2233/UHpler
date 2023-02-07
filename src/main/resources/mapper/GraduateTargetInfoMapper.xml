@@ -47,8 +47,7 @@
     <delete id="deleteTarget">
         DELETE
         FROM u_graduateinfo.graduate_target_info
-        where graduate_id = #{graduate_id}
-          AND name = #{name}
+        where id = #{id}
     </delete>
 
     <update id="updateTarget">

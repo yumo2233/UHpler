@@ -95,16 +95,16 @@ public class GraduateController {
         return resp;
     }
 
-    @Operation(summary = "根据年级专业删除毕业要求")
-    @PostMapping("/deleteGraduateInfo")
-    public CommonResp deleteGraduateInfo(@RequestBody GraduateInfoForm graduateInfoForm) {
-        GraduateInfo graduateInfo = graduateInfoService.transfer(graduateInfoForm);
+    @Operation(summary = "根据Id删除毕业要求")
+    @GetMapping("/deleteGraduateInfo/{Id}")
+    public CommonResp deleteGraduateInfo(@PathVariable Long Id) {
+        // GraduateInfo graduateInfo = graduateInfoService.transfer(graduateInfoForm);
         CommonResp commonResp = new CommonResp();
-        if (graduateInfo.getName() == null) {
-            commonResp.setMessage("毕业要求名称为空");
-            return commonResp;
-        }
-        boolean b = graduateInfoService.deleteGraduateInfo(graduateInfo);
+//        if (graduateInfo.getName() == null) {
+//            commonResp.setMessage("毕业要求名称为空");
+//            return commonResp;
+//        }
+        boolean b = graduateInfoService.deleteGraduateInfo(Id);
         if (b) {
             commonResp.setMessage("删除成功");
         } else {
@@ -128,11 +128,11 @@ public class GraduateController {
     }
 
     @Operation(summary = "删除毕业指标点")
-    @PostMapping("/deleteTarget")
-    public CommonResp deleteTarget(@RequestBody GraduateTargetForm targetForm) {
+    @GetMapping("/deleteTarget/{Id}")
+    public CommonResp deleteTarget(@PathVariable Long Id) {
         try {
-            GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(targetForm);
-            boolean flag = graduateTargetInfoService.deleteTarget(graduateTargetInfo);
+            // GraduateTargetInfo graduateTargetInfo = graduateTargetInfoService.transferTarget(targetForm);
+            boolean flag = graduateTargetInfoService.deleteTarget(Id);
             CommonResp commonResp = new CommonResp();
             if (flag) {
                 commonResp.setMessage("删除成功");
@@ -312,9 +312,9 @@ public class GraduateController {
     }
 
     @Operation(summary = "返回毕业要求页面")
-    @PostMapping("selectGraduatePage")
-    public CommonResp selectall(@RequestBody GraduateInfoForm graduateInfoForm) {
-        ArrayList<HashMap> selectall = graduateInfoService.selectall(graduateInfoForm.getId());
+    @GetMapping("selectGraduatePage/{graduateId}")
+    public CommonResp selectall(@PathVariable Long graduateId) {
+        ArrayList<HashMap> selectall = graduateInfoService.selectall(graduateId);
         CommonResp commonResp = new CommonResp();
         commonResp.setContent(selectall);
         return commonResp;

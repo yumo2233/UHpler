@@ -158,18 +158,20 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
 
 
     @Override
-    public boolean deleteTarget(GraduateTargetInfo graduateTargetInfo) {
-        graduateTargetInfo.setGraduate_id(getGraduate_idOfDb(graduateTargetInfo));
-        boolean flag = false;
-        if (graduateTargetInfoMapper.deleteTarget(graduateTargetInfo)) {
-            flag = true;
-        }
-        int count = selectgraduate_target_count(graduateTargetInfo);
-        GraduateInfo graduateInfo = new GraduateInfo();
-        graduateInfo.setId(graduateTargetInfo.getGraduate_id());
-        graduateInfo.setGraduate_target_count(--count);
-        graduateInfoMapper.updateGraduate_target_count(graduateInfo);
-        return flag;
+    public boolean deleteTarget(long Id) {
+//        graduateTargetInfo.setGraduate_id(getGraduate_idOfDb(graduateTargetInfo));
+//        boolean flag = false;
+//        if (graduateTargetInfoMapper.deleteTarget(graduateTargetInfo)) {
+//            flag = true;
+//        }
+//        int count = selectgraduate_target_count(graduateTargetInfo);
+//        GraduateInfo graduateInfo = new GraduateInfo();
+//        graduateInfo.setId(graduateTargetInfo.getGraduate_id());
+//        graduateInfo.setGraduate_target_count(--count);
+//        graduateInfoMapper.updateGraduate_target_count(graduateInfo);
+//        return flag;
+        boolean b = graduateTargetInfoMapper.deleteTarget(Id);
+        return b;
     }
 
     @Override

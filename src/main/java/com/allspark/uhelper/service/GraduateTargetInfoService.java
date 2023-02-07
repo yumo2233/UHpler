@@ -26,7 +26,7 @@ public interface GraduateTargetInfoService extends IService<GraduateTargetInfo> 
 
     public int insertTargetBatch(List<GraduateTargetInfo> list);
 
-    public boolean deleteTarget(GraduateTargetInfo graduateTargetInfo);
+    public boolean deleteTarget(long Id);
 
     public boolean updateTarget(GraduateTargetInfo graduateTargetInfo);
 

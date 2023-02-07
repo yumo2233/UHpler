@@ -28,7 +28,7 @@ public interface GraduateInfoService extends IService<GraduateInfo> {
 
     public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList);
 
-    public boolean deleteGraduateInfo(GraduateInfo graduateInfo);
+    public boolean deleteGraduateInfo(long id);
 
     public boolean updateGraduationName(GraduateInfo graduateInfo);
 

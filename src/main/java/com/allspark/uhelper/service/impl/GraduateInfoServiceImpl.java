@@ -100,8 +100,8 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     }
 
     @Override
-    public boolean deleteGraduateInfo(GraduateInfo graduateInfo) {
-        boolean b = graduateInfoMapper.deleteGraduateInfo(graduateInfo);
+    public boolean deleteGraduateInfo(long id) {
+        boolean b = graduateInfoMapper.deleteGraduateInfo(id);
         return b;
     }
 
@@ -172,26 +172,52 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
             hashMap.put("college", CollegeEnum.getEnumType((Integer) map.get("college")));
             hashMap.put("grade", map.get("grade"));
             hashMap.put("professional", map.get("professional"));
-            arrayList.add(hashMap);
-            //循环毕业要求
+            // arrayList.add(hashMap);
+//            //循环毕业要求
+//            for (int i = 0; i < list.size(); ++i) {
+//                //做毕业要求
+//                // ArrayList<HashMap> hashMaps = new ArrayList<>();
+//                HashMap hashMap1 = list.get(i);
+//                HashMap hashMap2 = new HashMap();
+//                ArrayList<HashMap> arrayList2 = new ArrayList<>();
+//                hashMap2.put("graduateName", hashMap1.get("name"));
+//                arrayList2.add(hashMap2);
+//                ArrayList<HashMap> arrayList1 = graduateTargetInfoMapper.selectGraduateTarget((Long) hashMap1.get("id"));
+//                for (int j = 0; j < arrayList1.size(); ++j) {
+//                    HashMap hashMap4 = arrayList1.get(j);
+//                    HashMap hashMap3 = new HashMap();
+//                    hashMap3.put("name", hashMap4.get("name"));
+//                    hashMap3.put("content", hashMap4.get("content"));
+//                    arrayList2.add(hashMap3);
+//                }
+//                hashMap.put("graduateName", arrayList2);
+//            }
+            ArrayList<HashMap> arrayList1 = new ArrayList();
+            //一次循环对应一个hashmap
             for (int i = 0; i < list.size(); ++i) {
-                //做毕业要求
-                // ArrayList<HashMap> hashMaps = new ArrayList<>();
                 HashMap hashMap1 = list.get(i);
                 HashMap hashMap2 = new HashMap();
-                ArrayList<HashMap> arrayList2 = new ArrayList<>();
+                hashMap2.put("graduateId", hashMap1.get("id"));
                 hashMap2.put("graduateName", hashMap1.get("name"));
-                arrayList2.add(hashMap2);
-                ArrayList<HashMap> arrayList1 = graduateTargetInfoMapper.selectGraduateTarget((Long) hashMap1.get("id"));
-                for (int j = 0; j < arrayList1.size(); ++j) {
-                    HashMap hashMap4 = arrayList1.get(j);
-                    HashMap hashMap3 = new HashMap();
-                    hashMap3.put("name", hashMap4.get("name"));
-                    hashMap3.put("content", hashMap4.get("content"));
-                    arrayList2.add(hashMap3);
+                arrayList1.add(hashMap2);
+                ArrayList<HashMap> arrayList3 = graduateTargetInfoMapper.selectGraduateTarget((Long) hashMap1.get("id"));
+                ArrayList arrayList4 = new ArrayList();
+                for (int j = 0; j < arrayList3.size(); ++j) {
+                    HashMap hashMap3 = arrayList3.get(j);
+                    HashMap hashMap4 = new HashMap();
+                    hashMap4.put("number", (i + 1) + "." + (j + 1));
+                    hashMap4.put("name", hashMap3.get("name"));
+                    hashMap4.put("id", hashMap3.get("id"));
+                    hashMap4.put("content", hashMap3.get("content"));
+                    arrayList4.add(hashMap4);
                 }
-                hashMap.put("graduateName" + i, arrayList2);
+                //hashmap
+                HashMap hashMap5 = new HashMap();
+                hashMap5.put("graduateTargetInfo", arrayList4);
+                arrayList1.add(hashMap5);
             }
+            hashMap.put("graduateName", arrayList1);
+            arrayList.add(hashMap);
             return arrayList;
         }
         return null;

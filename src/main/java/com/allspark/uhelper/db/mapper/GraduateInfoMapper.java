@@ -29,7 +29,7 @@ public interface GraduateInfoMapper extends BaseMapper<GraduateInfo> {
 
     public void insertGraduateInfoBatch(List<GraduateInfo> graduateInfoList);
 
-    public boolean deleteGraduateInfo(GraduateInfo graduateInfo);
+    public boolean deleteGraduateInfo(long id);
 
     public boolean updateGraduationName(GraduateInfo graduateInfo);
 
