@@ -90,7 +90,7 @@ export default defineComponent({
       demitter.emit('on-drawer-open', () => null)
     }
     const handleDownload = () => {
-      console.log('handle download')
+      window.open(`${apis.download}/${info.value.id}`)
     }
     onBeforeMount(() => {
       store.dispatch('getUsualGrade', info.value.id)
@@ -106,10 +106,8 @@ export default defineComponent({
     }
     const handleSave9 = () => {
       centerDialogVisible.value = false
-      axios.post(apis.modefyUsual, JSON.stringify({ courseID: info.value.id, studentAndScoreFormList: stu.value })).then(res => {
-        // if (res.data.success) {
+      axios.post(apis.modefyUsual, JSON.stringify({ courseID: info.value.id, studentAndScoreFormList: stu.value })).then(() => {
         router.push('/')
-        // }
       })
     }
     return {

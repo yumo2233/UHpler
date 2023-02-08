@@ -8,8 +8,8 @@
         <el-aside width="225px">
           <aside-bar></aside-bar>
         </el-aside>
-        <el-main style="background-color: #f5f6f7;">
-          <main-box></main-box>
+        <el-main style="background-color: white;">
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -21,13 +21,12 @@ import { defineComponent } from 'vue'
 // 组件
 import GlobalHeader from './GlobalHeader.vue'
 import AsideBar from './AsideBar.vue'
-import MainBox from './MainBox.vue'
 export default defineComponent({
   name: 'LayOut',
   components: {
     GlobalHeader,
-    AsideBar,
-    MainBox
+    AsideBar
+    // MainBox
   }
 })
 </script>

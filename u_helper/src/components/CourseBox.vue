@@ -68,7 +68,7 @@ export default defineComponent({
   margin-top: 20px;
   width: 250px;
   height: 150px;
-  background-color: white;
+  background-color: #f5f6f7;
   border-radius: 15px;
   position: relative;
   user-select: none;

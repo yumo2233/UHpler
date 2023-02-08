@@ -12,9 +12,9 @@
     <el-tab-pane label="平时成绩管理" name="fourth">
       <usual-grade :is-author="false"></usual-grade>
     </el-tab-pane>
-    <el-tab-pane label="期末成绩管理" name="fifth">期末成绩管理</el-tab-pane>
-    <el-tab-pane label="课程报告(个人)" name="sixth">课程报告(个人)</el-tab-pane>
-    <el-tab-pane label="课程报告(团队)" name="seventh">课程报告(团队)</el-tab-pane>
+    <el-tab-pane label="期末成绩管理" name="fifth"><final-grade :is-author="false"></final-grade></el-tab-pane>
+    <el-tab-pane label="课程报告(个人)" name="sixth"><personal-report></personal-report></el-tab-pane>
+    <el-tab-pane label="课程报告(团队)" name="seventh"><personal-report></personal-report></el-tab-pane>
   </el-tabs>
 </template>
 
@@ -28,13 +28,17 @@ import ExamWay from './aboutCourse/ExamWay.vue'
 import TargetInfo from './aboutCourse/TargetInfo.vue'
 import UsualGrade from './aboutCourse/UsualGrade.vue'
 import BasicInfo from './aboutCourse/BasicInfo.vue'
+import PersonalReport from './aboutCourse/PersonalReport.vue'
+import FinalGrade from './aboutCourse/FinalGrade.vue'
 export default defineComponent({
   name: 'CourseManage',
   components: {
     BasicInfo,
     ExamWay,
     TargetInfo,
-    UsualGrade
+    UsualGrade,
+    PersonalReport,
+    FinalGrade
   }
 })
 </script>
@@ -67,5 +71,6 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   border-radius: 10px;
   box-sizing: border-box;
   padding: 0 25px;
+  line-height: 70px;
 }
 </style>

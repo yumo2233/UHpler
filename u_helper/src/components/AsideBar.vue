@@ -14,7 +14,9 @@
             <router-link to="/class">
               <el-menu-item index="1-2"><el-icon><Avatar /></el-icon>班级管理</el-menu-item>
             </router-link>
-            <el-menu-item index="1-3"><el-icon><Avatar /></el-icon>毕业要求管理</el-menu-item>
+            <router-link to="/graduation">
+              <el-menu-item index="1-3"><el-icon><Avatar /></el-icon>毕业要求管理</el-menu-item>
+            </router-link>
           </el-menu-item-group>
         </el-sub-menu>
       </el-menu>

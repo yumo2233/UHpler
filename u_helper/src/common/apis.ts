@@ -10,5 +10,16 @@ export const apis = {
   change: '/user/updatePassword',
   listCollege: 'course/CollegeAndGrade',
   modefyUsual: '/course/modifyAllStudent',
-  modefyChecklist: '/course/modifyUsual'
+  modefyChecklist: '/course/modifyUsual',
+  download: '/course/downloadUsual',
+  gradContent: '/course/listFinal',
+  getClassAndPro: '/graduate/selectGAP',
+  collegeAndGrade: '/graduate/selectCollegeAndGrade',
+  graduatePage: '/graduate/selectGraduatePage',
+  deleteTarget: '/graduate/deleteTarget',
+  deleteGraduateInfo: '/graduate/deleteGraduateInfo',
+  updateTarget: '/graduate/updateTarget',
+  insertTarget: '/graduate/insertTarget',
+  updateGraduationName: '/graduate/updateGraduationName',
+  insertInfoTarget: '/graduate/insertInfoTarget'
 }

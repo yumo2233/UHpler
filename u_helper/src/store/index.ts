@@ -55,14 +55,13 @@ interface stuProps {
   number: number
   index: number
   usualScore: number[]
-  finalScore: number[]
+  finalScore: {
+    1: number[],
+    2: number[],
+    3: number[],
+    4: number[]
+  }
 }
-
-// interface IAccount {
-//   isFirst?: boolean
-//   userAvator?: string
-//   userId: number
-// }
 interface ICurrentUser {
   number: number;
   isFirst?: boolean;
@@ -70,6 +69,48 @@ interface ICurrentUser {
   Tcourses: ICourses[];
   avator: string;
   isLogin: boolean;
+}
+
+interface gradContent {// 期末成绩
+  targetId: number
+  targetName: string
+  first: {
+    1: number[],
+    2: number[],
+    3: number[],
+    4: number[]
+  }
+}
+interface labelAndValue {
+  label: string
+  value: string
+}
+interface CollegeAndProfess {
+  id: number
+  college: string
+  grade: number
+  professional: string
+  graduateCount: number
+  graduateTargetCount: number
+  name: string
+  userId: number
+}
+export interface graduateTargetInfo {
+  name: string
+  id?: number
+  content: string
+}
+export interface graduateName {
+  graduateName: string
+  graduateId?: number
+  graduateTargetInfo: graduateTargetInfo[]
+  add: boolean
+}
+export interface gradInfo {
+  college: string
+  grade: number
+  professional: string
+  graduateName: graduateName[]
 }
 export interface GlobalDataProps{
   isLogin: boolean
@@ -82,6 +123,14 @@ export interface GlobalDataProps{
   graduationList: []
   stuGrade: stuProps[]
   isAdd: boolean
+  gradContent: gradContent[]
+  ClassAndPro: {
+    grade: labelAndValue[],
+    professional: labelAndValue[]
+  }
+  CollegeAndProfess: CollegeAndProfess[]
+  filterArray: CollegeAndProfess[]
+  gradInfo: gradInfo
 }
 
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
@@ -137,7 +186,12 @@ export default createStore({
     },
     graduationList: [],
     stuGrade: [],
-    isAdd: false
+    isAdd: false,
+    gradContent: [],
+    ClassAndPro: { grade: [], professional: [] },
+    CollegeAndProfess: [],
+    filterArray: [],
+    gradInfo: {}
   },
   getters: {
     totalScore: (state) => (index: number) => {
@@ -145,9 +199,9 @@ export default createStore({
       const targetList = (state.currentCourse.targetList[index] as targetArray).checkList
       const len = targetList?.length || 0
       for (let i = 0; i < len; i++) {
-        score += 100 * ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
+        score += ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
       }
-      return score / 10000
+      return score / 100
     },
     stuScore: (state) => (index: number, stuIndex: number) => {
       let score = 0
@@ -160,6 +214,16 @@ export default createStore({
         score += currentTotal * ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
       }
       return score / 10000
+    },
+    updateVal: (state) => (obj: { grade: number, profess: string }) => {
+      state.filterArray = state.CollegeAndProfess
+      if (obj.grade) {
+        state.filterArray = state.filterArray.filter((item: CollegeAndProfess) => item.grade === obj.grade)
+      }
+      if (obj.profess) {
+        state.filterArray = state.filterArray.filter((item: CollegeAndProfess) => item.professional === obj.profess)
+      }
+      return state.filterArray
     }
   },
   mutations: {
@@ -283,6 +347,20 @@ export default createStore({
     },
     notFirstLogin (state) {
       state.user.isFirst = false
+    },
+    getGradContent (state, rawData) {
+      state.gradContent = rawData.content.targetAndFinalFormList
+    },
+    getGradeAndProfess (state, rawData) {
+      state.ClassAndPro.grade = rawData.content.grade
+      state.ClassAndPro.professional = rawData.content.professional
+    },
+    collegeAndGrade (state, rawData) {
+      state.CollegeAndProfess = rawData.content
+      state.filterArray = state.CollegeAndProfess
+    },
+    getOneGradInfo (state, rawData) {
+      state.gradInfo = rawData.content[0]
     }
   },
   actions: {
@@ -309,6 +387,18 @@ export default createStore({
           alert('账号或密码错误')
         }
       })
+    },
+    getGradContent ({ commit }, id) {
+      getAndCommit(`${apis.gradContent}/${id}`, 'getGradContent', commit)
+    },
+    getGradeAndProfess ({ commit }) {
+      getAndCommit(apis.getClassAndPro, 'getGradeAndProfess', commit)
+    },
+    collegeAndGrade ({ commit }) {
+      getAndCommit(apis.collegeAndGrade, 'collegeAndGrade', commit)
+    },
+    getOneGradInfo ({ commit }, id) {
+      getAndCommit(`${apis.graduatePage}/${id}`, 'getOneGradInfo', commit)
     }
   }
 })
