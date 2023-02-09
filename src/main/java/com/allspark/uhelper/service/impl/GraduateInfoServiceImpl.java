@@ -83,8 +83,8 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
 
     @Override
     public int insertGraduateInfo(GraduateInfo graduateTargetInfo) {
-        Long uuId = UuidUtils.getUuId();
-        graduateTargetInfo.setId(uuId);
+        //Long uuId = UuidUtils.getUuId();
+        //graduateTargetInfo.setId(uuId);
         int count = graduateTargetInfoMapper.selectGraduateTargetCount(graduateTargetInfo.getId());
         graduateTargetInfo.setGraduate_target_count(count);
         graduateInfoMapper.insertGraduateInfo(graduateTargetInfo);

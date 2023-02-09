@@ -34,7 +34,7 @@
 
     <insert id="insertTarget" parameterType="graduateTargetInfo">
         INSERT INTO u_graduateinfo.graduate_target_info(id, name, content, graduate_id)
-        VALUES (#{id}, #{name}, #{content}, #{graduate_id})
+        VALUES (#{id}, #{name}, #{content}, #{graduateId})
     </insert>
 
     <insert id="insertTargetBatch">

@@ -15,7 +15,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,college,professional,
+        id
+        ,college,professional,
         grade,name,headcount,
         user_id
     </sql>
@@ -24,4 +25,47 @@
         from u_classinfo.class_info
         where id = #{id,jdbcType=NUMERIC}
     </select>
+
+    <insert id="insetClass">
+        INSERT INTO u_classinfo.class_info (id, college, professional, grade, name, headcount, user_id)
+        VALUES (#{id}, #{college}, #{professional}, #{grade}, #{name}, #{headcount}, #{userId})
+    </insert>
+
+    <delete id="deleteClass">
+        DELETE
+        FROM u_classinfo.class_info
+        WHERE id = #{id}
+    </delete>
+
+    <update id="updateClass">
+        UPDATE u_classinfo.class_info
+        <set>
+            <if test="name != null and name !=''">
+                name = #{name},
+            </if>
+            <if test="collegeDB != null and collegeDB !=''">
+                college = #{collegeDB},
+            </if>
+            <if test="professional != null and professional !=''">
+                professional = #{professional},
+            </if>
+            <if test="grade != null and grade !=''">
+                grade = #{grade},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectClass" resultType="hashmap">
+        SELECT *
+        FROM u_classinfo.class_info
+    </select>
+
+    <select id="selectCourse" resultType="int">
+        SELECT count(*)
+        FROM u_classinfo.fk_class_course
+        WHERE class_id = #{class_id}
+    </select>
+
+
 </mapper>

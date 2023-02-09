@@ -1,5 +1,6 @@
 package com.allspark.uhelper.myenum;
 
+import com.allspark.uhelper.utils.UuidUtils;
 import org.junit.Test;
 
 /**
@@ -9,10 +10,9 @@ import org.junit.Test;
 
 public class test {
     @Test
-    public void tesst() {
-        CollegeEnum collegeEnum = CollegeEnum.DIANGONG;
-        System.out.println(collegeEnum.getCode());
-        System.out.println(collegeEnum);
+    public void test() {
+        Long uuId = UuidUtils.getUuId();
+        System.out.println(uuId);
     }
 }
 

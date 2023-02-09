@@ -1,7 +1,13 @@
 package com.allspark.uhelper.service.impl;
 
+import com.allspark.uhelper.common.form.ClassInfoForm;
+import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
+import com.allspark.uhelper.db.mapper.StudentInfoMapper;
+import com.allspark.uhelper.db.pojo.StudentDbInfo;
+import com.allspark.uhelper.db.pojo.StudentInfo;
 import com.allspark.uhelper.myenum.CollegeEnum;
+import com.allspark.uhelper.utils.UuidUtils;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.allspark.uhelper.db.pojo.ClassInfo;
@@ -10,18 +16,24 @@ import com.allspark.uhelper.db.mapper.ClassInfoMapper;
 import org.springframework.data.redis.hash.HashMapper;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
-* @author 86159
-* @description 针对表【class_info(班级的基本信息表)】的数据库操作Service实现
-* @createDate 2023-01-17 02:28:46
-*/
+ * @author 86159
+ * @description 针对表【class_info(班级的基本信息表)】的数据库操作Service实现
+ * @createDate 2023-01-17 02:28:46
+ */
 @Service
 @DS("u_classinfo")
 public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo>
-    implements ClassInfoService{
+        implements ClassInfoService {
 
+    @Resource
+    ClassInfoMapper classInfoMapper;
+
+    @Resource
+    StudentInfoMapper studentInfoMapper;
 
 //    public List<NAryTree> listAllClass(){
 //        List<NAryTree> nAryTrees = new LinkedList<>();
@@ -126,5 +138,80 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
             }
         }
         return collegeTrees;
+    }
+
+
+    @Override
+    public StudentDbInfo transferStudentDb(StudentInfoForm studentInfoForm) {
+        StudentDbInfo studentInfo = new StudentDbInfo();
+        studentInfo.setName(studentInfoForm.getName());
+        studentInfo.setClassId(studentInfoForm.getClassId());
+        studentInfo.setNumber(studentInfoForm.getNumber());
+        studentInfo.setIndex(studentInfoForm.getIndex());
+        return studentInfo;
+    }
+
+    @Override
+    public StudentInfo transferStudent(StudentInfoForm studentInfoForm) {
+        StudentInfo studentInfo = new StudentInfo();
+        studentInfo.setId(studentInfoForm.getId());
+        studentInfo.setName(studentInfoForm.getName());
+        studentInfo.setClassId(studentInfoForm.getClassId());
+        studentInfo.setNumber(studentInfoForm.getNumber());
+        studentInfo.setIndex(studentInfoForm.getIndex());
+        return studentInfo;
+    }
+
+    @Override
+    public ClassInfo transferClass(ClassInfoForm classInfoForm) {
+        ClassInfo classInfo = new ClassInfo();
+        classInfo.setId(classInfoForm.getId());
+        classInfo.setGrade(classInfoForm.getGrade());
+        classInfo.setName(classInfoForm.getName());
+        classInfo.setCollege(classInfoForm.getCollege());
+        classInfo.setProfessional(classInfoForm.getProfessional());
+        classInfo.setHeadcount(classInfoForm.getHeadcount());
+        classInfo.setUserId(classInfoForm.getUserId());
+        classInfo.setCollegeDB(classInfoForm.getCollege().getCode());
+        return classInfo;
+    }
+
+    @Override
+    public void insetClass(ClassInfo classInfo) {
+        classInfo.setId(UuidUtils.getUuId());
+        classInfoMapper.insetClass(classInfo);
+    }
+
+    @Override
+    public boolean deleteClass(Long id) {
+        boolean b = classInfoMapper.deleteClass(id);
+        return b;
+    }
+
+    @Override
+    public void updateClass(ClassInfo classInfo) {
+        classInfoMapper.updateClass(classInfo);
+    }
+
+    @Override
+    public ArrayList<HashMap> selectClass() {
+        ArrayList<HashMap> arrayList = classInfoMapper.selectClass();
+        ArrayList<HashMap> list = new ArrayList<>();
+        for (int i = 0; i < arrayList.size(); ++i) {
+            HashMap hashMap = arrayList.get(i);
+            int course = classInfoMapper.selectCourse((long) hashMap.get("id"));
+            String college = CollegeEnum.getEnumType((Integer) hashMap.get("college"));
+            hashMap.put("userId", hashMap.get("user_id"));
+            hashMap.remove("user_id");
+            hashMap.put("college", college);
+            hashMap.put("courseCount", course);
+            list.add(hashMap);
+        }
+        return list;
+    }
+
+    @Override
+    public void insertStudent(StudentInfo studentInfo) {
+        studentInfoMapper.insertStudent(studentInfo);
     }
 }

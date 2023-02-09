@@ -43,6 +43,8 @@ public class GraduateTargetForm {
      */
     private Long graduate_id;
 
+    private Long graduateId;
+
     /**
      * 毕业要求的名字
      */

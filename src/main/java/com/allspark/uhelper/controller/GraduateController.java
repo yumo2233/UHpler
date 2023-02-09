@@ -305,8 +305,8 @@ public class GraduateController {
             commonResp.setMessage("未查询到相关数据");
             return commonResp;
         }
-        map.put("grade", list1);
-        map.put("professional", list2);
+        map.put("grade", list2);
+        map.put("professional", list1);
         commonResp.setContent(map);
         return commonResp;
     }

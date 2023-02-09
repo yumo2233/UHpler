@@ -100,6 +100,12 @@
           AND professional = #{professional}
     </select>
 
+    <select id="selectGraduate_target_countById" resultType="int">
+        SELECT graduate_target_count
+        FROM u_graduateinfo.graduate_info
+        where id = #{id}
+    </select>
+
     <update id="updateGraduate_target_count">
         UPDATE u_graduateinfo.graduate_info
         <set>

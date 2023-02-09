@@ -35,4 +35,9 @@
         order by `index`;
     </select>
 
+    <insert id="insertStudent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO u_classinfo.student_info (`name`, `number`, `index`, class_id)
+        VALUES (#{name}, #{number}, #{index}, #{classId})
+    </insert>
+
 </mapper>

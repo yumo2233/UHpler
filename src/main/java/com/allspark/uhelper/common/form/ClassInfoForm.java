@@ -1,20 +1,19 @@
-package com.allspark.uhelper.db.pojo;
+package com.allspark.uhelper.common.form;
 
 import com.allspark.uhelper.myenum.CollegeEnum;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 
 /**
- * 班级的基本信息表
- * @TableName class_info
+ * @author Pzr
+ * @create 2023/2/9 - 18:50
  */
-@TableName(value ="class_info")
+@Schema(description = "前端提交的班级表单")
 @Data
-public class ClassInfo implements Serializable {
+@EqualsAndHashCode
+public class ClassInfoForm {
     /**
      * 班级id
      */
@@ -25,7 +24,6 @@ public class ClassInfo implements Serializable {
      * 学院
      */
     private CollegeEnum college;
-    private int collegeDB;
 
     /**
      * 专业
@@ -51,7 +49,4 @@ public class ClassInfo implements Serializable {
      * 外键关联是哪个用户创建的
      */
     private Long userId;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

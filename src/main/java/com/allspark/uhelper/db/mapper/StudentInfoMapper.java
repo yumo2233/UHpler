@@ -1,6 +1,8 @@
 package com.allspark.uhelper.db.mapper;
 import java.util.Collection;
 import java.util.List;
+
+import com.allspark.uhelper.db.pojo.StudentDbInfo;
 import org.apache.ibatis.annotations.Param;
 
 import com.allspark.uhelper.db.pojo.StudentInfo;
@@ -20,6 +22,7 @@ public interface StudentInfoMapper extends BaseMapper<StudentInfo> {
 
     List<StudentInfo> listAllByClassIdIn(@Param("classIdList") List<Long> classIdList);
 
+    void insertStudent(StudentInfo studentInfo);
 }
 
 

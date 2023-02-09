@@ -36,6 +36,7 @@ public class GraduateTargetInfo implements Serializable {
      */
     private Long graduate_id;
 
+    private long graduateId;
     /**
      * 年级
      */

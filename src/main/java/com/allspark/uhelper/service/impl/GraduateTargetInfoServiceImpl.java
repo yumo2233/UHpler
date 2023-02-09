@@ -70,11 +70,11 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         //更新指标点数目
         GraduateInfo graduateInfo = new GraduateInfo();
         //确定毕业信息表的Id
-        graduateInfo.setGrade(graduateTargetInfo.getGrade());
-        graduateInfo.setProfessional(graduateTargetInfo.getProfessional());
-        graduateInfo.setName(graduateTargetInfo.getGraduate_name());
-        long id = graduateInfoMapper.selectId(graduateInfo);
-        graduateInfo.setId(id);
+//        graduateInfo.setGrade(graduateTargetInfo.getGrade());
+//        graduateInfo.setProfessional(graduateTargetInfo.getProfessional());
+//        graduateInfo.setName(graduateTargetInfo.getGraduate_name());
+//        long id = graduateInfoMapper.selectId(graduateInfo);
+        graduateInfo.setId(graduateTargetInfo.getGraduateId());
         graduateInfo.setGraduate_target_count(count);
         graduateInfoMapper.updateGraduate_target_count(graduateInfo);
         return count;
@@ -107,6 +107,7 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         graduateTargetInfo.setId(targetForm.getId());
         graduateTargetInfo.setName(targetForm.getName());
         graduateTargetInfo.setContent(targetForm.getContent());
+        graduateTargetInfo.setGraduateId(targetForm.getGraduateId());
         graduateTargetInfo.setGraduate_id(targetForm.getGraduate_id());
         graduateTargetInfo.setGrade(targetForm.getGrade());
         graduateTargetInfo.setProfessional(targetForm.getProfessional());
@@ -134,11 +135,12 @@ public class GraduateTargetInfoServiceImpl extends ServiceImpl<GraduateTargetInf
         //设置指标点的uuid
         graduateTargetInfo.setId(UuidUtils.getUuId());
         //设置外键Id
-        graduateTargetInfo.setGraduate_id(getGraduate_idOfDb(graduateTargetInfo));
+        // graduateTargetInfo.setGraduate_id(getGraduate_idOfDb(graduateTargetInfo));
         //插入数据
         graduateTargetInfoMapper.insertTarget(graduateTargetInfo);
         //获取指标点数目
-        int count = selectgraduate_target_count(graduateTargetInfo);
+        //int count = selectgraduate_target_count(graduateTargetInfo);
+        int count = graduateInfoMapper.selectGraduate_target_countById(graduateTargetInfo.getGraduateId());
         return updateTargetCount(graduateTargetInfo, ++count);
     }
 
