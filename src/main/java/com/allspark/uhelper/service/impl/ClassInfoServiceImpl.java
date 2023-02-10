@@ -214,4 +214,10 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
     public void insertStudent(StudentInfo studentInfo) {
         studentInfoMapper.insertStudent(studentInfo);
     }
+
+    @Override
+    public HashMap selectClassById(long id) {
+        HashMap hashMap = classInfoMapper.selectClassById(id);
+        return hashMap;
+    }
 }

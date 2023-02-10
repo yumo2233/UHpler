@@ -31,7 +31,7 @@ public interface ClassInfoMapper extends BaseMapper<ClassInfo> {
 
     int selectCourse(long class_id);
 
-
+    HashMap selectClassById(long id);
 }
 
 

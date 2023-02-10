@@ -34,4 +34,6 @@ public interface ClassInfoService extends IService<ClassInfo> {
     ArrayList<HashMap> selectClass();
 
     void insertStudent(StudentInfo studentInfo);
+
+    HashMap selectClassById(long id);
 }

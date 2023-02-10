@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.allspark.uhelper.db.mapper.ClassInfoMapper">
 
+
     <resultMap id="BaseResultMap" type="com.allspark.uhelper.db.pojo.ClassInfo">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="college" column="college" jdbcType="TINYINT"/>
@@ -67,5 +68,11 @@
         WHERE class_id = #{class_id}
     </select>
 
+    <select id="selectClassById" resultType="hashmap">
+        SELECT *
+        FROM u_classinfo.class_info
+        WHERE id = #{id}
+    </select>
 
 </mapper>
+

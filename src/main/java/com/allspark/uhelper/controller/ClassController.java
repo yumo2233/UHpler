@@ -79,4 +79,13 @@ public class ClassController {
         CommonResp commonResp = new CommonResp();
         return commonResp;
     }
+
+    @Operation(summary = "查询单个班级信息")
+    @GetMapping("/selectClass/{id}")
+    public CommonResp selectClassById(@PathVariable Long id) {
+        HashMap hashMap = classInfoService.selectClassById(id);
+        CommonResp commonResp = new CommonResp();
+        commonResp.setContent(hashMap);
+        return commonResp;
+    }
 }
