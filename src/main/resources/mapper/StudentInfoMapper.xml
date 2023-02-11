@@ -40,4 +40,9 @@
         VALUES (#{name}, #{number}, #{index}, #{classId})
     </insert>
 
+    <select id="selectStudentByClassId" resultType="hashmap">
+        SELECT id, `index`, `name`, `number`
+        FROM u_classinfo.student_info
+        WHERE class_id = #{class_id}
+    </select>
 </mapper>

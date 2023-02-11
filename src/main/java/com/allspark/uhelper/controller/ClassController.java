@@ -7,6 +7,7 @@ import com.allspark.uhelper.db.pojo.ClassInfo;
 import com.allspark.uhelper.db.pojo.StudentDbInfo;
 import com.allspark.uhelper.db.pojo.StudentInfo;
 import com.allspark.uhelper.service.ClassInfoService;
+import com.allspark.uhelper.service.StudentInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class ClassController {
     @Autowired
     ClassInfoService classInfoService;
 
+    @Autowired
+    StudentInfoService studentInfoService;
 
     @Operation(summary = "插入单个班级信息")
     @PostMapping("/insetClass")
@@ -86,6 +89,15 @@ public class ClassController {
         HashMap hashMap = classInfoService.selectClassById(id);
         CommonResp commonResp = new CommonResp();
         commonResp.setContent(hashMap);
+        return commonResp;
+    }
+
+    @Operation(summary = "根据班级id查询学生信息")
+    @GetMapping("/selectStudent/{class_id}")
+    public CommonResp selectStudentByClassId(@PathVariable Long class_id) {
+        ArrayList<HashMap> arrayList = studentInfoService.selectStudentByClassId(class_id);
+        CommonResp commonResp = new CommonResp();
+        commonResp.setContent(arrayList);
         return commonResp;
     }
 }
