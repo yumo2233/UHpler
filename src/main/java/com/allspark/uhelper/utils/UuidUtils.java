@@ -17,12 +17,10 @@ public class UuidUtils {
      */
     public synchronized static Long getUuId() {
 
-
         String nanoRandom = System.nanoTime() + "" + new Random().nextInt(99999);
         int hash = Math.abs(UUID.randomUUID().hashCode());
         int needAdd = 10 - String.valueOf(hash).length();
         return Long.valueOf(hash + "" + nanoRandom.substring(0, needAdd));
-
     }
 
 

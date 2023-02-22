@@ -73,6 +73,15 @@
         FROM u_classinfo.class_info
         WHERE id = #{id}
     </select>
+    <select id="selectBatchIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_classinfo.class_info
+        where id in
+        <foreach collection="longs" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>
 

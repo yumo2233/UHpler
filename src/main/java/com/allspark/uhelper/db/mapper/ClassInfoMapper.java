@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.allspark.uhelper.db.pojo.StudentInfo;
 import org.apache.ibatis.annotations.Param;
 
 import com.allspark.uhelper.db.pojo.ClassInfo;
@@ -32,6 +31,11 @@ public interface ClassInfoMapper extends BaseMapper<ClassInfo> {
     int selectCourse(long class_id);
 
     HashMap selectClassById(long id);
+
+    List<ClassInfo> selectBatchIds(List<Long> longs);
+
+
+
 }
 
 

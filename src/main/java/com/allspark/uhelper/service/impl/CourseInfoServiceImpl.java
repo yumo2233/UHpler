@@ -933,7 +933,6 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             } else {
                 checkList = checkList + "+" + checkInfo.getName() + "*" + checkInfo.getRatio().doubleValue() * 100 + "%";
             }
-
         }
         docMap.put("${checkList}", checkList);
         docMap.put("${finalRatio}", courseInfo.getFinalRatio().doubleValue() * 100 + "");
