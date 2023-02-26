@@ -8,13 +8,13 @@
     </div>
     <div class="gradreq">
       <template v-for="(o, index) in info.graduateName" :key="index">
-        <grad-req :index="index+1" :info="o" :is-author="isAuthor"></grad-req>
+        <grad-req :index="index+1" :info="o" :isAuthor="view"></grad-req>
       </template>
     </div>
     <div class="footer">
-      <el-button type="primary" @click="addOne">增加毕业要求</el-button>
+      <el-button type="primary" @click="addOne" :disabled="view">增加毕业要求</el-button>
       <el-button type="primary" @click="goBack">返回</el-button>
-      <el-button type="primary" @click="saveCurr">保存</el-button>
+      <el-button type="primary" @click="saveCurr" :disabled="view">保存</el-button>
     </div>
   </div>
 </template>
@@ -48,11 +48,12 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const info = computed(() => store.state.gradInfo)
     const id = route.query.id
+    const view = route.query.view ? 1 : 0
     onBeforeMount(() => {
       store.dispatch('getOneGradInfo', id)
     })
     const goBack = () => {
-      router.push('/editgrad')
+      router.push('/graduation')
     }
     const addOne = () => {
       const obj = {
@@ -70,7 +71,7 @@ export default defineComponent({
       cemitter.emit('on-save', () => null)
     }
     return {
-      goBack, info, addOne, saveCurr
+      goBack, info, addOne, saveCurr, view
     }
   }
 })

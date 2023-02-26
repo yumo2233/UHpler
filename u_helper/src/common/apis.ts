@@ -21,5 +21,12 @@ export const apis = {
   updateTarget: '/graduate/updateTarget',
   insertTarget: '/graduate/insertTarget',
   updateGraduationName: '/graduate/updateGraduationName',
-  insertInfoTarget: '/graduate/insertInfoTarget'
+  insertInfoTarget: '/graduate/insertInfoTarget',
+  selectClass: '/course/selectClass',
+  selectStu: '/course/selectStudent',
+  updateClass: '/course/updateClass',
+  updateSingleStudent: '/course/updateSingleStudent',
+  insetSingleStudent: '/course/insetSingleStudent',
+  deleteSingleStudent: '/course/deleteSingleStudent',
+  deleteClassClass: '/course/deleteClassClass'
 }

@@ -10,6 +10,8 @@ coursemanager 下的isAuthor 等待登录完成后进行
 
 router的前置路由守卫，每个页面的路由先自动跳转到首页
 
+每次请求都应携带用户工号，用于获取由他管理的班级或年级
+
 const options = {
   学院: string
   专业: string

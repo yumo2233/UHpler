@@ -60,6 +60,7 @@ export default defineComponent({
   top: 0;
   left: 0;
   z-index: 100;
+  line-height: 70px;
   user-select: none;
 }
 .inner {

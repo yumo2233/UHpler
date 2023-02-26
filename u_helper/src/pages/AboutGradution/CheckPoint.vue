@@ -19,10 +19,7 @@ export default defineComponent({
   name: 'CheckPoint',
   props: {
     index: Number,
-    isAuthor: {
-      type: Boolean,
-      default: false
-    },
+    isAuthor: Number,
     info: Object as PropType<graduateTargetInfo>,
     targetId: Number
   },

@@ -47,15 +47,15 @@ export interface ICourses {
   targetList: targetArray[]
 }
 
-interface stuProps {
+export interface stuProps {
   name: string
   id: number
   classId: number
   className: string
   number: number
   index: number
-  usualScore: number[]
-  finalScore: {
+  usualScore?: number[]
+  finalScore?: {
     1: number[],
     2: number[],
     3: number[],
@@ -112,6 +112,24 @@ export interface gradInfo {
   professional: string
   graduateName: graduateName[]
 }
+
+interface classSelect {
+  college: string
+  headCount: number
+  courseCount: number
+  userId: number
+  grade: number
+  name: number
+  id: number
+  professional: string
+}
+
+interface Student {
+  number: number // 学号
+  id: number
+  index: number
+  name: string
+}
 export interface GlobalDataProps{
   isLogin: boolean
   user: ICurrentUser
@@ -131,6 +149,10 @@ export interface GlobalDataProps{
   CollegeAndProfess: CollegeAndProfess[]
   filterArray: CollegeAndProfess[]
   gradInfo: gradInfo
+  classArray: classSelect[]
+  classfilter: classSelect[]
+  stuArr: stuProps[]
+  stu: Student[]
 }
 
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
@@ -191,7 +213,11 @@ export default createStore({
     ClassAndPro: { grade: [], professional: [] },
     CollegeAndProfess: [],
     filterArray: [],
-    gradInfo: {}
+    classfilter: [],
+    gradInfo: {},
+    classArray: [],
+    stuArr: [],
+    stu: []
   },
   getters: {
     totalScore: (state) => (index: number) => {
@@ -208,7 +234,7 @@ export default createStore({
       const checkList = state.currentCourse.checkList
       const targetList = (state.currentCourse.targetList[index] as targetArray).checkList
       const len = targetList?.length || 0
-      const stuInfo = (state.stuGrade[stuIndex] as stuProps).usualScore
+      const stuInfo = (state.stuGrade[stuIndex] as stuProps).usualScore || []
       for (let i = 0; i < len; i++) {
         const currentTotal = stuInfo[checkList.indexOf((targetList as [])[i])]
         score += currentTotal * ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
@@ -224,6 +250,19 @@ export default createStore({
         state.filterArray = state.filterArray.filter((item: CollegeAndProfess) => item.professional === obj.profess)
       }
       return state.filterArray
+    },
+    classfilter: (state) => (obj: { grade: number, profess: string }) => {
+      state.classfilter = state.classArray
+      if (obj.grade) {
+        state.classfilter = state.classArray.filter((item: classSelect) => item.grade === obj.grade)
+      }
+      if (obj.profess) {
+        state.classfilter = state.classfilter.filter((item: classSelect) => item.professional === obj.profess)
+      }
+      return state.classfilter
+    },
+    classDetail: (state) => (id: number) => {
+      return state.classArray.find((item: classSelect) => item.id === id)
     }
   },
   mutations: {
@@ -286,7 +325,7 @@ export default createStore({
     getCourse (state, rawData) {
       state.courses = rawData.content
     },
-    getClassList (state, rawData) {
+    fList (state, rawData) {
       state.classList = rawData.content
     },
     addCurrentCourse (state, rawData) {
@@ -361,6 +400,17 @@ export default createStore({
     },
     getOneGradInfo (state, rawData) {
       state.gradInfo = rawData.content[0]
+    },
+    selectClass (state, rawData) {
+      state.classfilter = rawData.content
+      state.classArray = rawData.content
+    },
+    getStuInfo (state, rawData) {
+      state.stuArr = rawData.content
+    },
+    getClassList (state, rawData) {
+      // unknown data
+      state.classList = rawData.content
     }
   },
   actions: {
@@ -399,6 +449,12 @@ export default createStore({
     },
     getOneGradInfo ({ commit }, id) {
       getAndCommit(`${apis.graduatePage}/${id}`, 'getOneGradInfo', commit)
+    },
+    selectClass ({ commit }) {
+      getAndCommit(apis.selectClass, 'selectClass', commit)
+    },
+    getStuInfo ({ commit }, id) {
+      getAndCommit(`${apis.selectStu}/${id}`, 'getStuInfo', commit)
     }
   }
 })

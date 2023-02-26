@@ -80,11 +80,11 @@ demitter.on('on-update-usual-grade', (row: object) => {
   rowInfo.value = row
   const len = checkList.value.length
   const currentStu = stu.value.find(item => item.id === rowInfo.value.id)
-  const slen = currentStu?.usualScore.length || 0
+  const slen = (currentStu?.usualScore as []).length || 0
   const dif = len - slen
   if (dif > 0) {
     for (let i = 0; i < dif; i++) {
-      currentStu?.usualScore.push(0)
+      (currentStu?.usualScore as []).push(0)
     }
   }
 })

@@ -2,8 +2,8 @@
   <div class="outer">
     <i class="red">* </i><span> 毕业要求{{ index }}</span>&nbsp;
     <el-input :disabled="isAuthor" @input="isChanged=true" v-model="name" class="w-50 m-2" style="height: 34px;width: 343px;"/>&nbsp;
-    <el-button type="info" @click="deleteCur">删除毕业要求</el-button>&nbsp;
-    <el-button type="primary" @click="addOne">增加指标点</el-button>
+    <el-button type="info" @click="deleteCur" :disabled="isAuthor">删除毕业要求</el-button>&nbsp;
+    <el-button type="primary" @click="addOne" :disabled="isAuthor">增加指标点</el-button>
     <template v-for="(o, oindex) in info?.graduateTargetInfo" :key="o">
       <check-point :is-author="isAuthor" :info="o" :targetId="info?.graduateId" :index="oindex+1"></check-point>
     </template>
@@ -21,10 +21,7 @@ import { apis } from '@/common/apis'
 export default defineComponent({
   props: {
     index: Number,
-    isAuthor: {
-      type: Boolean,
-      default: false
-    },
+    isAuthor: Number,
     info: Object as PropType<graduateName>
   },
   components: {

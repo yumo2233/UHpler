@@ -2,13 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // 引入组件
 import CourseManage from '@/pages/CourseManage.vue'
-import CourseList from '@/pages/CourseList.vue'
+import CourseList from '@/pages/aboutCourse/CourseList.vue'
 import ClassManage from '@/pages/ClassManage.vue'
 import LoginVue from '@/pages/aboutLogin/LoginVue.vue'
 import FirstLogin from '@/pages/aboutLogin/FirstLogin.vue'
 import GradList from '@/pages/GradManage.vue'
-
+import ClassDetail from '@/pages/aboutClass/ClassDetail.vue'
 import CheckOrEditFGrad from '@/pages/AboutGradution/CheckOrEditFGrad.vue'
+
+import AddClass from '@/pages/aboutClass/AddClass.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -40,6 +42,12 @@ const router = createRouter({
   }, {
     path: '/editgrad',
     component: CheckOrEditFGrad
+  }, {
+    path: '/editclass',
+    component: ClassDetail
+  }, {
+    path: '/test',
+    component: AddClass
   }]
 })
 

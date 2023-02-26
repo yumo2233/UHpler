@@ -9,9 +9,9 @@
     <el-table-column prop="address" label="操作">
       <template #default="scope">
           <div class="flex justify-space-between mb-4 flex-wrap gap-4">
-          <el-button link type="primary" :disabled="isAuthor" @click.prevent="goEdit(detailData[scope.$index].id)">编辑</el-button>
-          <el-button link type="primary" @click.prevent="goView">查看</el-button>
-          <el-button link type="danger" :disabled="isAuthor" @click.prevent="goDelete">删除</el-button>
+          <el-button link type="primary" :disabled="detailData[scope.$index].userId !== userId" @click.prevent="goEdit(detailData[scope.$index].id)">编辑</el-button>
+          <el-button link type="primary" @click.prevent="goView(detailData[scope.$index].id)">查看</el-button>
+          <el-button link type="danger" :disabled="detailData[scope.$index].userId !== userId" @click.prevent="goDelete(detailData[scope.$index].id)">删除</el-button>
         </div>
       </template>
     </el-table-column>
@@ -19,11 +19,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, computed, ref } from 'vue'
+import { defineComponent, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import FilterBar from '@/components/FilterBar.vue'
 import router from '@/router'
+import axios from 'axios'
+import { apis } from '@/common/apis'
 export default defineComponent({
   name: 'GradList',
   components: {
@@ -43,18 +45,26 @@ const goEdit = (id: number) => {
     }
   })
 }
-const isAuthor = ref(false)
-const goView = () => {
-  console.log('view')
+const userId = computed(() => store.state.user.number)
+const goView = (id: number) => {
+  router.push({
+    path: '/editgrad',
+    query: {
+      id,
+      view: 1
+    }
+  })
 }
-const goDelete = () => {
-  console.log('delete')
+const goDelete = (id: number) => {
+  if (confirm('确认删除？')) {
+    axios.get(`${apis.deleteGraduateInfo}/${id}`)
+    store.dispatch('collegeAndGrade')
+  }
 }
 const updateVal = (obj: { grade: number, profess: string }) => {
   store.getters.updateVal(obj)
 }
 onBeforeMount(() => {
   store.dispatch('collegeAndGrade')
-  // here change isAuthor
 })
 </script>
