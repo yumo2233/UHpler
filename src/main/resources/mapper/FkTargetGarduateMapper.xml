@@ -16,7 +16,7 @@
     <select id="selectAllByTargetId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from fk_target_garduate
+        from u_courseinfo.fk_target_garduate
         where
         target_id = #{targetId,jdbcType=NUMERIC}
     </select>

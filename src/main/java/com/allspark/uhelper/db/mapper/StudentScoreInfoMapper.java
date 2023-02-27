@@ -2,6 +2,7 @@ package com.allspark.uhelper.db.mapper;
 import java.util.Collection;
 import java.util.List;
 
+import com.allspark.uhelper.db.pojo.StudentInfo;
 import net.sf.jsqlparser.statement.replace.Replace;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,6 +24,12 @@ public interface StudentScoreInfoMapper extends BaseMapper<StudentScoreInfo> {
     int updateBatchByCourseId(List<StudentScoreInfo> list);
 
     int insertBatch(@Param("studentScoreInfoCollection") List<StudentScoreInfo> studentScoreInfoCollection);
+
+    int insertFinalScoreBatch(@Param("studentScoreInfoCollection") List<StudentScoreInfo> studentScoreInfoCollection);
+
+    List<StudentScoreInfo> selectAllByIdAndCourseId(@Param("studentInfoList")List<StudentInfo> studentInfoList, Long courseId);
+
+
 
 }
 

@@ -11,10 +11,8 @@
 //import java.util.ArrayList;
 //import java.util.List;
 //
-///**
-// * @author ChangLu
-// * @date 2021/08/30 11:29
-// **/
+
+
 //@Component
 //public class CorsFilter extends OncePerRequestFilter {
 //    //跨域白名单

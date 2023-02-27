@@ -35,4 +35,11 @@
             where target_id = #{item.targetId,jdbcType=NUMERIC}
         </foreach>
     </delete>
+    <delete id="delByTargetId1">
+        <foreach collection="list" item="item" separator=";">
+            delete
+            from u_courseinfo.fk_target_final
+            where target_id = #{item,jdbcType=NUMERIC}
+        </foreach>
+    </delete>
 </mapper>

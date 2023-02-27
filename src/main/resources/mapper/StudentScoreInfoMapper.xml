@@ -39,4 +39,25 @@
             #{item.finalScore})
         </foreach>
     </insert>
+    <insert id="insertFinalScoreBatch">
+        replace into u_classinfo.student_score_info(id,course_id,
+        final_score)
+        values
+        <foreach collection="studentScoreInfoCollection" item="item" separator=",">
+            (#{item.id,jdbcType=NUMERIC},#{item.courseId,jdbcType=NUMERIC},
+            #{item.finalScore})
+        </foreach>
+    </insert>
+    <select id="selectAllByIdAndCourseId"  parameterType="list" resultMap="BaseResultMap">
+            select
+            <include refid="Base_Column_List"/>
+            from u_classinfo.student_score_info
+            where
+            id in
+            <foreach collection="studentInfoList" item="item" separator="," open="(" close=")">
+                #{item.id,jdbcType=NUMERIC}
+            </foreach>
+            and course_id = #{courseId,jdbcType=NUMERIC}
+
+    </select>
 </mapper>
