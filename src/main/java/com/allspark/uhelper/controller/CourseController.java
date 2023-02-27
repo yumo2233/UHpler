@@ -1,11 +1,11 @@
 package com.allspark.uhelper.controller;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import com.allspark.uhelper.common.form.CourseInfoForm;
-import com.allspark.uhelper.common.form.FinalScoreForm;
-import com.allspark.uhelper.common.form.StudentAndScoreListForm;
-import com.allspark.uhelper.common.form.UsualScoreForm;
+import com.alibaba.excel.EasyExcel;
+import com.allspark.uhelper.common.form.*;
 import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
 import com.allspark.uhelper.common.util.CommonResp;
@@ -19,18 +19,26 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * @ClassName CourseController
- * @Description TODO
+ * @Description 课程管理接口
  * @Author 86159
  * @Date 2023/1/17 2:17
  * @Version 1.0
@@ -49,6 +57,9 @@ public class CourseController {
 
     @Autowired
     private GraduateTargetInfoServiceImpl graduateTargetInfoService;
+
+    @Autowired
+    private ServletContext servletContext;
 
     @Operation(summary = "返回所有课程信息")
 
@@ -175,6 +186,24 @@ public class CourseController {
         return resp;
     }
 
+
+    @Operation(summary = "上传该课程下的所有学生的期末成绩")
+    @PostMapping("/uploadFinalScore/{courseId}")
+    public CommonResp uploadFinalScore(HttpServletRequest request, @PathVariable Long courseId, @RequestBody MultipartFile file) throws IOException {
+        CommonResp resp = new CommonResp<>();
+        boolean flag;
+        ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
+        flag = courseInfoService.uploadFinalModel(reader, courseId);
+
+        if (flag) {
+            resp.setMessage("上传成功");
+        } else {
+            resp.setMessage("上传失败");
+            resp.setSuccess(false);
+        }
+        return resp;
+    }
+
     @Operation(summary = "显示该课程的平时成绩构成")
     @GetMapping("/listUsual/{courseId}")
     public CommonResp listUsual(@PathVariable Long courseId) {
@@ -199,9 +228,10 @@ public class CourseController {
         return resp;
     }
 
-    @Operation(summary = "显示该课程的期末成绩构成")
-    @GetMapping("/listFinal/{courseId}")
-    public CommonResp listFinal(@PathVariable Long courseId) {
+
+    @Operation(summary = "显示该课程的期末成绩构成(复选框)")
+    @GetMapping("/listFinalStructure/{courseId}")
+    public CommonResp listFinalStructure(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
         FinalScoreResp finalScoreResp = courseInfoService.listFinal(courseId);
         resp.setContent(finalScoreResp);
@@ -209,11 +239,36 @@ public class CourseController {
         return resp;
     }
 
-    @Operation(summary = "修改该课程下的期末成绩构成")
-    @PostMapping("/modifyFinal")
-    public CommonResp modifyFinal(@RequestBody FinalScoreForm form) {
+    @Operation(summary = "修改该课程下的期末成绩构成(复选框)")
+    @PostMapping("/modifyFinalStructure")
+    public CommonResp modifyFinalStructure(@RequestBody FinalScoreForm form) {
         CommonResp resp = new CommonResp<>();
         boolean flag = courseInfoService.modifyFinal(form);
+        if (flag) {
+            resp.setMessage("修改成功");
+        } else {
+            resp.setMessage("修改失败");
+            resp.setSuccess(false);
+        }
+        return resp;
+    }
+
+//课程目标名称部分是编号后续需要修改 TODO
+    @Operation(summary = "显示该课程的期末成绩构成")
+    @GetMapping("/listFinal/{courseId}")
+    public CommonResp listFinal(@PathVariable Long courseId) {
+        CommonResp resp = new CommonResp<>();
+        FinalStructureForm finalScoreResp = courseInfoService.listFinal1(courseId);
+        resp.setContent(finalScoreResp);
+        resp.setMessage("显示该课程的期末成绩构成");
+        return resp;
+    }
+
+    @Operation(summary = "修改该课程下的期末成绩构成")
+    @PostMapping("/modifyFinal")
+    public CommonResp modifyFinal(@RequestBody FinalStructureForm form) {
+        CommonResp resp = new CommonResp<>();
+        boolean flag = courseInfoService.modifyFinal1(form);
         if (flag) {
             resp.setMessage("修改成功");
         } else {

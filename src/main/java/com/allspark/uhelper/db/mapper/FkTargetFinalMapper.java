@@ -23,6 +23,8 @@ public interface FkTargetFinalMapper extends BaseMapper<FkTargetFinal> {
 
     int insertBatch(@Param("fkTargetFinalCollection") Collection<FkTargetFinal> fkTargetFinalCollection);
 
+    int delByTargetId1(List<Long> item);
+
 }
 
 

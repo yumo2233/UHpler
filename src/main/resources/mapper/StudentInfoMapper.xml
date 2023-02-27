@@ -45,4 +45,14 @@
         FROM u_classinfo.student_info
         WHERE class_id = #{class_id}
     </select>
+    <select id="selectAllByNumberIn" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_classinfo.student_info
+        where
+        number in
+        <foreach collection="numberList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
 </mapper>

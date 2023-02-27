@@ -38,14 +38,14 @@
     <select id="selectAllById" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from course_info
+        from u_courseinfo.course_info
         where
         id = #{id,jdbcType=NUMERIC}
     </select>
     <select id="selectAllByIdIn" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from course_info
+        from u_courseinfo.course_info
         where
         id in
         <foreach collection="idList" item="item" open="(" close=")" separator=",">

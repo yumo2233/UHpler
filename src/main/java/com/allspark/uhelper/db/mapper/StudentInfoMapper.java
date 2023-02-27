@@ -27,6 +27,8 @@ public interface StudentInfoMapper extends BaseMapper<StudentInfo> {
     void insertStudent(StudentInfo studentInfo);
 
     ArrayList<HashMap> selectStudentByClassId(long class_id);
+
+    List<StudentInfo> selectAllByNumberIn(@Param("numberList") Collection<String> numberList);
 }
 
 

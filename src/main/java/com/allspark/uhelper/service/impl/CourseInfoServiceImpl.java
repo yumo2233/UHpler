@@ -2,6 +2,7 @@ package com.allspark.uhelper.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.allspark.uhelper.common.form.*;
@@ -956,6 +957,199 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             }
         }
         return document;
+    }
+
+    public boolean modifyFinal1(FinalStructureForm form) {
+        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(form.getCourseId());
+        List<Long> itemList = new ArrayList<>();
+        List<FkTargetFinal> fkTargetFinalList = new ArrayList<>();
+        HashMap<String, Long> nameForId = new HashMap<>(15);
+        HashMap<Integer, String>[] first1 = form.getFirst1();
+        HashMap<Integer, String>[] first2 = form.getFirst2();
+        HashMap<Integer, String>[] first3 = form.getFirst3();
+        HashMap<Integer, String>[] first4 = form.getFirst4();
+        for (TargetInfo targetInfo : targetInfoList) {
+            itemList.add(targetInfo.getId());
+            nameForId.put(targetInfo.getNumber(), targetInfo.getId());
+            for (int i = 0; i < 4; i++) {
+                FkTargetFinal fkTargetFinal = new FkTargetFinal();
+                fkTargetFinal.setTargetId(targetInfo.getId());
+                fkTargetFinal.setFirst(i + 1);
+                List<Integer> second = new ArrayList<>();
+                if (i == 0) {
+                    for (HashMap<Integer, String> item : first1) {
+                        for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
+                            String value = integerStringEntry.getValue();
+                            Integer key = integerStringEntry.getKey();
+                            if (value.equals(targetInfo.getName())) {
+                                second.add(key);
+                            }
+                        }
+                    }
+                } else if (i == 1){
+                    for (HashMap<Integer, String> item : first2) {
+                        for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
+                            String value = integerStringEntry.getValue();
+                            Integer key = integerStringEntry.getKey();
+                            if (value.equals(targetInfo.getName())) {
+                                second.add(key);
+                            }
+                        }
+                    }
+                } else if (i == 2) {
+                    for (HashMap<Integer, String> item : first3) {
+                        for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
+                            String value = integerStringEntry.getValue();
+                            Integer key = integerStringEntry.getKey();
+                            if (value.equals(targetInfo.getName())) {
+                                second.add(key);
+                            }
+                        }
+                    }
+                } else {
+                    for (HashMap<Integer, String> item : first4) {
+                        for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
+                            String value = integerStringEntry.getValue();
+                            Integer key = integerStringEntry.getKey();
+                            if (value.equals(targetInfo.getName())) {
+                                second.add(key);
+                            }
+                        }
+                    }
+                }
+                Integer[] a = second.toArray(new Integer[second.size()]);
+                String s = JSONUtil.parse(a).toBean(String.class);
+                fkTargetFinal.setSecond(s);
+                fkTargetFinalList.add(fkTargetFinal);
+            }
+        }
+        boolean flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+            fkTargetFinalMapper.delByTargetId1(itemList);
+            fkTargetFinalMapper.insertBatch(fkTargetFinalList);
+            return true;
+        }));
+
+
+        return flag;
+    }
+
+    public FinalStructureForm listFinal1(Long courseId) {
+
+        List<TargetInfo> targetInfoList = targetInfoMapper.selectAllByCourseId(courseId);
+        int first11 = 0;
+        int first22 = 0;
+        int first33 = 0;
+        int first44 = 0;
+        for (TargetInfo targetInfo : targetInfoList) {
+            int i = 1;
+            List<FkTargetFinal> fkTargetFinals = fkTargetFinalMapper.selectAllByTargetId(targetInfo.getId());
+            for (FkTargetFinal fkTargetFinal : fkTargetFinals) {
+                int firstCount = JSONUtil.parse(fkTargetFinal.getSecond()).toBean(Integer[].class).length;
+                if (i == 1) {
+                    first11 += firstCount;
+                } else if (i == 2) {
+                    first22 += firstCount;
+                } else if (i == 3) {
+                    first33 += firstCount;
+                } else if (i == 4) {
+                    first44 += firstCount;
+                }
+                i++;
+            }
+        }
+        HashMap<Integer, String>[] first1 = new HashMap[first11];
+        HashMap<Integer, String>[] first2 = new HashMap[first22];
+        HashMap<Integer, String>[] first3 = new HashMap[first33];
+        HashMap<Integer, String>[] first4 = new HashMap[first44];
+        for (TargetInfo targetInfo : targetInfoList) {
+            String targetName = targetInfo.getName();
+            List<FkTargetFinal> fkTargetFinals = fkTargetFinalMapper.selectAllByTargetId(targetInfo.getId());
+            for (FkTargetFinal fkTargetFinal : fkTargetFinals) {
+                Integer first = fkTargetFinal.getFirst();
+                Integer[] integers1 = JSONUtil.parse(fkTargetFinal.getSecond()).toBean(Integer[].class);
+                for (Integer index : integers1) {
+                    if (first == 1) {
+                        HashMap<Integer, String> item = new HashMap<>();
+                        item.put(index, targetName);
+                        first1[index - 1] =  item;
+                    } else if (first == 2) {
+                        HashMap<Integer, String> item = new HashMap<>();
+                        item.put(index, targetName);
+                        first2[index - 1] =  item;
+                    } else if (first == 3) {
+                        HashMap<Integer, String> item = new HashMap<>();
+                        item.put(index, targetName);
+                        first3[index - 1] =  item;
+                    } else if (first == 4) {
+                        HashMap<Integer, String> item = new HashMap<>();
+                        item.put(index, targetName);
+                        first4[index - 1] =  item;
+                    }
+                }
+            }
+        }
+        FinalStructureForm finalStructureForm = new FinalStructureForm();
+        finalStructureForm.setFirst1(first1);
+        finalStructureForm.setFirst2(first2);
+        finalStructureForm.setFirst3(first3);
+        finalStructureForm.setFirst4(first4);
+        finalStructureForm.setCourseId(courseId);
+        return finalStructureForm;
+    }
+
+    public boolean uploadFinalModel(ExcelReader reader, Long courseId) {
+        boolean flag = true;
+        List<String> numberList = new ArrayList<>();
+        List<List<Object>> readAll = reader.read();
+        int i = 0;
+        for (List<Object> list : readAll) {
+            if (i < 4) {
+                i++;
+                continue;
+            }
+            numberList.add((String) list.get(1));
+
+        }
+        List<StudentInfo> studentInfoList = studentInfoMapper.selectAllByNumberIn(numberList);
+        HashMap<String, Long> numberForId = new HashMap<>();
+        for (StudentInfo studentInfo : studentInfoList) {
+            numberForId.put(studentInfo.getNumber(), studentInfo.getId());
+        }
+        int j = 0;
+        HashMap<Long, Object> usualMap = new HashMap<>();
+        List<StudentScoreInfo> studentScoreInfoList1 = studentScoreInfoMapper.selectAllByIdAndCourseId(studentInfoList, courseId);
+        System.out.println(studentScoreInfoList1);
+        for (StudentScoreInfo studentScoreInfo : studentScoreInfoList1) {
+            usualMap.put(studentScoreInfo.getId(), studentScoreInfo.getUsualScore());
+        }
+        List<StudentScoreInfo> studentScoreInfoList = new ArrayList<>();
+        for (List<Object> list : readAll) {
+            if (j < 4) {
+                j++;
+                continue;
+            }
+            String number = (String) list.get(1);
+            Long aLong = numberForId.get(number);
+            StudentScoreInfo studentScoreInfo = new StudentScoreInfo();
+            list.remove(0);
+            list.remove(0);
+            list.remove(0);
+            if (usualMap.containsKey(aLong)) {
+                studentScoreInfo.setUsualScore(usualMap.get(aLong).toString());
+            } else {
+                studentScoreInfo.setUsualScore("[0]");
+            }
+            studentScoreInfo.setFinalScore(JSONUtil.parse(list).toBean(String.class));
+            studentScoreInfo.setCourseId(courseId);
+            studentScoreInfo.setId(aLong);
+            studentScoreInfoList.add(studentScoreInfo);
+        }
+
+        flag = Boolean.TRUE.equals(transactionTemplate.execute(status -> {
+            studentScoreInfoMapper.insertBatch(studentScoreInfoList);
+            return true;
+        }));
+        return  flag;
     }
 }
 
