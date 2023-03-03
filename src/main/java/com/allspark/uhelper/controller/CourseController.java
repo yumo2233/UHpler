@@ -13,6 +13,7 @@ import com.allspark.uhelper.db.pojo.CourseInfo;
 import com.allspark.uhelper.service.impl.ClassInfoServiceImpl;
 import com.allspark.uhelper.service.impl.CourseInfoServiceImpl;
 import com.allspark.uhelper.service.impl.GraduateTargetInfoServiceImpl;
+import com.allspark.uhelper.utils.SemesterUtil;
 import com.spire.doc.Document;
 import com.spire.doc.FileFormat;
 import io.swagger.v3.oas.annotations.Operation;
@@ -157,6 +158,16 @@ public class CourseController {
         List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
         resp.setContent(collegeTrees);
         resp.setMessage("返回所有的毕业指标点");
+        return resp;
+    }
+
+    @Operation(summary = "显示执行学期(下拉框)")
+    @GetMapping("/listSemester")
+    public CommonResp listSemester() {
+        CommonResp resp = new CommonResp<>();
+        String[] sem = SemesterUtil.select();
+        resp.setContent(sem);
+        resp.setMessage("返回执行学期");
         return resp;
     }
 

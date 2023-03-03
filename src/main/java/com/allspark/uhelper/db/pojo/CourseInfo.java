@@ -89,7 +89,7 @@ public class CourseInfo implements Serializable {
     /**
      * 执行学期（枚举值）
      */
-    private SemesterEnum semester;
+    private Integer semester;
 
     /**
      * 平时成绩占比

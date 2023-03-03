@@ -99,7 +99,7 @@ public class CourseInfoResp {
     /**
      * 执行学期（枚举值）
      */
-    private SemesterEnum semester;
+    private String semester;
 
     /**
      * 平时成绩占比

@@ -17,14 +17,14 @@ public enum SemesterEnum {
     * @return
     **/
 
-    ONE(1,SemesterUtil.select()[0]),
-    TWO(2,SemesterUtil.select()[1]),
-    THREE(3,SemesterUtil.select()[2]),
-    FOUR(4,SemesterUtil.select()[3]),
-    FIVE(5,SemesterUtil.select()[4]),
-    SIX(6,SemesterUtil.select()[5]),
-    SEVEN(7,SemesterUtil.select()[6]),
-    EIGHT(8,SemesterUtil.select()[7]);
+    ONE(SemesterUtil.selectInt()[0],SemesterUtil.select()[0]),
+    TWO(SemesterUtil.selectInt()[1],SemesterUtil.select()[1]),
+    THREE(SemesterUtil.selectInt()[2],SemesterUtil.select()[2]),
+    FOUR(SemesterUtil.selectInt()[3],SemesterUtil.select()[3]),
+    FIVE(SemesterUtil.selectInt()[4],SemesterUtil.select()[4]),
+    SIX(SemesterUtil.selectInt()[5],SemesterUtil.select()[5]),
+    SEVEN(SemesterUtil.selectInt()[6],SemesterUtil.select()[6]),
+    EIGHT(SemesterUtil.selectInt()[7],SemesterUtil.select()[7]);
 
 
     SemesterEnum(int i, String s) {

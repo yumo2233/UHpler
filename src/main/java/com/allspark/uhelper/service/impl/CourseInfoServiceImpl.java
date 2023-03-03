@@ -1,6 +1,5 @@
 package com.allspark.uhelper.service.impl;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -9,22 +8,21 @@ import com.allspark.uhelper.common.form.*;
 import com.allspark.uhelper.common.resp.*;
 import com.allspark.uhelper.db.mapper.*;
 import com.allspark.uhelper.db.pojo.*;
+import com.allspark.uhelper.service.CourseInfoService;
 import com.allspark.uhelper.utils.CopyUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.allspark.uhelper.service.CourseInfoService;
-import com.spire.doc.*;
+import com.spire.doc.Document;
+import com.spire.doc.Section;
+import com.spire.doc.Table;
+import com.spire.doc.TableRow;
 import com.spire.doc.fields.TextRange;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.support.incrementer.HsqlMaxValueIncrementer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -84,6 +82,10 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         List<CourseInfoResp> courseInfoResps = new ArrayList<>();
         for (CourseInfo courseInfo : course) {
             CourseInfoResp courseInfoResp = CopyUtil.copy(courseInfo, CourseInfoResp.class);
+            Integer yearFlag = courseInfo.getSemester();
+            Integer year = yearFlag / 10;
+            int semC = yearFlag % 10;
+            courseInfoResp.setSemester(year + "~" + (year + 1) + "_" + semC);
             courseInfoResp.setId(courseInfo.getId());
             List<Long> fkClassCourses = fkClassCourseMapper.selectClassIdByCourseId(courseInfo.getId());
             List<Long> fkPres = fkPreMapper.selectPreidById(courseInfo.getId());
@@ -122,12 +124,17 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         if (flag1 == 0 || flag0 == 0) {
 
         } else {
-            String s = new String("期末平时占比不归一");
+            String s = "期末平时占比不归一";
             map.put("message", s);
             return map;
         }
 //        SnowFlake10 snowFlake = new SnowFlake10();
         CourseInfo courseInfo = CopyUtil.copy(courseInfoForm, CourseInfo.class);
+        String semester = courseInfoForm.getSemester();
+        Integer year = Integer.parseInt(semester.substring(0, 4));
+        Integer semC = new Integer(semester.substring(10, 11));
+        Integer yearC = year * 10 + semC;
+        courseInfo.setSemester(yearC);
         List<Long> classList = courseInfoForm.getClassList();
         List<Long> preList = courseInfoForm.getPreList();
         List<CheckInfoForm> checkInfoFormList = courseInfoForm.getCheckList();
@@ -897,7 +904,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         }
         docMap.put("${classList}", classList);
         docMap.put("${studentNum}", studentCount.toString());
-        docMap.put("${semester}", courseInfo.getSemester().getName());
+        docMap.put("${semester}", courseInfo.getSemester());
         int j = 1;
         int targetCount = 0;
         String courseTarget = new String("");
@@ -981,17 +988,17 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                         for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
                             String value = integerStringEntry.getValue();
                             Integer key = integerStringEntry.getKey();
-                            if (value.equals(targetInfo.getName())) {
+                            if (value.equals(targetInfo.getNumber())) {
                                 second.add(key);
                             }
                         }
                     }
-                } else if (i == 1){
+                } else if (i == 1) {
                     for (HashMap<Integer, String> item : first2) {
                         for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
                             String value = integerStringEntry.getValue();
                             Integer key = integerStringEntry.getKey();
-                            if (value.equals(targetInfo.getName())) {
+                            if (value.equals(targetInfo.getNumber())) {
                                 second.add(key);
                             }
                         }
@@ -1001,7 +1008,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                         for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
                             String value = integerStringEntry.getValue();
                             Integer key = integerStringEntry.getKey();
-                            if (value.equals(targetInfo.getName())) {
+                            if (value.equals(targetInfo.getNumber())) {
                                 second.add(key);
                             }
                         }
@@ -1011,7 +1018,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                         for (Map.Entry<Integer, String> integerStringEntry : item.entrySet()) {
                             String value = integerStringEntry.getValue();
                             Integer key = integerStringEntry.getKey();
-                            if (value.equals(targetInfo.getName())) {
+                            if (value.equals(targetInfo.getNumber())) {
                                 second.add(key);
                             }
                         }
@@ -1062,7 +1069,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         HashMap<Integer, String>[] first3 = new HashMap[first33];
         HashMap<Integer, String>[] first4 = new HashMap[first44];
         for (TargetInfo targetInfo : targetInfoList) {
-            String targetName = targetInfo.getName();
+            String targetName = targetInfo.getNumber();
             List<FkTargetFinal> fkTargetFinals = fkTargetFinalMapper.selectAllByTargetId(targetInfo.getId());
             for (FkTargetFinal fkTargetFinal : fkTargetFinals) {
                 Integer first = fkTargetFinal.getFirst();
@@ -1071,19 +1078,19 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                     if (first == 1) {
                         HashMap<Integer, String> item = new HashMap<>();
                         item.put(index, targetName);
-                        first1[index - 1] =  item;
+                        first1[index - 1] = item;
                     } else if (first == 2) {
                         HashMap<Integer, String> item = new HashMap<>();
                         item.put(index, targetName);
-                        first2[index - 1] =  item;
+                        first2[index - 1] = item;
                     } else if (first == 3) {
                         HashMap<Integer, String> item = new HashMap<>();
                         item.put(index, targetName);
-                        first3[index - 1] =  item;
+                        first3[index - 1] = item;
                     } else if (first == 4) {
                         HashMap<Integer, String> item = new HashMap<>();
                         item.put(index, targetName);
-                        first4[index - 1] =  item;
+                        first4[index - 1] = item;
                     }
                 }
             }
@@ -1149,7 +1156,7 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
             studentScoreInfoMapper.insertBatch(studentScoreInfoList);
             return true;
         }));
-        return  flag;
+        return flag;
     }
 }
 

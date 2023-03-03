@@ -65,7 +65,7 @@
                 #{teacher,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nature},
                 #{number,jdbcType=VARCHAR}, #{allPeriod,jdbcType=NUMERIC}, #{theoryPeriod,jdbcType=NUMERIC},
                 #{runPeriod,jdbcType=NUMERIC}, #{score,jdbcType=NUMERIC}, #{preElse,jdbcType=VARCHAR},
-                #{studentNum,jdbcType=NUMERIC}, #{semester}, #{usualRatio,jdbcType=DECIMAL},
+                #{studentNum,jdbcType=NUMERIC}, #{semester,jdbcType=INTEGER}, #{usualRatio,jdbcType=DECIMAL},
                 #{finalRatio,jdbcType=DECIMAL}, #{finalId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
                 #{userName,jdbcType=VARCHAR})
 
