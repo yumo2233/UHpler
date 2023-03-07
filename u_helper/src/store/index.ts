@@ -54,32 +54,33 @@ export interface stuProps {
   className: string
   number: number
   index: number
-  usualScore?: number[]
-  finalScore?: {
-    1: number[],
-    2: number[],
-    3: number[],
-    4: number[]
-  }
+  usualScore: number[]
+  finalScore1: number[]
+  finalScore2: number[]
+  finalScore3: number[]
+  finalScore4: number[]
 }
-interface ICurrentUser {
-  number: number;
-  isFirst?: boolean;
-  userName: string;
-  Tcourses: ICourses[];
-  avator: string;
-  isLogin: boolean;
+// interface ICurrentUser {
+//   number: number;
+//   isFirst?: boolean;
+//   userName: string;
+//   Tcourses: ICourses[];
+//   avator: string;
+//   isLogin: boolean;
+// }
+
+interface User {
+  isLogin: boolean
+  isFirst: boolean
+  number: number
 }
 
-interface gradContent {// 期末成绩
-  targetId: number
-  targetName: string
-  first: {
-    1: number[],
-    2: number[],
-    3: number[],
-    4: number[]
-  }
+interface finalGrade {// 期末成绩构成
+  courseId: number
+  first1: []
+  first2: []
+  first3: []
+  first4: []
 }
 interface labelAndValue {
   label: string
@@ -124,15 +125,25 @@ interface classSelect {
   professional: string
 }
 
-interface Student {
+export interface Student {
   number: number // 学号
-  id: number
+  // id: number
   index: number
   name: string
 }
+
+interface targetAndFinalForm { // 期末成绩构成
+  targetId: number
+  targetName: string
+  first1: number[]
+  first2: number[]
+  first3: number[]
+  first4: number[]
+}
+
 export interface GlobalDataProps{
   isLogin: boolean
-  user: ICurrentUser
+  user: User
   token?: string
   courses: ICourses[]
   // accountInfo: IAccount
@@ -141,7 +152,7 @@ export interface GlobalDataProps{
   graduationList: []
   stuGrade: stuProps[]
   isAdd: boolean
-  gradContent: gradContent[]
+  gradContent: finalGrade
   ClassAndPro: {
     grade: labelAndValue[],
     professional: labelAndValue[]
@@ -150,9 +161,10 @@ export interface GlobalDataProps{
   filterArray: CollegeAndProfess[]
   gradInfo: gradInfo
   classArray: classSelect[]
-  classfilter: classSelect[]
+  classfilter: classSelect[] // 考虑与filerArray合并
   stuArr: stuProps[]
-  stu: Student[]
+  stu: Student[]// 临时供新增班级页面使用的学生信息，考虑是否可与stuArr合并
+  targetAndFinalFormList: targetAndFinalForm[]
 }
 
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
@@ -177,7 +189,7 @@ const examAndCommit = (state: { token?: string; isLogin?: boolean; courses?: nev
 }
 export default createStore({
   state: {
-    user: { isLogin: true, isFirst: false },
+    user: { isLogin: true, isFirst: false, userId: 0 },
     token: localStorage.getItem('token') || '',
     courses: [],
     classList: [],
@@ -209,7 +221,7 @@ export default createStore({
     graduationList: [],
     stuGrade: [],
     isAdd: false,
-    gradContent: [],
+    gradContent: {},
     ClassAndPro: { grade: [], professional: [] },
     CollegeAndProfess: [],
     filterArray: [],
@@ -217,7 +229,8 @@ export default createStore({
     gradInfo: {},
     classArray: [],
     stuArr: [],
-    stu: []
+    stu: [],
+    targetAndFinalFormList: []
   },
   getters: {
     totalScore: (state) => (index: number) => {
@@ -388,7 +401,7 @@ export default createStore({
       state.user.isFirst = false
     },
     getGradContent (state, rawData) {
-      state.gradContent = rawData.content.targetAndFinalFormList
+      state.gradContent = rawData.content
     },
     getGradeAndProfess (state, rawData) {
       state.ClassAndPro.grade = rawData.content.grade
@@ -411,6 +424,24 @@ export default createStore({
     getClassList (state, rawData) {
       // unknown data
       state.classList = rawData.content
+    },
+    addClassStu (state, obj: Student) { // 新增班级页面的新增学生
+      (state.stu as Student[]).push(obj)
+    },
+    deleteAddStu (state, id: number) { // 新增班级页面的删除学生
+      const stu = state.stu
+      for (let i = 0; i < stu.length; i++) {
+        if ((stu[i] as Student).number === id) {
+          stu.splice(i, 1)
+        }
+      }
+    },
+    listFinalStructure (state, rawData) {
+      state.targetAndFinalFormList = rawData.content.targetAndFinalFormList
+    },
+    logout (state) {
+      state.user.isLogin = false
+      localStorage.removeItem('token')
     }
   },
   actions: {
@@ -455,6 +486,9 @@ export default createStore({
     },
     getStuInfo ({ commit }, id) {
       getAndCommit(`${apis.selectStu}/${id}`, 'getStuInfo', commit)
+    },
+    listFinalStructure ({ commit }, id) {
+      getAndCommit(`${apis.listFinalStructure}/${id}`, 'listFinalStructure', commit)
     }
   }
 })

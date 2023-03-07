@@ -22,8 +22,6 @@
 import { ref, defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
-import axios from 'axios'
-import { apis } from '@/common/apis'
 export default defineComponent({
   name: 'UpLoad',
   emits: {
@@ -46,18 +44,12 @@ export default defineComponent({
     }
     const save = () => {
       const obj = {
-        class_id: props.classId,
         name: name.value,
         index: index.value,
-        number: id.value
+        number: id.value,
+        id: Date.now()
       }
-      if (props.edit) {
-        axios.post(apis.updateSingleStudent, JSON.stringify(obj))
-      } else {
-        axios.post(apis.insetSingleStudent, JSON.stringify(obj))
-      }
-      store.dispatch('getStuInfo', props.classId)
-      context.emit('close-model')
+      context.emit('close-model', obj)
     }
     const back = () => {
       context.emit('close-model')

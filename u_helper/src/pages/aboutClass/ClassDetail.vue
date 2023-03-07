@@ -1,5 +1,5 @@
 <template>
-  <edit-vue :edit="outerId" v-if="isEdit" :classId="id" @close-model="isEdit = false"></edit-vue>
+  <edit-vue :edit="outerId" v-if="isEdit" :classId="id" @close-model="closeEdit"></edit-vue>
   <div class="outer">
     <div class="classInfo">
       <span style="font-weight: bolder;">编辑班级信息</span>
@@ -20,6 +20,7 @@
     </div>
     <div class="editStu">
       <span style="font-weight: bolder;">编辑班级成员信息</span> <br>
+      <el-button type="primary" :disabled="view" @click="isEdit=true;add=true"> 新增 </el-button> <br>
       <el-table :data="stu" style="width: 100%;margin-top: 20px;">
         <el-table-column prop="index" label="班级序号"/>
         <el-table-column prop="name" label="姓名"/>
@@ -27,16 +28,16 @@
         <el-table-column label="操作">
           <template #default="scope">
             <div>
-              <el-button :disabled="view" text @click="edit(stu[scope.$index].id)">编辑</el-button>
-              <el-button :disabled="view" text @click="deleteCurrent(stu[scope.$index].id)">删除</el-button>
+              <el-button :disabled="view" text @click="edit(stu[scope.$index].id)"> 编辑 </el-button>
+              <el-button :disabled="view" text @click="deleteCurrent(stu[scope.$index].id)"> 删除 </el-button>
             </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="button">
-      <el-button type="plain" @click="back">返回</el-button>
-      <el-button type="primary" @click="handleSave">保存</el-button>
+      <el-button type="plain" @click="back"> 返回 </el-button>
+      <el-button type="primary" @click="handleSave"> 保存 </el-button>
     </div>
   </div>
 </template>
@@ -68,6 +69,7 @@ export default defineComponent({
     const edited = ref(false)
     const goUpload = ref(false)
     const isEdit = ref(false)
+    const add = ref(false)// 控制是否打开edit-vue时是否为新增接口
     const outerId = ref(0)// 给editvue用的学生信息
     const handleSave = () => {
       if (edited.value) {
@@ -85,8 +87,17 @@ export default defineComponent({
       isEdit.value = true
       outerId.value = id
     }
-    const addOne = () => {
-      isEdit.value = true
+    const closeEdit = (obj: unknown) => {
+      isEdit.value = false
+      // 此处处理保存后的数据
+      if (obj) {
+        if (add.value) {
+          axios.post(apis.updateSingleStudent, JSON.stringify(obj))
+        } else {
+          axios.post(apis.insetSingleStudent, JSON.stringify(obj))
+        }
+      }
+      store.dispatch('getStuInfo', id)
     }
     const back = () => {
       router.push('/class')
@@ -95,7 +106,7 @@ export default defineComponent({
       store.dispatch('getStuInfo', id)
     })
     return {
-      view, info, unit, pro, edited, stu, handleSave, deleteCurrent, edit, goUpload, isEdit, addOne, outerId, id, back
+      view, info, unit, pro, edited, stu, handleSave, deleteCurrent, edit, goUpload, isEdit, outerId, id, back, add, closeEdit
     }
   }
 })

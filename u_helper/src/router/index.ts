@@ -9,7 +9,6 @@ import FirstLogin from '@/pages/aboutLogin/FirstLogin.vue'
 import GradList from '@/pages/GradManage.vue'
 import ClassDetail from '@/pages/aboutClass/ClassDetail.vue'
 import CheckOrEditFGrad from '@/pages/AboutGradution/CheckOrEditFGrad.vue'
-
 import AddClass from '@/pages/aboutClass/AddClass.vue'
 
 const routerHistory = createWebHistory()
@@ -46,7 +45,7 @@ const router = createRouter({
     path: '/editclass',
     component: ClassDetail
   }, {
-    path: '/test',
+    path: '/addclass',
     component: AddClass
   }]
 })

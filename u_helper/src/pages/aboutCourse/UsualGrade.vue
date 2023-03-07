@@ -65,7 +65,6 @@ import { useStore } from 'vuex'
 import axios from 'axios'
 import { apis } from '@/common/apis'
 import router from '@/router'
-console.log(7)
 export default defineComponent({
   props: {
     isAuthor: {

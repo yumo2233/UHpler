@@ -12,6 +12,7 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 axios.defaults.baseURL = 'https://mock.apifox.cn/m1/2206130-0-default'
+// axios.defaults.baseURL = '192.168.0.113'
 
 const app = createApp(App)
 // store

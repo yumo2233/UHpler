@@ -1,5 +1,6 @@
 <template>
-  <up-load v-if="goUpload" @close-model="closeUpload"></up-load>
+  <!-- TODO -->
+  <up-load website="" v-if="goUpload" @close-model="closeUpload"></up-load>
   <edit-vue v-if="goEdit" @close-model="closeEdit"></edit-vue>
   <div class="outer">
     <div class="classInfo">
@@ -30,9 +31,9 @@
         <el-table-column label="操作">
           <template #default="scope">
             <div>
-              {{ scope.$index }}
-              <!-- <el-button text @click="edit(stu[scope.$index].id)">编辑</el-button>
-              <el-button text @click="deleteCurrent(stu[scope.$index].id)">删除</el-button> -->
+              <!-- {{ scope.$index }} -->
+              <!-- <el-button text @click="edit(stu[scope.$index].number)">编辑</el-button> -->
+              <el-button text @click="deleteCurrent(stu[scope.$index].number)">删除</el-button>
             </div>
           </template>
         </el-table-column>
@@ -70,15 +71,25 @@ export default defineComponent({
       store.dispatch('get...')
       */
     }
-    const closeEdit = () => {
+    // const edit = (id: number) => {
+    //   goEdit.value = true
+    // }
+    const deleteCurrent = (id: number) => {
+      store.commit('deleteAddStu', id)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const closeEdit = (obj: any) => {
       goEdit.value = false
       // 此处保存数据
+      if (obj) {
+        store.commit('addClassStu', obj)
+      }
     }
     onBeforeMount(() => {
       store.dispatch('getGradeAndProfess')
     })
     return {
-      unit1, pro1, unit, pro, class1, grade, goUpload, closeUpload, stu, goEdit, closeEdit
+      unit1, pro1, unit, pro, class1, grade, goUpload, closeUpload, stu, goEdit, closeEdit, deleteCurrent
     }
   }
 })

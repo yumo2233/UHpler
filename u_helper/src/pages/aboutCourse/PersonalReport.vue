@@ -21,7 +21,7 @@ export default defineComponent({
     const file = ref()
     console.log(file)
     onBeforeMount(() => {
-      axios.get(`${apis.download}/${info.value.id}`, { responseType: 'blob' }).then(res => {
+      axios.get(`${apis.downloadReport}/${info.value.id}`, { responseType: 'blob' }).then(res => {
         renderAsync(res.data, file.value)
       })
     })
