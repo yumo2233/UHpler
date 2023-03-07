@@ -1158,6 +1158,18 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         }));
         return flag;
     }
+
+    public List<HashMap> listPre(long loginIdAsLong) {
+        List<CourseInfo> courseInfos = courseInfoMapper.listAllByUserId(loginIdAsLong);
+        List<HashMap> list = new ArrayList<>();
+        for (CourseInfo courseInfo : courseInfos) {
+            HashMap item = new HashMap();
+            item.put("label", courseInfo.getName());
+            item.put("value", courseInfo.getId());
+            list.add(item);
+        }
+        return list;
+    }
 }
 
 

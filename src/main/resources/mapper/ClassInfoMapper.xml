@@ -82,6 +82,11 @@
             #{item}
         </foreach>
     </select>
+    <select id="listAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_classinfo.class_info
+    </select>
 
 </mapper>
 

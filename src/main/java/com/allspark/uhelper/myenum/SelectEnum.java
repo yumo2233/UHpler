@@ -22,6 +22,7 @@ public enum SelectEnum {
         code=i;
         name=s;
     }
+
     @EnumValue
     private final Integer code;
     @JsonValue

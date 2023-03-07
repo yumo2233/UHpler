@@ -90,7 +90,7 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
         List<NAryTree> collegeTrees = new LinkedList<>();
         HashMap<CollegeEnum,NAryTree> collegeHash = new HashMap<>();
         HashMap<String,NAryTree> proHash = new HashMap<>();
-        List<ClassInfo> classInfoList = list();
+        List<ClassInfo> classInfoList = classInfoMapper.listAll();
         int i=0;
         for (ClassInfo classInfo : classInfoList) {
             i++;

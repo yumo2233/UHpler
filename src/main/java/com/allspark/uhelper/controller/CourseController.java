@@ -1,5 +1,7 @@
 package com.allspark.uhelper.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -327,5 +329,14 @@ public class CourseController {
         document.saveToStream(out, FileFormat.Doc);
     }
 
+    @Operation(summary = "返回先修课程列表")
+    @GetMapping("/listPre")
+    public CommonResp listPre(){
+        long loginIdAsLong = StpUtil.getLoginIdAsLong();
+        List<HashMap> preList = courseInfoService.listPre(loginIdAsLong);
+        CommonResp resp = new CommonResp<>();
+        resp.setContent(preList);
+        return resp;
+    }
 
 }

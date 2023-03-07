@@ -1,5 +1,6 @@
 package com.allspark.uhelper.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.allspark.uhelper.common.form.GraduateInfoForm;
 import com.allspark.uhelper.common.form.GraduateTargetForm;
 import com.allspark.uhelper.common.resp.GradeAndProfessionalResp;
@@ -29,6 +30,7 @@ import java.util.Map;
 @Tag(name = "GraduateController",description = "毕业要求接口")
 @RestController
 @RequestMapping("/graduate")
+//@SaCheckLogin
 public class GraduateController {
 
     @Autowired
