@@ -1,5 +1,7 @@
 package com.allspark.uhelper.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.util.ListUtils;
 import com.allspark.uhelper.common.form.ClassInfoForm;
 import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.common.util.CommonResp;
@@ -12,7 +14,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,6 +32,8 @@ import java.util.HashMap;
 @RequestMapping("/course")
 public class ClassController {
 
+    //    @Autowired
+//    private UploadDAO uploadDAO;
     @Autowired
     ClassInfoService classInfoService;
 
@@ -100,4 +106,15 @@ public class ClassController {
         commonResp.setContent(arrayList);
         return commonResp;
     }
+
+
+    @PostMapping("/uploadClass")
+    @ResponseBody
+    public CommonResp upload(MultipartFile file) throws IOException {
+        classInfoService.uploadExcel(file);
+        CommonResp commonResp = new CommonResp();
+        return commonResp;
+    }
+
+
 }

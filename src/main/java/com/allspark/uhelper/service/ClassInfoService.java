@@ -7,7 +7,9 @@ import com.allspark.uhelper.db.pojo.StudentDbInfo;
 import com.allspark.uhelper.db.pojo.StudentInfo;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,4 +38,7 @@ public interface ClassInfoService extends IService<ClassInfo> {
     void insertStudent(StudentInfo studentInfo);
 
     HashMap selectClassById(long id);
+
+    void uploadExcel(MultipartFile uploadFile) throws IOException;
+
 }

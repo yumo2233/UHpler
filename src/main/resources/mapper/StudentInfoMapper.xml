@@ -40,6 +40,13 @@
         VALUES (#{name}, #{number}, #{index}, #{classId})
     </insert>
 
+    <insert id="insertStudentBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO u_graduateinfo.graduate_info (`name`, `number`, `index`, class_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{name}, #{number}, #{index}, #{classId})
+        </foreach>
+    </insert>
+
     <select id="selectStudentByClassId" resultType="hashmap">
         SELECT id, `index`, `name`, `number`
         FROM u_classinfo.student_info

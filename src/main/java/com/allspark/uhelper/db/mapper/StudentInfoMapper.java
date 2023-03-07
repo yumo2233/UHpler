@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import com.allspark.uhelper.db.pojo.GraduateInfo;
 import com.allspark.uhelper.db.pojo.StudentDbInfo;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,6 +26,8 @@ public interface StudentInfoMapper extends BaseMapper<StudentInfo> {
     List<StudentInfo> listAllByClassIdIn(@Param("classIdList") List<Long> classIdList);
 
     void insertStudent(StudentInfo studentInfo);
+
+    void insertStudentBatch(List<StudentInfo> datalist);
 
     ArrayList<HashMap> selectStudentByClassId(long class_id);
 

@@ -1,5 +1,7 @@
 package com.allspark.uhelper.service.impl;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.read.listener.PageReadListener;
 import com.allspark.uhelper.common.form.ClassInfoForm;
 import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
@@ -15,8 +17,11 @@ import com.allspark.uhelper.service.ClassInfoService;
 import com.allspark.uhelper.db.mapper.ClassInfoMapper;
 import org.springframework.data.redis.hash.HashMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -220,4 +225,17 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
         HashMap hashMap = classInfoMapper.selectClassById(id);
         return hashMap;
     }
+
+    @Override
+    public void uploadExcel(MultipartFile uploadFile) throws IOException {
+        if (!uploadFile.isEmpty()) {
+            InputStream inputStream = uploadFile.getInputStream();
+
+            EasyExcel.read(inputStream, StudentInfo.class, new PageReadListener<StudentInfo>(dataList -> {
+                studentInfoMapper.insertStudentBatch(dataList);
+            })).sheet().doRead();
+        }
+    }
+
+
 }

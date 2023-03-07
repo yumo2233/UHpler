@@ -1115,7 +1115,6 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
                 continue;
             }
             numberList.add((String) list.get(1));
-
         }
         List<StudentInfo> studentInfoList = studentInfoMapper.selectAllByNumberIn(numberList);
         HashMap<String, Long> numberForId = new HashMap<>();
