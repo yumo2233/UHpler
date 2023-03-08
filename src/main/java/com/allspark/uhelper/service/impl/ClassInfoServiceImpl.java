@@ -2,6 +2,8 @@ package com.allspark.uhelper.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
+import com.alibaba.fastjson.JSON;
+import com.allspark.uhelper.common.form.ClassAndStudentForm;
 import com.allspark.uhelper.common.form.ClassInfoForm;
 import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.common.resp.classTree.NAryTree;
@@ -168,6 +170,20 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
     }
 
     @Override
+    public ClassInfo transferClass(ClassAndStudentForm classAndStudentForm) {
+        ClassInfo classInfo = new ClassInfo();
+        classInfo.setId(classAndStudentForm.getId());
+        classInfo.setGrade(classAndStudentForm.getGrade());
+        classInfo.setName(classAndStudentForm.getName());
+        classInfo.setCollege(classAndStudentForm.getCollege());
+        classInfo.setProfessional(classAndStudentForm.getProfessional());
+        classInfo.setHeadcount(classAndStudentForm.getHeadcount());
+        classInfo.setUserId(classAndStudentForm.getUserId());
+        classInfo.setCollegeDB(classAndStudentForm.getCollege().getCode());
+        return classInfo;
+    }
+
+    @Override
     public ClassInfo transferClass(ClassInfoForm classInfoForm) {
         ClassInfo classInfo = new ClassInfo();
         classInfo.setId(classInfoForm.getId());
@@ -227,14 +243,22 @@ public class ClassInfoServiceImpl extends ServiceImpl<ClassInfoMapper, ClassInfo
     }
 
     @Override
-    public void uploadExcel(MultipartFile uploadFile) throws IOException {
+    public ArrayList<StudentInfo> uploadExcel(MultipartFile uploadFile) throws IOException {
+        final ArrayList<StudentInfo>[] arrayList = new ArrayList[]{new ArrayList<>()};
         if (!uploadFile.isEmpty()) {
-            InputStream inputStream = uploadFile.getInputStream();
 
+            InputStream inputStream = uploadFile.getInputStream();
             EasyExcel.read(inputStream, StudentInfo.class, new PageReadListener<StudentInfo>(dataList -> {
-                studentInfoMapper.insertStudentBatch(dataList);
+                for (StudentInfo studentInfo : dataList) {
+                    //studentInfo.setClassId(classId);
+                    // System.out.println(studentInfo);
+                    // studentInfoMapper.insertStudent(studentInfo);
+                    arrayList[0] = (ArrayList<StudentInfo>) dataList;
+                }
+
             })).sheet().doRead();
         }
+        return arrayList[0];
     }
 
 

@@ -146,6 +146,36 @@ public class GraduateInfoServiceImpl extends ServiceImpl<GraduateInfoMapper, Gra
     }
 
     @Override
+    public ArrayList<HashMap> selectCollege() {
+        ArrayList arrayList = new ArrayList();
+        HashMap map1 = new HashMap();
+        map1.put("value", "1");
+        map1.put("label", "通信与信息工程学院（人工智能学院）");
+        arrayList.add(map1);
+
+        HashMap map2 = new HashMap();
+        map2.put("value", "2");
+        map2.put("label", "电子工程学院");
+        arrayList.add(map2);
+
+        HashMap map3 = new HashMap();
+        map3.put("value", "3");
+        map3.put("label", "自动化学院");
+        arrayList.add(map3);
+
+        HashMap map4 = new HashMap();
+        map4.put("value", "4");
+        map4.put("label", "计算机学院");
+        arrayList.add(map4);
+
+        HashMap map5 = new HashMap();
+        map5.put("value", "5");
+        map5.put("label", "经济与管理学院");
+        arrayList.add(map5);
+        return arrayList;
+    }
+
+    @Override
     public ArrayList<GradeAndProfessionalResp> selectGradeAndProfessional() {
         ArrayList<GraduateInfo> list = graduateInfoMapper.selectGradeAndProfessional();
         ArrayList<GradeAndProfessionalResp> arrayList = new ArrayList();

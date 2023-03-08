@@ -1,5 +1,6 @@
 package com.allspark.uhelper.db.pojo;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -28,16 +29,19 @@ public class StudentInfo implements Serializable {
     /**
      * 学号
      */
+    @ExcelProperty(value = "学号")
     private String number;
 
     /**
      * 姓名
      */
+    @ExcelProperty(value = "姓名")
     private String name;
 
     /**
      * 班内序号
      */
+    @ExcelProperty(value = "班内序号")
     private Integer index;
 
     @TableField(exist = false)

@@ -1,5 +1,6 @@
 package com.allspark.uhelper.service;
 
+import com.allspark.uhelper.common.form.ClassAndStudentForm;
 import com.allspark.uhelper.common.form.ClassInfoForm;
 import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.db.pojo.ClassInfo;
@@ -27,6 +28,8 @@ public interface ClassInfoService extends IService<ClassInfo> {
 
     ClassInfo transferClass(ClassInfoForm classInfoForm);
 
+    ClassInfo transferClass(ClassAndStudentForm classAndStudentForm);
+
     void insetClass(ClassInfo classInfo);
 
     boolean deleteClass(Long id);
@@ -39,6 +42,7 @@ public interface ClassInfoService extends IService<ClassInfo> {
 
     HashMap selectClassById(long id);
 
-    void uploadExcel(MultipartFile uploadFile) throws IOException;
+    ArrayList<StudentInfo> uploadExcel(MultipartFile uploadFile) throws IOException;
+
 
 }

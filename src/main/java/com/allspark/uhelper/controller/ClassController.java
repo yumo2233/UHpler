@@ -2,6 +2,7 @@ package com.allspark.uhelper.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.util.ListUtils;
+import com.allspark.uhelper.common.form.ClassAndStudentForm;
 import com.allspark.uhelper.common.form.ClassInfoForm;
 import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.common.util.CommonResp;
@@ -10,6 +11,7 @@ import com.allspark.uhelper.db.pojo.StudentDbInfo;
 import com.allspark.uhelper.db.pojo.StudentInfo;
 import com.allspark.uhelper.service.ClassInfoService;
 import com.allspark.uhelper.service.StudentInfoService;
+import com.allspark.uhelper.utils.CopyUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ import java.util.HashMap;
  **/
 @Tag(name = "ClassController", description = "班级和学生接口")
 @RestController
-@RequestMapping("/course")
+@RequestMapping("/class")
 public class ClassController {
 
     //    @Autowired
@@ -107,14 +109,31 @@ public class ClassController {
         return commonResp;
     }
 
-
+    @Operation(summary = "上传学生的excel表格")
     @PostMapping("/uploadClass")
     @ResponseBody
     public CommonResp upload(MultipartFile file) throws IOException {
-        classInfoService.uploadExcel(file);
+        ArrayList<StudentInfo> arrayList = classInfoService.uploadExcel(file);
         CommonResp commonResp = new CommonResp();
+        commonResp.setContent(arrayList);
         return commonResp;
     }
 
+    @Operation(summary = "同时上传学生和班级")
+    @PostMapping("/insertCASBatch")
+    @ResponseBody
+    public CommonResp insertCASBatch(@RequestBody ClassAndStudentForm classAndStudentForm) {
+        ArrayList<StudentInfo> arrayList = classAndStudentForm.getArrayList();
+        int size = arrayList.size();
+        ClassInfo classInfo = classInfoService.transferClass(classAndStudentForm);
+        classInfo.setHeadcount(size);
+        classInfoService.insetClass(classInfo);
+        for (StudentInfo one : arrayList) {
+            one.setClassId(classInfo.getId());
+            classInfoService.insertStudent(one);
+        }
+        CommonResp commonResp = new CommonResp();
+        return commonResp;
+    }
 
 }

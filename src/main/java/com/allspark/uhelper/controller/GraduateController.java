@@ -305,8 +305,10 @@ public class GraduateController {
             commonResp.setMessage("未查询到相关数据");
             return commonResp;
         }
+        List<HashMap> list3 = graduateInfoService.selectCollege();
         map.put("grade", list2);
         map.put("professional", list1);
+        map.put("college", list3);
         commonResp.setContent(map);
         return commonResp;
     }

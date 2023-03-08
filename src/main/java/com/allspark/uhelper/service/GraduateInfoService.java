@@ -38,6 +38,8 @@ public interface GraduateInfoService extends IService<GraduateInfo> {
 
     public ArrayList<HashMap> selectProfessional();
 
+    public ArrayList<HashMap> selectCollege();
+
     public ArrayList<GradeAndProfessionalResp> selectGradeAndProfessional();
 
     public ArrayList<HashMap> selectall(long id);
