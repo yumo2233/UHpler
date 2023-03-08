@@ -70,4 +70,11 @@
                 #{userName,jdbcType=VARCHAR})
 
     </insert>
+    <select id="listAllByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from u_courseinfo.course_info
+        where
+        user_id = #{userId,jdbcType=NUMERIC}
+    </select>
 </mapper>

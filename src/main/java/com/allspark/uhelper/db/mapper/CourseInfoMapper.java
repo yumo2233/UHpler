@@ -22,6 +22,8 @@ public interface CourseInfoMapper extends BaseMapper<CourseInfo> {
 
     int insertAll(CourseInfo courseInfo);
 
+    List<CourseInfo> listAllByUserId(@Param("userId") Long userId);
+
 }
 
 

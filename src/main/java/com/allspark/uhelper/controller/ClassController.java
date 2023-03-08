@@ -3,6 +3,7 @@ package com.allspark.uhelper.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.util.ListUtils;
 import com.allspark.uhelper.common.form.ClassAndStudentForm;
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.allspark.uhelper.common.form.ClassInfoForm;
 import com.allspark.uhelper.common.form.StudentInfoForm;
 import com.allspark.uhelper.common.util.CommonResp;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 @Tag(name = "ClassController", description = "班级和学生接口")
 @RestController
 @RequestMapping("/class")
+@SaCheckLogin
 public class ClassController {
 
     //    @Autowired

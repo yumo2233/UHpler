@@ -34,6 +34,8 @@ public interface ClassInfoMapper extends BaseMapper<ClassInfo> {
 
     List<ClassInfo> selectBatchIds(List<Long> longs);
 
+    List<ClassInfo> listAll();
+
 
 
 }
