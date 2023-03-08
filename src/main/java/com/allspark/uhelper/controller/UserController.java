@@ -32,7 +32,7 @@ public class UserController {
 
     @Operation(description = "用户登录")
     @PostMapping("/login")
-    public CommonResp login(@RequestBody @Valid UserLoginForm form){
+    public CommonResp login(@RequestBody @Valid UserLoginForm form) {
         HashMap map = userInfoService.login(form);
         boolean flag = (Boolean) map.get("flag");
         Long userId = (Long) map.get("userId");
@@ -45,6 +45,7 @@ public class UserController {
         resp.setSuccess(flag);
         if (flag) {
             StpUtil.login(userId);
+            param.put("userId", userId);
             resp.setMessage("登陆成功");
             resp.setContent(param);
             param.put("token", StpUtil.getTokenValue());

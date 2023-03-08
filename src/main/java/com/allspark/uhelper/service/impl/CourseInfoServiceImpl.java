@@ -548,8 +548,8 @@ public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoMapper, CourseI
         for (TargetAndFinalForm targetAndFinalForm : targetAndFinalFormList) {
             for (int i = 1; i <= 4; i++) {
                 FkTargetFinal fkTargetFinal = new FkTargetFinal();
+                fkTargetFinal.setTargetId(targetAndFinalForm.getTargetId());
                 if (i == 1) {
-                    fkTargetFinal.setTargetId(targetAndFinalForm.getTargetId());
                     fkTargetFinal.setFirst(1);
                     fkTargetFinal.setSecond(JSONUtil.parse(targetAndFinalForm.getFirst1()).toBean(String.class));
                 } else if (i == 2) {

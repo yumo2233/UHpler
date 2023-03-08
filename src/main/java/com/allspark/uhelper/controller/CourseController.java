@@ -65,8 +65,8 @@ public class CourseController {
     private ServletContext servletContext;
 
     @Operation(summary = "返回所有课程信息")
-
     @GetMapping("/listAllCourseInfo")
+    @SaCheckLogin
     public CommonResp listAllCourseInfo() {
         List<CourseInfo> courseInfos = courseInfoService.list();
         CommonResp resp = new CommonResp<>();
@@ -82,6 +82,7 @@ public class CourseController {
 
     @Operation(summary = "返回所有课程")
     @GetMapping("/listAllCourse")
+    @SaCheckLogin
     public CommonResp listAllCourse() {
         List<CourseInfo> courseInfos = courseInfoService.list();
         CommonResp resp = new CommonResp<>();
@@ -97,6 +98,7 @@ public class CourseController {
 
     @Operation(summary = "返回单个课程信息")
     @GetMapping("/listOne/{courseId}")
+    @SaCheckLogin
     public CommonResp listOne(@PathVariable Long courseId) {
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(courseId);
@@ -111,6 +113,7 @@ public class CourseController {
 
     @Operation(summary = "修改单个课程信息")
     @PostMapping("/modifyOne")
+    @SaCheckLogin
     public CommonResp listOne(@Valid @RequestBody CourseInfoForm course) {
         CommonResp resp = new CommonResp<>();
         HashMap<String, Object> result = courseInfoService.modifyOneCourseInfo(course);
@@ -128,6 +131,7 @@ public class CourseController {
 
     @Operation(summary = "增加单个课程信息")
     @PostMapping("/addOne")
+    @SaCheckLogin
     public CommonResp addOne(@Valid @RequestBody CourseInfoForm course) {
         CommonResp resp = new CommonResp<>();
         HashMap<String, Object> result = courseInfoService.addOneCourseInfo(course);
@@ -145,6 +149,7 @@ public class CourseController {
 
     @Operation(summary = "显示班级列表(三级显示)")
     @GetMapping("/listAllClass")
+    @SaCheckLogin
     public CommonResp listAllClass() {
         CommonResp resp = new CommonResp<>();
         List<NAryTree> collegeTrees = classInfoService.listAll3();
@@ -155,6 +160,7 @@ public class CourseController {
 
     @Operation(summary = "显示毕业指标点列表(二级显示)")
     @GetMapping("/listAllGraduate")
+    @SaCheckLogin
     public CommonResp listAllGraduate() {
         CommonResp resp = new CommonResp<>();
         List<NAryTree> collegeTrees = graduateTargetInfoService.listAll2();
@@ -165,6 +171,7 @@ public class CourseController {
 
     @Operation(summary = "显示执行学期(下拉框)")
     @GetMapping("/listSemester")
+    @SaCheckLogin
     public CommonResp listSemester() {
         CommonResp resp = new CommonResp<>();
         String[] sem = SemesterUtil.select();
@@ -176,6 +183,7 @@ public class CourseController {
 
     @Operation(summary = "显示该课程的学生和成绩")
     @GetMapping("/listAllStudent/{courseId}")
+    @SaCheckLogin
     public CommonResp listAllStudent(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
 
@@ -186,6 +194,7 @@ public class CourseController {
     }
 
     @Operation(summary = "修改该课程下的所有学生的平时和期末成绩")
+    @SaCheckLogin
     @PostMapping("/modifyAllStudent")
     public CommonResp modifyAllStudent(@RequestBody StudentAndScoreListForm form) {
         CommonResp resp = new CommonResp<>();
@@ -202,8 +211,13 @@ public class CourseController {
 
     @Operation(summary = "上传该课程下的所有学生的期末成绩")
     @PostMapping("/uploadFinalScore/{courseId}")
-    public CommonResp uploadFinalScore(HttpServletRequest request, @PathVariable Long courseId, @RequestBody MultipartFile file) throws IOException {
+    public CommonResp uploadFinalScore(HttpServletRequest request, @PathVariable Long courseId, @RequestBody MultipartFile file, @RequestParam("token") String token) throws IOException {
         CommonResp resp = new CommonResp<>();
+        if (!token.equals(StpUtil.getTokenValue())) {
+            resp.setContent("登陆失败");
+            resp.setSuccess(false);
+            return resp;
+        }
         boolean flag;
         ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
         flag = courseInfoService.uploadFinalModel(reader, courseId);
@@ -219,6 +233,7 @@ public class CourseController {
 
     @Operation(summary = "显示该课程的平时成绩构成")
     @GetMapping("/listUsual/{courseId}")
+    @SaCheckLogin
     public CommonResp listUsual(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
         UsualScoreResp usualScoreResp = courseInfoService.listUsual(courseId);
@@ -228,6 +243,7 @@ public class CourseController {
     }
 
     @Operation(summary = "修改该课程下的平时成绩构成")
+    @SaCheckLogin
     @PostMapping("/modifyUsual")
     public CommonResp modifyUsual(@RequestBody UsualScoreForm form) {
         CommonResp resp = new CommonResp<>();
@@ -244,6 +260,7 @@ public class CourseController {
 
     @Operation(summary = "显示该课程的期末成绩构成(复选框)")
     @GetMapping("/listFinalStructure/{courseId}")
+    @SaCheckLogin
     public CommonResp listFinalStructure(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
         FinalScoreResp finalScoreResp = courseInfoService.listFinal(courseId);
@@ -253,6 +270,7 @@ public class CourseController {
     }
 
     @Operation(summary = "修改该课程下的期末成绩构成(复选框)")
+    @SaCheckLogin
     @PostMapping("/modifyFinalStructure")
     public CommonResp modifyFinalStructure(@RequestBody FinalScoreForm form) {
         CommonResp resp = new CommonResp<>();
@@ -269,6 +287,7 @@ public class CourseController {
 //课程目标名称部分是编号后续需要修改 TODO
     @Operation(summary = "显示该课程的期末成绩构成")
     @GetMapping("/listFinal/{courseId}")
+    @SaCheckLogin
     public CommonResp listFinal(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
         FinalStructureForm finalScoreResp = courseInfoService.listFinal1(courseId);
@@ -279,6 +298,7 @@ public class CourseController {
 
     @Operation(summary = "修改该课程下的期末成绩构成")
     @PostMapping("/modifyFinal")
+    @SaCheckLogin
     public CommonResp modifyFinal(@RequestBody FinalStructureForm form) {
         CommonResp resp = new CommonResp<>();
         boolean flag = courseInfoService.modifyFinal1(form);
@@ -331,6 +351,7 @@ public class CourseController {
 
     @Operation(summary = "返回先修课程列表")
     @GetMapping("/listPre")
+    @SaCheckLogin
     public CommonResp listPre(){
         long loginIdAsLong = StpUtil.getLoginIdAsLong();
         List<HashMap> preList = courseInfoService.listPre(loginIdAsLong);

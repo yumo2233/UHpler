@@ -18,7 +18,7 @@
     </sql>
     <update id="update">
         update u_classinfo.user_info
-        set password = #{password},is_first = 1 where number = #{number}
+        set password = #{password},is_first = 0 where number = #{number}
     </update>
     <select id="login" resultType="java.lang.Long">
         select id from u_classinfo.user_info where number = #{number} and password = #{password};

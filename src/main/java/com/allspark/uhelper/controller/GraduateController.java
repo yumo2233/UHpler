@@ -30,7 +30,7 @@ import java.util.Map;
 @Tag(name = "GraduateController",description = "毕业要求接口")
 @RestController
 @RequestMapping("/graduate")
-//@SaCheckLogin
+@SaCheckLogin
 public class GraduateController {
 
     @Autowired
