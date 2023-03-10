@@ -65,6 +65,7 @@ import { useStore } from 'vuex'
 import axios from 'axios'
 import { apis } from '@/common/apis'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 export default defineComponent({
   props: {
     isAuthor: {
@@ -77,10 +78,13 @@ export default defineComponent({
     DrawerVue
   },
   setup () {
+    const route = useRoute()
     const store = useStore<GlobalDataProps>()
     const message = ref('')
     const centerDialogVisible = ref(false)
+    const id = route.query.id
     const info = computed(() => store.state.currentCourse)
+    console.log(info.value)
     const checkList = computed(() => store.state.currentCourse.checkList)
     const stu = computed(() => store.state.stuGrade)
     const totalScore = computed(() => store.getters.totalScore)
@@ -89,10 +93,10 @@ export default defineComponent({
       demitter.emit('on-drawer-open', () => null)
     }
     const handleDownload = () => {
-      window.open(`${apis.download}/${info.value.id}`)
+      window.open('http://192.168.0.117:8888/course/downloadUsual/' + id)
     }
     onBeforeMount(() => {
-      store.dispatch('getUsualGrade', info.value.id)
+      store.dispatch('getUsualGrade', id)
     })
     const grade = computed(() => store.state.stuGrade)
     const goEdit = (row: object) => {

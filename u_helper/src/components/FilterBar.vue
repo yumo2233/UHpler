@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <div class="academy">
-      <span>学院/专业：</span>
+      <span>专业：</span>
       <el-select @change="updateVal" v-model="pro" class="m-2" placeholder="Select">
         <el-option v-for="item in professional" :key="item.value" :label="item.label" :value="item.value"/>
       </el-select>
@@ -37,6 +37,7 @@ export default defineComponent({
     const professional = computed(() => store.state.ClassAndPro.professional)
     const grade = computed(() => store.state.ClassAndPro.grade)
     const updateVal = () => {
+      // console.log(pro.value)
       const onj = { grade: gra.value, profess: pro.value }
       context.emit('update', onj)
     }

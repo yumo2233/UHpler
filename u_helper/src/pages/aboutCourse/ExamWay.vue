@@ -19,11 +19,11 @@
     </div>
     <i>* </i><span>平时成绩占比：</span>
     <span class="right">
-      <el-input @input="fchange" :disabled="isAuthor" type="number" v-model="usual" class="w-50 m-2" placeholder="请输入0-100以内数字" style="height: 38px;width: 343px;"/>&nbsp;%
+      <el-input @input="fchange" :disabled="isAuthor" type="number" v-model="usual" class="w-50 m-2" placeholder="请输入0-100以内数字" style="height: 38px;width: 343px;"/>&nbsp;
     </span><br>
     <i>* </i><span>期末成绩占比：</span>
     <span class="right">
-      <el-input @input="uchange" :disabled="isAuthor" type="number" v-model="final" class="w-50 m-2" placeholder="请输入0-100以内数字" style="height: 38px;width: 343px;"/>&nbsp;%
+      <el-input @input="uchange" :disabled="isAuthor" type="number" v-model="final" class="w-50 m-2" placeholder="请输入0-100以内数字" style="height: 38px;width: 343px;"/>&nbsp;
     </span><br>
     <template v-for="(i, index) in info.checkList" :key="i.id">
       <add-examway :index="+index+1" :info="i"></add-examway>
@@ -61,6 +61,7 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
     const info = computed(() => store.state.currentCourse)
+    const isAdd = computed(() => store.state.isAdd)
     const addEaxmWay = () => {
       info.value.checkList.push({
         id: Date.now(),
@@ -91,7 +92,7 @@ export default defineComponent({
       message.value = '是否返回课程列表页，返回将不会保存已修改信息'
     }
     const submitChange = () => {
-      if (!store.state.isAdd) {
+      if (!isAdd.value) {
         axios.post(apis.modfiy, JSON.stringify(info.value)).then(res => {
           if (res.status !== 200) {
             alert('保存失败')

@@ -1,6 +1,7 @@
 import { createStore, Commit } from 'vuex'
 import axios from 'axios'
 import { apis } from '@/common/apis'
+import router from '@/router'
 
 export interface checkArray {
   id: number,
@@ -19,6 +20,10 @@ interface targetArray {
   name: string,
   graduateId: number,
   checkList?: checkArray[]
+}
+interface labelAndValue {
+  label: string
+  value: string
 }
 type targetName = 'id' | 'courseId' | 'content' | 'number' | 'name' | 'graduateId'
 export interface ICourses {
@@ -45,6 +50,7 @@ export interface ICourses {
   number: string
   checkList: checkArray[]
   targetList: targetArray[]
+  Semester: labelAndValue[]
 }
 
 export interface stuProps {
@@ -73,6 +79,7 @@ interface User {
   isLogin: boolean
   isFirst: boolean
   number: number
+  userId: string
 }
 
 interface finalGrade {// 期末成绩构成
@@ -82,10 +89,7 @@ interface finalGrade {// 期末成绩构成
   first3: []
   first4: []
 }
-interface labelAndValue {
-  label: string
-  value: string
-}
+
 interface CollegeAndProfess {
   id: number
   college: string
@@ -155,7 +159,8 @@ export interface GlobalDataProps{
   gradContent: finalGrade
   ClassAndPro: {
     grade: labelAndValue[],
-    professional: labelAndValue[]
+    professional: labelAndValue[],
+    college: labelAndValue[]
   }
   CollegeAndProfess: CollegeAndProfess[]
   filterArray: CollegeAndProfess[]
@@ -165,13 +170,25 @@ export interface GlobalDataProps{
   stuArr: stuProps[]
   stu: Student[]// 临时供新增班级页面使用的学生信息，考虑是否可与stuArr合并
   targetAndFinalFormList: targetAndFinalForm[]
+  curClass: classSelect
+  listPre: labelAndValue[]
 }
 
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
 }
-
+const changeName = (name: string) => {
+  let res = ''
+  switch (name) {
+    case 'autoMation': res = '自动化学院'; break
+    case 'communAndInfo': res = '通信与信息工程学院'; break
+    case 'electronAndEng': res = '电子工程学院'; break
+    case 'computing': res = '计算机学院'; break
+    case 'economyAndMag': res = '经济与管理学院'; break
+  }
+  return res
+}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkAndCommit = (state: { token?: string; isLogin?: boolean; courses?: never[]; classList?: never[]; currentCourse: any; graduationList?: never[]; isAdd?: boolean }, name: checkName, id: number, value: string | number) => {
   const tmp = state.currentCourse.checkList.find((item: checkArray) => (item as checkArray).id === id)
@@ -189,11 +206,12 @@ const examAndCommit = (state: { token?: string; isLogin?: boolean; courses?: nev
 }
 export default createStore({
   state: {
-    user: { isLogin: true, isFirst: false, userId: 0 },
+    user: { isLogin: false, isFirst: false, userId: 0, number: '' },
     token: localStorage.getItem('token') || '',
     courses: [],
     classList: [],
     currentCourse: {
+      listPre: [],
       name: '',
       teacher: '',
       college: '',
@@ -216,13 +234,14 @@ export default createStore({
       userName: '',
       number: '',
       checkList: [],
-      targetList: []
+      targetList: [],
+      Semester: []
     },
     graduationList: [],
     stuGrade: [],
     isAdd: false,
     gradContent: {},
-    ClassAndPro: { grade: [], professional: [] },
+    ClassAndPro: { grade: [], professional: [], college: [] },
     CollegeAndProfess: [],
     filterArray: [],
     classfilter: [],
@@ -230,7 +249,8 @@ export default createStore({
     classArray: [],
     stuArr: [],
     stu: [],
-    targetAndFinalFormList: []
+    targetAndFinalFormList: [],
+    curClass: {}
   },
   getters: {
     totalScore: (state) => (index: number) => {
@@ -240,7 +260,7 @@ export default createStore({
       for (let i = 0; i < len; i++) {
         score += ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
       }
-      return score / 100
+      return score * 100
     },
     stuScore: (state) => (index: number, stuIndex: number) => {
       let score = 0
@@ -252,7 +272,7 @@ export default createStore({
         const currentTotal = stuInfo[checkList.indexOf((targetList as [])[i])]
         score += currentTotal * ((targetList as [])[i] as checkArray).ratio2 * ((targetList as [])[i] as checkArray).ratio
       }
-      return score / 10000
+      return score
     },
     updateVal: (state) => (obj: { grade: number, profess: string }) => {
       state.filterArray = state.CollegeAndProfess
@@ -346,6 +366,7 @@ export default createStore({
     },
     clearCurrentCourse (state) {
       state.currentCourse = {
+        listPre: [],
         name: '',
         teacher: '',
         college: '',
@@ -368,7 +389,8 @@ export default createStore({
         userName: '',
         number: '',
         checkList: [],
-        targetList: []
+        targetList: [],
+        Semester: []
       }
     },
     addGraduationList (state, rawData) {
@@ -395,7 +417,10 @@ export default createStore({
     login (state, rawData) {
       state.user = { ...rawData, isLogin: true }
       localStorage.setItem('token', rawData.token)
-      axios.defaults.headers.common.Authorization = rawData.token
+      localStorage.setItem('userId', rawData.userId)
+      localStorage.setItem('number', rawData.number)
+      axios.defaults.headers.common.token = rawData.token
+      router.push('/')
     },
     notFirstLogin (state) {
       state.user.isFirst = false
@@ -406,8 +431,14 @@ export default createStore({
     getGradeAndProfess (state, rawData) {
       state.ClassAndPro.grade = rawData.content.grade
       state.ClassAndPro.professional = rawData.content.professional
+      state.ClassAndPro.college = rawData.content.college
     },
     collegeAndGrade (state, rawData) {
+      const data: [{ college: string }] = rawData.content
+      for (let i = 0; i < data.length; i++) {
+        // console.log(1111111)
+        data[i].college = changeName(data[i].college)
+      }
       state.CollegeAndProfess = rawData.content
       state.filterArray = state.CollegeAndProfess
     },
@@ -415,6 +446,11 @@ export default createStore({
       state.gradInfo = rawData.content[0]
     },
     selectClass (state, rawData) {
+      const data: [{ college: string }] = rawData.content
+      for (let i = 0; i < data.length; i++) {
+        console.log(1111111)
+        data[i].college = changeName(data[i].college)
+      }
       state.classfilter = rawData.content
       state.classArray = rawData.content
     },
@@ -442,6 +478,32 @@ export default createStore({
     logout (state) {
       state.user.isLogin = false
       localStorage.removeItem('token')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('number')
+    },
+    classSelect (state, rawData) {
+      state.curClass = rawData.content
+    },
+    selectSemster (state, rawData) {
+      const data = rawData.content
+      const len = data.length
+      const modified: labelAndValue[] = []
+      for (let i = 0; i < len; i++) {
+        modified.push({
+          value: data[i],
+          label: data[i]
+        })
+      }
+      (state.currentCourse.Semester as labelAndValue[]) = modified
+    },
+    listPre (state, rawData) {
+      state.currentCourse.listPre = rawData.content
+    },
+    addNewStu (state, rawData: Student[]) {
+      const length = rawData.length
+      for (let i = 0; i < length; i++) {
+        (state.stu as Student[]).push(rawData[i])
+      }
     }
   },
   actions: {
@@ -481,7 +543,7 @@ export default createStore({
     getOneGradInfo ({ commit }, id) {
       getAndCommit(`${apis.graduatePage}/${id}`, 'getOneGradInfo', commit)
     },
-    selectClass ({ commit }) {
+    selectClass ({ commit }) { // 返回班级信息
       getAndCommit(apis.selectClass, 'selectClass', commit)
     },
     getStuInfo ({ commit }, id) {
@@ -489,6 +551,15 @@ export default createStore({
     },
     listFinalStructure ({ commit }, id) {
       getAndCommit(`${apis.listFinalStructure}/${id}`, 'listFinalStructure', commit)
+    },
+    classSelect ({ commit }, id) {
+      getAndCommit(`${apis.selectClass}/${id}`, 'classSelect', commit)
+    },
+    selectSemster ({ commit }) {
+      getAndCommit(apis.listSemester, 'selectSemster', commit)
+    },
+    listPre ({ commit }) {
+      getAndCommit(apis.listPre, 'listPre', commit)
     }
   }
 })

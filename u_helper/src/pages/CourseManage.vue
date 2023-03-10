@@ -13,7 +13,7 @@
       <usual-grade :is-author="false"></usual-grade>
     </el-tab-pane>
     <el-tab-pane label="期末成绩管理" name="fifth"><final-grade :is-author="false"></final-grade></el-tab-pane>
-    <el-tab-pane label="课程报告" name="sixth"><personal-report></personal-report></el-tab-pane>
+    <!-- <el-tab-pane label="课程报告" name="sixth"><personal-report></personal-report></el-tab-pane> -->
   </el-tabs>
 </template>
 
@@ -27,7 +27,7 @@ import ExamWay from './aboutCourse/ExamWay.vue'
 import TargetInfo from './aboutCourse/TargetInfo.vue'
 import UsualGrade from './aboutCourse/UsualGrade.vue'
 import BasicInfo from './aboutCourse/BasicInfo.vue'
-import PersonalReport from './aboutCourse/PersonalReport.vue'
+// import PersonalReport from './aboutCourse/PersonalReport.vue'
 import FinalGrade from './aboutCourse/FinalGrade.vue'
 export default defineComponent({
   name: 'CourseManage',
@@ -36,7 +36,7 @@ export default defineComponent({
     ExamWay,
     TargetInfo,
     UsualGrade,
-    PersonalReport,
+    // PersonalReport,
     FinalGrade
   }
 })

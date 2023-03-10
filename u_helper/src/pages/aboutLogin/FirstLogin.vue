@@ -48,7 +48,6 @@ const change = () => {
     if (res.data.success) {
       router.push('/')
     } else {
-      store.commit('notFirstLogin')
       alert('修改密码失败，请检查网络')
     }
   })

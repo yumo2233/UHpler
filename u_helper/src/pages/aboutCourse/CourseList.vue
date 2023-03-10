@@ -1,7 +1,12 @@
 <template>
   <el-row :gutter="20" justify="start">
     <el-col :span="6">
-      <router-link to="/course">
+      <router-link :to="{
+        path: '/course',
+        query: {
+          id: 0
+        }
+      }">
         <course-box @click="addOne" :is-first="true"></course-box>
       </router-link>
     </el-col>
@@ -33,6 +38,7 @@ export default defineComponent({
     onBeforeMount(() => {
       store.dispatch('getCourse')
       store.commit('clearCurrentCourse')
+      store.state.isAdd = false
     })
     const courseList = computed(() => store.state.courses)
     const addOne = () => {

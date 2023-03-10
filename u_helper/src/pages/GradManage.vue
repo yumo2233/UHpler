@@ -9,9 +9,9 @@
     <el-table-column prop="address" label="操作">
       <template #default="scope">
           <div class="flex justify-space-between mb-4 flex-wrap gap-4">
-          <el-button link type="primary" :disabled="detailData[scope.$index].userId !== userId" @click.prevent="goEdit(detailData[scope.$index].id)">编辑</el-button>
+          <el-button link type="primary" :disabled="detailData[scope.$index].userId !== +userId" @click.prevent="goEdit(detailData[scope.$index].id)">编辑</el-button>
           <el-button link type="primary" @click.prevent="goView(detailData[scope.$index].id)">查看</el-button>
-          <el-button link type="danger" :disabled="detailData[scope.$index].userId !== userId" @click.prevent="goDelete(detailData[scope.$index].id)">删除</el-button>
+          <el-button link type="danger" :disabled="detailData[scope.$index].userId !== +userId" @click.prevent="goDelete(detailData[scope.$index].id)">删除</el-button>
         </div>
       </template>
     </el-table-column>
@@ -57,11 +57,13 @@ const goView = (id: number) => {
 }
 const goDelete = (id: number) => {
   if (confirm('确认删除？')) {
-    axios.get(`${apis.deleteGraduateInfo}/${id}`)
-    store.dispatch('collegeAndGrade')
+    axios.get(`${apis.deleteGraduateInfo}/${id}`).then(() => {
+      store.dispatch('collegeAndGrade')
+    })
   }
 }
 const updateVal = (obj: { grade: number, profess: string }) => {
+  console.log(obj)
   store.getters.updateVal(obj)
 }
 onBeforeMount(() => {

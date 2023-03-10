@@ -12,7 +12,15 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 axios.defaults.baseURL = 'https://mock.apifox.cn/m1/2206130-0-default'
-// axios.defaults.baseURL = '192.168.0.113'
+// axios.defaults.baseURL = 'http://192.168.0.111:8888'
+// axios.defaults.baseURL = 'http://124.223.18.54:8080'
+if (localStorage.getItem('token')) {
+  store.state.user.isLogin = true
+  store.state.user.userId = parseInt(localStorage.getItem('userId') as string)
+  store.state.user.number = localStorage.getItem('number') as string
+  axios.defaults.headers.common.token = localStorage.getItem('token')
+}
+axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 const app = createApp(App)
 // store

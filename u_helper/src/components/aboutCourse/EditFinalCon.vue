@@ -50,6 +50,7 @@ import { apis } from '@/common/apis'
 import mitt from 'mitt'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 type Event = {
   'drawer-open': () => null
@@ -60,16 +61,18 @@ export default defineComponent({
   name: 'EditFinalCon',
   setup () {
     const store = useStore<GlobalDataProps>()
-    const id = computed(() => store.state.currentCourse.id)
+    const route = useRoute()
+    const id = route.query.id
     const targetList = computed(() => store.state.targetAndFinalFormList)
     const dialog = ref(false)
     onBeforeMount(() => {
       // code
-      store.dispatch('listFinalStructure', id.value)
+      store.dispatch('listFinalStructure', id)
     })
     const handleSave = () => {
       // code
-      axios.post(apis.modifyFinalStructure, { ...targetList.value, courseId: id.value })
+      axios.post(apis.modifyFinalStructure, JSON.stringify({ targetAndFinalFormList: targetList.value, courseId: id }))
+      // console.log(targetList.value)
       emitter.emit('drawer-close', () => null)
     }
     // 事件

@@ -64,7 +64,7 @@ export default defineComponent({
     const id = route.query.id ? +route.query.id : 0
     const unit = computed(() => store.state.ClassAndPro.grade)
     const pro = computed(() => store.state.ClassAndPro.professional)
-    const info = computed(() => store.getters.classDetail(id))
+    const info = computed(() => store.state.curClass)
     const stu = computed(() => store.state.stuArr)
     const edited = ref(false)
     const goUpload = ref(false)
@@ -104,6 +104,7 @@ export default defineComponent({
     }
     onBeforeMount(() => {
       store.dispatch('getStuInfo', id)
+      store.dispatch('classSelect', id)
     })
     return {
       view, info, unit, pro, edited, stu, handleSave, deleteCurrent, edit, goUpload, isEdit, outerId, id, back, add, closeEdit

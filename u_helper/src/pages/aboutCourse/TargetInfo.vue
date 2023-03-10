@@ -42,6 +42,7 @@ export default defineComponent({
     const router = useRouter()
     const info = computed(() => store.state.currentCourse)
     const message = ref('')
+    const isAdd = computed(() => store.state.isAdd)
     const centerDialogVisible = ref(false)
     const backOrSave = ref(0)
     const addTargetWay = () => {
@@ -66,7 +67,7 @@ export default defineComponent({
     const handleSave6 = () => {
       if (backOrSave.value) {
         backOrSave.value = 0
-        if (!store.state.isAdd) {
+        if (!isAdd.value) {
           axios.post(apis.modfiy, JSON.stringify(info.value)).then(res => {
             if (res.status !== 200) {
               alert('保存失败')
@@ -93,7 +94,7 @@ export default defineComponent({
       }
     })
     emitter.on('on-target-change', ({ index, value }) => {
-      console.log(index)
+      // console.log(index)
       if (index > -1) {
         info.value.targetList[index].graduateId = value
       } else {

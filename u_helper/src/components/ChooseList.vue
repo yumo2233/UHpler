@@ -7,9 +7,9 @@
         <span style="margin-left: 20px;">
           <i class="red">*</i>
           <span>占同考核方式权重</span>
-          <el-input v-model="j.ratio2" style="width: 50px;" class="w-50 m-2" /> %
-          考核次数
-          <el-input v-model="j.time" style="width: 50px;" class="w-50 m-2" /> <br>
+          <el-input v-model="j.ratio2" style="width: 50px;" class="w-50 m-2" max="1"/> <br>
+          <!-- 考核次数
+          <el-input v-model="j.time" style="width: 50px;" class="w-50 m-2" /> <br> -->
         </span>
       </template>
     </div>
@@ -46,7 +46,7 @@ for (let i = 0, len = targetList.value.length; i < len; i++) {
   }
 }
 const onChange = (i: number, j: number) => {
-  console.log(isChecked)
+  // console.log(isChecked)
   if (isChecked[i * len + j]) {
     if (!targetList.value[i].checkList) {
       targetList.value[i].checkList = []

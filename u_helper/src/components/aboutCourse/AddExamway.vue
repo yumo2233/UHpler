@@ -12,7 +12,7 @@
     </div>
     <div>
       <i>* </i><span>占所有考核方式比重：</span>
-      <span class="right"><el-input type="number" v-model="Ratio" class="w-50 m-2" placeholder="请输入0-1以内数字" style="height: 38px;width: 343px;"/>&nbsp;%</span>
+      <span class="right"><el-input type="number" v-model="Ratio" class="w-50 m-2" placeholder="请输入0-1以内数字" style="height: 38px;width: 343px;" max="1"/>&nbsp;</span>
     </div>
   </div>
 </template>

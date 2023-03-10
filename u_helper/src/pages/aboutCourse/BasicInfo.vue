@@ -16,11 +16,11 @@
     <span><i>*</i> 所属院系：</span>
     <span class="right">
       <el-radio-group :disabled="isAuthor" v-model="academy">
-        <el-radio :label="1">通信与信息工程学院</el-radio>
-        <el-radio :label="2">电子工程学院</el-radio>
-        <el-radio :label="3">自动化学院</el-radio>
-        <el-radio :label="4">计算机学院</el-radio>
-        <el-radio :label="5">经济与管理学院</el-radio>
+        <el-radio label="communAndInfo">通信与信息工程学院</el-radio>
+        <el-radio label="electronAndEng">电子工程学院</el-radio>
+        <el-radio label="autoMation">自动化学院</el-radio>
+        <el-radio label="computing">计算机学院</el-radio>
+        <el-radio label="economyAndMag">经济与管理学院</el-radio>
       </el-radio-group>
     </span><br>
     <span><i>*</i> 开设单位：</span>
@@ -35,8 +35,8 @@
     <span><i>*</i> 课程性质：</span>
       <span class="right">
         <el-radio-group :disabled="isAuthor" v-model="courseKind" class="ml-4">
-          <el-radio :label="11" size="large">专业必修</el-radio>
-          <el-radio :label="12" size="large">专业选修</el-radio>
+          <el-radio label="专业必修" size="large"></el-radio>
+          <el-radio label="专业选修" size="large"></el-radio>
         </el-radio-group>
       </span><br>
     <span><i>*</i> 课程编号：</span>
@@ -56,7 +56,7 @@
       <el-input v-model="score" :disabled="isAuthor" type="number" class="w-50 m-2" placeholder="请输入0-100以内纯数字" style="height: 38px;width: 343px;"/></span><br>
     <span><i>*</i> 先修课程：</span>
     <span class="right">
-      <el-select v-model="courseKind" filterable="true" allow-create :disabled="isAuthor" class="m-2" placeholder="请输入" size="large" style="width: 343px;">
+      <el-select v-model="preCourse" filterable="true" allow-create :disabled="isAuthor" class="m-2" placeholder="请输入" size="large" style="width: 343px;">
         <el-option v-for="item in option1s" :key="item.value" :label="item.label" :value="item.value"/>
       </el-select>
     </span><br>
@@ -69,8 +69,8 @@
       <el-input :disabled="isAuthor" v-model="studentNum" type="number" class="w-50 m-2" placeholder="请输入0-100以内纯数字" style="height: 38px;width: 343px;"/></span><br>
     <span><i>*</i> 执行学期：</span>
     <span class="right">
-      <el-select :disabled="isAuthor" v-model="courseKind" class="m-2" placeholder="请选择" size="large" style="width: 343px;">
-        <el-option v-for="item in option1s" :key="item.value" :label="item.label" :value="item.value"/>
+      <el-select :disabled="isAuthor" v-model="semester" class="m-2" placeholder="请选择" size="large" style="width: 343px;">
+        <el-option v-for="item in semester1" :key="item.value" :label="item.label" :value="item.value"/>
       </el-select>
     </span><br>
     <el-button :diabled="isAuthor" @click="handleBack" style="margin: 0 20px;">返回</el-button>
@@ -85,7 +85,6 @@ import { GlobalDataProps } from '@/store'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { apis } from '@/common/apis'
-console.log(1)
 export default defineComponent({
   name: 'BasicInfo',
   props: {
@@ -100,22 +99,35 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore<GlobalDataProps>()
     const info = computed(() => store.state.currentCourse)
-    let num = 0
-    if (info.value) {
-      switch (info.value.unit) {
-        case 'communAndInfo': num = 1
-          break
-        case 'electronAndEng': num = 2
-          break
-        case 'autoMation': num = 3
-          break
-        case 'computing': num = 4
-          break
-      }
-    }
+    const semester1 = computed(() => info.value.Semester)
+    const isAdd = computed(() => store.state.isAdd)
+    // let num = 0
+    // if (info.value) {
+    //   switch (info.value.unit) {
+    //     case 'communAndInfo': num = 1
+    //       break
+    //     case 'electronAndEng': num = 2
+    //       break
+    //     case 'autoMation': num = 3
+    //       break
+    //     case 'computing': num = 4
+    //       break
+    //   }
+    // }
     const cascaderRef: Ref = ref(null)
     // #region input
-    const academy = ref(num)
+    const academy = computed({
+      get: () => info.value.college,
+      set: (value) => {
+        info.value.college = value
+      }
+    })
+    const semester = computed({
+      get: () => info.value.semester,
+      set: (value) => {
+        info.value.semester = value
+      }
+    })
     const unit = computed({
       get: () => info.value.unit,
       set: (value) => {
@@ -132,6 +144,12 @@ export default defineComponent({
       get: () => info.value.name,
       set: (value) => {
         store.commit('modeName', value)
+      }
+    })
+    const preCourse = computed({
+      get: () => info.value.preList,
+      set: (value) => {
+        info.value.preList = value
       }
     })
     const id = computed({
@@ -176,13 +194,22 @@ export default defineComponent({
         store.commit('modeObj', value)
       }
     })
-    const courseKind = ref(11)
+    const option1s = computed(() => store.state.listPre)
+    const courseKind = computed({
+      get: () => info.value.nature,
+      set: (value) => {
+        info.value.nature = value
+      }
+    })
     // #endregion
     const message = ref('')
     const centerDialogVisible = ref(false)
     const backOrSave = ref(0)
     onBeforeMount(() => {
       store.dispatch('getClassList')
+      store.dispatch('selectSemster')
+      // store.dispatch('course')
+      store.dispatch('listPre')
     })
     const options = computed(() => store.state.classList)
     const customProps = {
@@ -199,16 +226,8 @@ export default defineComponent({
       }
     }
     // console.log(cascaderRef.value.getCheckedNodes())
-    const option1s = [
-      {
-        value: 'Option1',
-        label: 'Option1'
-      },
-      {
-        value: 'Option2',
-        label: 'Option2'
-      }
-    ]
+    // const option1s = [
+    // ]
     const handleSave1 = () => {
       // 身份验证
       // eslint-disable-next-line no-constant-condition
@@ -221,8 +240,7 @@ export default defineComponent({
     const handleSave2 = () => {
       if (backOrSave.value) {
         backOrSave.value = 0
-        if (!store.state.isAdd) {
-          console.log(info.value)
+        if (!isAdd.value) {
           axios.post(apis.modfiy, JSON.stringify(info.value)).then(res => {
             console.log('props.info exits modefied', res.status)
           })
@@ -260,18 +278,20 @@ export default defineComponent({
       runPeriod,
       score,
       studentNum,
-      option1s,
+      semester1,
       handleSave1,
       handleSave2,
       handleBack,
       message,
+      semester,
+      option1s,
+      preCourse,
       props: {
         multiple: true
       }
     }
   }
 })
-console.log(2)
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
     <el-input @input="isChanged=true" v-model="num" :disabled="isAuthor" class="w-50 m-2" style="height: 34px;width: 50px;"/>&nbsp;
     <el-input @input="isChanged=true" v-model="content" :disabled="isAuthor" class="w-50 m-2" style="height: 34px;width: 500px;"/>
     <!-- 此处绑定编号 -->
-    <el-button text @click="deleteCur">删除指标点</el-button>
+    <el-button :disabled="isAuthor" text @click="deleteCur">删除指标点</el-button>
     <br>
   </div>
 </template>

@@ -46,8 +46,8 @@ export default defineComponent({
       const obj = {
         name: name.value,
         index: index.value,
-        number: id.value,
-        id: Date.now()
+        number: id.value
+        // id: Date.now()
       }
       context.emit('close-model', obj)
     }

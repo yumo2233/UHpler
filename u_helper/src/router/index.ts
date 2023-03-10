@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '@/store'
 
 // 引入组件
 import CourseManage from '@/pages/CourseManage.vue'
@@ -48,6 +49,19 @@ const router = createRouter({
     path: '/addclass',
     component: AddClass
   }]
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next()
+  } else {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      store.commit('logout')
+    } else {
+      next()
+    }
+  }
 })
 
 export default router

@@ -1,6 +1,6 @@
 <template>
   <div class="outer">
-    <up-load v-if="goUpload" @close-model="handleClose" :website="'https://mock.apifox.cn/m1/2206130-0-default/course/uploadFinalScore/'+info.id"></up-load>
+    <up-load v-if="goUpload" @close-model="handleClose" :website="website"></up-load>
     <edit-final-con></edit-final-con>
     <el-table :data="stu" border style="width: 100%">
       <el-table-column prop="className" label="年级" />
@@ -64,11 +64,11 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onBeforeMount } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 // import axios from 'axios'
-// import { apis } from '@/common/apis'
+import { apis } from '@/common/apis'
 import UpLoad from '@/components/UpLoad.vue'
 import EditFinalCon, { emitter } from '@/components/aboutCourse/EditFinalCon.vue'
 
@@ -86,25 +86,28 @@ export default defineComponent({
 </script>
 
 <script lang="ts" setup>
+const route = useRoute()
 const store = useStore<GlobalDataProps>()
 const router = useRouter()
+const id = route.query.id
 const goUpload = ref(false)
 const gradContent = computed(() => store.state.gradContent)
 const info = computed(() => store.state.currentCourse)
 const stu = computed(() => store.state.stuGrade)
+const website = apis.uploadFinalGrade + '?token=' + localStorage.getItem('token')
 onBeforeMount(() => {
-  store.dispatch('getGradContent', info.value.id)
+  store.dispatch('getGradContent', id)
 })
 const handleClose = () => {
   goUpload.value = false
-  store.dispatch('getUsualGrade', info.value.id)
+  store.dispatch('getUsualGrade', id)
 }
 const goBack = () => {
   router.push('/')
 }
 // TODO
 const downGrade = () => {
-  window.open('')// 下载地址
+  window.open('http://192.168.0.117:8888/course/downloadFinal/' + id)// 下载地址
 }
 const goedit = () => {
   emitter.emit('drawer-open', () => null)

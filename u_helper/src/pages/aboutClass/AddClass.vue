@@ -1,6 +1,6 @@
 <template>
   <!-- TODO -->
-  <up-load website="" v-if="goUpload" @close-model="closeUpload"></up-load>
+  <up-load :website="website" v-if="goUpload" @close-model="closeUpload"></up-load>
   <edit-vue v-if="goEdit" @close-model="closeEdit"></edit-vue>
   <div class="outer">
     <div class="classInfo">
@@ -15,9 +15,9 @@
           <el-option v-for="o in pro1" :key="o.value" :label="o.label" :value="o.value"></el-option>
         </el-select> <br>
         <i class="red">* </i><span>年级: </span>
-        <el-input v-model="grade" class="w-50 m-2" style="height: 34px;width: 343px;margin: 20px 0;"/><br>
+        <el-input v-model="grade" class="w-50 m-2" style="height: 34px;width: 343px;margin: 20px 0;" placeholder="填入整数"/><br>
         <i class="red">* </i><span>班级: </span>
-        <el-input v-model="class1" class="w-50 m-2" style="height: 34px;width: 343px;margin: 20px 0;"/><br>
+        <el-input v-model="class1" class="w-50 m-2" style="height: 34px;width: 343px;margin: 20px 0;" placeholder="填入整数"/><br>
       </div>
     </div>
     <div class="editStu">
@@ -31,14 +31,13 @@
         <el-table-column label="操作">
           <template #default="scope">
             <div>
-              <!-- {{ scope.$index }} -->
-              <!-- <el-button text @click="edit(stu[scope.$index].number)">编辑</el-button> -->
               <el-button text @click="deleteCurrent(stu[scope.$index].number)">删除</el-button>
             </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <el-button type="primary" @click="handleSave">保存</el-button>
   </div>
 </template>
 
@@ -46,8 +45,11 @@
 import { defineComponent, computed, onBeforeMount, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store/index'
+import { apis } from '@/common/apis'
 import UpLoad from '@/components/UpLoad.vue'
 import EditVue from '@/components/EditVue.vue'
+import axios from 'axios'
+import router from '@/router'
 export default defineComponent({
   name: 'AddClass',
   components: {
@@ -55,27 +57,37 @@ export default defineComponent({
   },
   setup () {
     const store = useStore<GlobalDataProps>()
-    const unit1 = computed(() => store.state.ClassAndPro.grade)
+    const unit1 = computed(() => store.state.ClassAndPro.college)
     const pro1 = computed(() => store.state.ClassAndPro.professional)
     const stu = computed(() => store.state.stu)
     const unit = ref('')
     const pro = ref('')
-    const class1 = ref('')
+    const class1 = ref(0)
     const grade = ref('')
     const goUpload = ref(false)
     const goEdit = ref(false)
     const closeUpload = () => {
       goUpload.value = false
-      // 此处获取上传数据的解析数据
-      /*
-      store.dispatch('get...')
-      */
     }
+    const website = apis.addclassWeb + '?token=' + localStorage.getItem('token')
     // const edit = (id: number) => {
     //   goEdit.value = true
     // }
     const deleteCurrent = (id: number) => {
       store.commit('deleteAddStu', id)
+    }
+    const handleSave = () => {
+      const obj = {
+        college: (+unit.value - 1).toString(),
+        professional: pro.value,
+        grade: grade.value,
+        name: class1.value,
+        userId: store.state.user.userId,
+        arrayList: store.state.stu
+      }
+      axios.post(apis.insetClass, JSON.stringify(obj)).then(() => {
+        router.push('/class')
+      })
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const closeEdit = (obj: any) => {
@@ -89,7 +101,7 @@ export default defineComponent({
       store.dispatch('getGradeAndProfess')
     })
     return {
-      unit1, pro1, unit, pro, class1, grade, goUpload, closeUpload, stu, goEdit, closeEdit, deleteCurrent
+      unit1, pro1, unit, pro, class1, grade, goUpload, closeUpload, stu, goEdit, closeEdit, deleteCurrent, handleSave, website
     }
   }
 })

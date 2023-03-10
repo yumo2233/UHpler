@@ -10,9 +10,9 @@
     <el-table-column label="操作">
       <template #default="scope">
         <div class="flex justify-space-between mb-4 flex-wrap gap-4">
-          <el-button link type="primary" :disabled="classList[scope.$index].userId === userId" @click.prevent="goEdit(classList[scope.$index].id)">编辑</el-button>
+          <el-button link type="primary" :disabled="classList[scope.$index].userId !== +userId" @click.prevent="goEdit(classList[scope.$index].id)">编辑</el-button>
           <el-button link type="primary" @click.prevent="goView(classList[scope.$index].id)">查看</el-button>
-          <el-button link type="danger" :disabled="classList[scope.$index].userId === userId" @click.prevent="goDelete(classList[scope.$index].id)">删除</el-button>
+          <el-button link type="danger" :disabled="classList[scope.$index].userId !== +userId" @click.prevent="goDelete(classList[scope.$index].id)">删除</el-button>
         </div>
       </template>
     </el-table-column>
@@ -36,7 +36,7 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore<GlobalDataProps>()
     const classList = computed(() => store.state.classfilter)
-    const userId = computed(() => store.state.user.number)
+    const userId = computed(() => store.state.user.userId)
     onBeforeMount(() => {
       store.dispatch('selectClass')
     })
