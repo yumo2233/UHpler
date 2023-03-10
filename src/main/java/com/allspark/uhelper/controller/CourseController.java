@@ -100,12 +100,18 @@ public class CourseController {
     @GetMapping("/listOne/{courseId}")
     @SaCheckLogin
     public CommonResp listOne(@PathVariable Long courseId) {
+        CommonResp resp = new CommonResp<>();
+        if (courseId == 0) {
+            resp.setMessage("没有该课程");
+            resp.setSuccess(false);
+            resp.setContent(new CourseInfoResp());
+            return resp;
+        }
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(courseId);
         List<CourseInfo> courseInfos = courseInfoService.listByIds(ids);
         List<CourseInfoResp> courseInfoRespList = courseInfoService.listCourseInfoResp(courseInfos);
         CourseInfoResp courseInfoResp = courseInfoRespList.get(0);
-        CommonResp resp = new CommonResp<>();
         resp.setContent(courseInfoResp);
         resp.setMessage("返回指定course_id的课程");
         return resp;
@@ -186,7 +192,12 @@ public class CourseController {
     @SaCheckLogin
     public CommonResp listAllStudent(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
-
+        if (courseId == 0) {
+            resp.setMessage("没有该课程");
+            resp.setSuccess(false);
+            resp.setContent(new ArrayList<StudentAndScoreResp>());
+            return resp;
+        }
         List<StudentAndScoreResp> studentAndScoreRespList = courseInfoService.listAllStudent(courseId);
         resp.setContent(studentAndScoreRespList);
         resp.setMessage("显示该课程下的所有学生的平时和期末成绩");
@@ -263,6 +274,12 @@ public class CourseController {
     @SaCheckLogin
     public CommonResp listFinalStructure(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
+        if (courseId == 0) {
+            resp.setMessage("没有该课程");
+            resp.setSuccess(false);
+            resp.setContent(new FinalScoreResp());
+            return resp;
+        }
         FinalScoreResp finalScoreResp = courseInfoService.listFinal(courseId);
         resp.setContent(finalScoreResp);
         resp.setMessage("显示该课程的期末成绩构成");
@@ -290,6 +307,12 @@ public class CourseController {
     @SaCheckLogin
     public CommonResp listFinal(@PathVariable Long courseId) {
         CommonResp resp = new CommonResp<>();
+        if (courseId == 0) {
+            resp.setMessage("没有该课程");
+            resp.setSuccess(false);
+            resp.setContent(new FinalStructureForm());
+            return resp;
+        }
         FinalStructureForm finalScoreResp = courseInfoService.listFinal1(courseId);
         resp.setContent(finalScoreResp);
         resp.setMessage("显示该课程的期末成绩构成");
