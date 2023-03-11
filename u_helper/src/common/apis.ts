@@ -37,6 +37,6 @@ export const apis = {
   listSemester: '/course/listSemester',
   listPre: '/course/listPre',
   insetClass: '/class/insertCASBatch',
-  addclassWeb: 'localhost:8080', // 上传文件新增班级成员
+  addclassWeb: 'http://124.223.18.54:8080', // 上传文件新增班级成员
   uploadFinalGrade: 'localhost:8080'// 上传期末成绩
 }

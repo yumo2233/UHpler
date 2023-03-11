@@ -7,7 +7,7 @@
       <h3>欢迎登录U助教系统</h3>
       <el-input v-model="userName" placeholder="请输入您的工号" clearable size="large" style="margin-bottom: 10px;" @blur="isUser"/>
       <span class="red pos1" v-show="usererror">{{ umessage }}</span>
-      <el-input v-model="password" placeholder="请输入登录密码" size="large" style="margin-top: 20px;margin-bottom: 10px;" show-password @blur="isPass"/>
+      <el-input v-model="password" placeholder="请输入登录密码" size="large" style="margin-top: 40px;margin-bottom: 10px;" show-password @blur="isPass"/>
       <span class="red pos2" v-show="passerror">{{ pmessage }}</span>
       <el-button @click="login" class="button" type="primary">登 录</el-button>
     </div>
@@ -113,12 +113,12 @@ h3 {
 .pos1 {
   position: absolute;
   left: 25px;
-  bottom: 140px;
+  bottom: 225px;
 }
 .pos2 {
   /* background-color: red; */
   position: absolute;
   left: 25px;
-  bottom: 60px;
+  bottom: 135px;
 }
 </style>

@@ -74,7 +74,7 @@ export default defineComponent({
   user-select: none;
 }
 .inner {
-  background-color: #bfa;
+  background-color: #fff;
   width: 800px;
   margin: 0 auto;
   margin-top: 150px;

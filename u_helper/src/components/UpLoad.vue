@@ -25,7 +25,6 @@ import { ref, defineComponent } from 'vue'
 import { genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import store from '@/store'
-// import store from '@/store'
 export default defineComponent({
   name: 'UpLoad',
   emits: {
@@ -78,7 +77,7 @@ export default defineComponent({
 }
 
 .inner {
-  background-color: #bfa;
+  background-color: white;
   width: 800px;
   margin: 0 auto;
   margin-top: 300px;

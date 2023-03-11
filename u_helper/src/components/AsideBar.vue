@@ -1,7 +1,7 @@
 <template>
   <el-row class="tac">
     <el-col>
-      <el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+      <el-menu default-active="1-1" class="el-menu-vertical-demo">
         <el-sub-menu index="1">
           <template #title>
             <el-icon><User /></el-icon>
@@ -31,14 +31,6 @@ export default defineComponent({
   components: {
   }
 })
-</script>
-<script lang="ts" setup>
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
 </script>
 
 <style scoped>
